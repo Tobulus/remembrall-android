@@ -1,4 +1,4 @@
-package com.driving.groceries;
+package com.groceries;
 
 import org.junit.Test;
 

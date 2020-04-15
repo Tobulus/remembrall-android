@@ -1,4 +1,4 @@
-package com.driving.groceries.ui.login;
+package com.groceries.ui;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -7,22 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.driving.groceries.ui.login.ItemFragment.OnListFragmentInteractionListener;
-
 import java.util.List;
 
-import com.driving.groceries.R;
+import com.groceries.R;
+import com.groceries.model.GroceryList;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link GroceryList} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * specified {@link ItemFragment.OnListFragmentInteractionListener}.
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<GroceryList> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final ItemFragment.OnListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<GroceryList> items, OnListFragmentInteractionListener listener) {
+    public MyItemRecyclerViewAdapter(List<GroceryList> items, ItemFragment.OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

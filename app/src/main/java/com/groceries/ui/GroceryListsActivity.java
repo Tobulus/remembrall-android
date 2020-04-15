@@ -1,10 +1,11 @@
-package com.driving.groceries.ui.login;
+package com.groceries.ui;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.driving.groceries.R;
+import com.groceries.R;
+import com.groceries.model.GroceryList;
 
 public class GroceryListsActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
     @Override

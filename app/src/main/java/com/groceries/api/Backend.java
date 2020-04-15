@@ -1,4 +1,4 @@
-package com.driving.groceries.ui.login;
+package com.groceries.api;
 
 import android.content.Context;
 
@@ -7,6 +7,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.groceries.model.GroceryList;
+import com.groceries.model.GroceryListEntry;
 
 import org.json.JSONObject;
 

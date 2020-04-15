@@ -1,4 +1,4 @@
-package com.driving.groceries.ui.login;
+package com.groceries.ui;
 
 
 import android.content.Intent;
@@ -12,7 +12,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.driving.groceries.R;
+import com.groceries.R;
+import com.groceries.api.Backend;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            Backend.get().login(json -> {
+            Backend.get().login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), json -> {
                 loadingProgressBar.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(this, GroceryListsActivity.class);
                 startActivity(intent);

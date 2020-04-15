@@ -1,4 +1,4 @@
-package com.driving.groceries.ui.login;
+package com.groceries.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.driving.groceries.R;
+import com.groceries.R;
+import com.groceries.api.Backend;
+import com.groceries.model.GroceryList;
 
 /**
  * A fragment representing a list of Items.

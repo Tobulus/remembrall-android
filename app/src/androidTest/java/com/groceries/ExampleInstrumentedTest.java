@@ -1,4 +1,4 @@
-package com.driving.groceries;
+package com.groceries;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.driving.groceries", appContext.getPackageName());
+        assertEquals("com.groceries", appContext.getPackageName());
     }
 }

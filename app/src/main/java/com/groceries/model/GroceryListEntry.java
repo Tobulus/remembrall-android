@@ -1,4 +1,4 @@
-package com.driving.groceries.ui.login;
+package com.groceries.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
