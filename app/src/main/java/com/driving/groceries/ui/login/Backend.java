@@ -2,16 +2,17 @@ package com.driving.groceries.ui.login;
 
 import android.content.Context;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class Backend {
@@ -21,6 +22,8 @@ public class Backend {
 
     private RequestQueue queue;
     private String url;
+
+    private String token;
 
     private Backend(Context ctx){
         this.queue  = Volley.newRequestQueue(ctx);
@@ -49,15 +52,39 @@ public class Backend {
         return instance;
     }
 
+    public void login(String user, String password, Response.Listener<JSONObject> onSuccess, Response.ErrorListener onError) {
+        AtomicReference<ApiLoginRequest> request = new AtomicReference<>();
+        request.set(new ApiLoginRequest(url +  "/api/auth", user, password, json -> {
+            token = request.get().getToken();
+            onSuccess.onResponse(json);
+        }, onError));
+        queue.add(request.get());
+    }
+
     public void getGroceryLists(Consumer<List<GroceryList>> listConsumer, Response.ErrorListener errorListener) {
-        JsonArrayRequest json = new JsonArrayRequest(Request.Method.GET, url +  "/service/json/grocery-lists", null, response -> {
+        ApiArrayRequest json = new ApiArrayRequest(url +  "/api/grocery-lists", response -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(), new TypeReference<List<GroceryList>>(){}));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }, errorListener);
+        }, errorListener, token);
+
+        queue.add(json);
+    }
+
+    public void getGroceryListEntries(Long groceryList, Consumer<List<GroceryListEntry>> listConsumer, Response.ErrorListener errorListener) {
+        String requestUrl = url +  "/api/grocery-list/" + groceryList + "/entries";
+
+        ApiArrayRequest json = new ApiArrayRequest(requestUrl, response -> {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                listConsumer.accept(mapper.readValue(response.toString(), new TypeReference<List<GroceryListEntry>>(){}));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, errorListener, token);
 
         queue.add(json);
     }
