@@ -19,8 +19,12 @@ import java.util.function.Consumer;
 
 public class Backend {
 
+    private final static String BACKEND_FILE = "Backend";
+    private final static String TOKEN_KEY = "token";
+
     private static Backend instance;
     private static final Object singletonLock = new Object();
+    private final Context ctx;
 
     private RequestQueue queue;
     private String url;
@@ -28,6 +32,7 @@ public class Backend {
     private String token;
 
     private Backend(Context ctx){
+        this.ctx = ctx;
         this.queue  = Volley.newRequestQueue(ctx);
         this.url = "http://192.168.0.249:8080";
     }
@@ -36,7 +41,7 @@ public class Backend {
         if (instance == null) {
             synchronized (singletonLock) {
                 if (instance == null) {
-                    instance = new Backend( ctx);
+                    instance = new Backend(ctx);
                 } else {
                     throw new IllegalStateException("Backend was already initialized!");
                 }
@@ -58,6 +63,7 @@ public class Backend {
         AtomicReference<ApiLoginRequest> request = new AtomicReference<>();
         request.set(new ApiLoginRequest(url +  "/api/auth", user, password, json -> {
             token = request.get().getToken();
+            ctx.getSharedPreferences(BACKEND_FILE, Context.MODE_PRIVATE).edit().putString(TOKEN_KEY, token).apply();
             onSuccess.onResponse(json);
         }, onError));
         queue.add(request.get());
