@@ -31,7 +31,7 @@ public class ApiLoginRequest extends JsonObjectRequest {
     }
 
     @Override
-    protected Map<String,String> getParams(){
+    public Map<String,String> getHeaders() {
         Map<String,String> params = new HashMap<>();
         String phrase = user + ":" + password;
         params.put("X-AUTH-TOKEN", "(empty)");

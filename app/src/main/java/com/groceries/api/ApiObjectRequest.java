@@ -20,7 +20,7 @@ public class ApiObjectRequest extends JsonObjectRequest {
     }
 
     @Override
-    protected Map<String,String> getParams(){
+    public Map<String,String> getHeaders() {
         Map<String,String> params = new HashMap<>();
         params.put("X-AUTH-TOKEN", token);
         return params;
