@@ -1,4 +1,4 @@
-package com.groceries.ui;
+package com.groceries.ui.groceryList;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,25 +21,21 @@ import com.groceries.model.GroceryList;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnGroceryListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class GroceryListFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnGroceryListFragmentInteractionListener mListener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ItemFragment() {
+    public GroceryListFragment() {
     }
 
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(int columnCount) {
-        ItemFragment fragment = new ItemFragment();
+    public static GroceryListFragment newInstance(int columnCount) {
+        GroceryListFragment fragment = new GroceryListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -70,7 +66,7 @@ public class ItemFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             Backend.get().getGroceryLists(list -> {
-                recyclerView.setAdapter(new MyItemRecyclerViewAdapter(list, mListener));
+                recyclerView.setAdapter(new GroceryListViewAdapter(list, mListener));
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -84,8 +80,8 @@ public class ItemFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnGroceryListFragmentInteractionListener) {
+            mListener = (OnGroceryListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -98,17 +94,7 @@ public class ItemFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(GroceryList item);
+    public interface OnGroceryListFragmentInteractionListener {
+        void onClickGroceryList(GroceryList item);
     }
 }

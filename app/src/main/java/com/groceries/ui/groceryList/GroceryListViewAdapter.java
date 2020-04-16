@@ -1,4 +1,4 @@
-package com.groceries.ui;
+package com.groceries.ui.groceryList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,14 +14,14 @@ import com.groceries.model.GroceryList;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link GroceryList} and makes a call to the
- * specified {@link ItemFragment.OnListFragmentInteractionListener}.
+ * specified {@link GroceryListFragment.OnGroceryListFragmentInteractionListener}.
  */
-public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
+public class GroceryListViewAdapter extends RecyclerView.Adapter<GroceryListViewAdapter.ViewHolder> {
 
     private final List<GroceryList> mValues;
-    private final ItemFragment.OnListFragmentInteractionListener mListener;
+    private final GroceryListFragment.OnGroceryListFragmentInteractionListener mListener;
 
-    public MyItemRecyclerViewAdapter(List<GroceryList> items, ItemFragment.OnListFragmentInteractionListener listener) {
+    public GroceryListViewAdapter(List<GroceryList> items, GroceryListFragment.OnGroceryListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -43,7 +43,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
             if (null != mListener) {
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
-                mListener.onListFragmentInteraction(holder.mItem);
+                mListener.onClickGroceryList(holder.mItem);
             }
         });
     }
@@ -62,8 +62,8 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.item_number);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

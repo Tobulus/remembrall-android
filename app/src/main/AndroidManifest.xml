@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.groceries.ui.GroceryListsActivity"
+            android:name="com.groceries.ui.groceryList.GroceryListsActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

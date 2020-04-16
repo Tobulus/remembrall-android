@@ -1,4 +1,4 @@
-package com.groceries.ui;
+package com.groceries.ui.groceryList;
 
 import android.os.Bundle;
 
@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.model.GroceryList;
 
-public class GroceryListsActivity extends AppCompatActivity implements ItemFragment.OnListFragmentInteractionListener {
+public class GroceryListsActivity extends AppCompatActivity implements GroceryListFragment.OnGroceryListFragmentInteractionListener {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -15,7 +16,7 @@ public class GroceryListsActivity extends AppCompatActivity implements ItemFragm
     }
 
     @Override
-    public void onListFragmentInteraction(GroceryList item) {
+    public void onClickGroceryList(GroceryList list) {
     }
 
     @Override
