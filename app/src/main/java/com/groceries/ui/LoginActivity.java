@@ -14,15 +14,21 @@ import android.widget.Toast;
 
 import com.groceries.R;
 import com.groceries.api.Backend;
+import com.groceries.ui.groceryList.GroceryListsActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
         Backend.initBackend(getApplicationContext());
+
+        if (Backend.get().restoreSession()) {
+            switchToGroceryLists();
+            return;
+        }
+
+        setContentView(R.layout.activity_login);
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -30,16 +36,20 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         loginButton.setEnabled(true);
-
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
             Backend.get().login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), json -> {
                 loadingProgressBar.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(this, GroceryListsActivity.class);
-                startActivity(intent);
-                finish();
-            }, error -> Toast.makeText(getApplicationContext(), "Failed:" + error.getMessage(), Toast.LENGTH_LONG).show());
+                switchToGroceryLists();
+            }, error -> {
+                Toast.makeText(getApplicationContext(), "Failed:" + error.getMessage(), Toast.LENGTH_LONG).show();});
         });
+    }
+
+    private void switchToGroceryLists() {
+        Intent intent = new Intent(this, GroceryListsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

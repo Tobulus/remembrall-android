@@ -9,6 +9,9 @@ public class GroceryListEntry {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("groceryList")
+    private GroceryList groceryList;
+
     public Long getId() {
         return id;
     }
