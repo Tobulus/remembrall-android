@@ -11,7 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
-import com.groceries.ui.LoginActivity;
+import com.groceries.ui.basic.LoginActivity;
 
 import org.json.JSONObject;
 
@@ -64,6 +64,18 @@ public class Backend {
             onSuccess.onResponse(json);
         }, onError));
         queue.add(request.get());
+    }
+
+    public void register(String user, String password, String matchingPassword, Consumer<String> onSuccess, Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/user/registration";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("username", user);
+        params.put("password", password);
+        params.put("matchingPassword", matchingPassword);
+
+        ApiPostRequest request = new ApiPostRequest(requestUrl, onSuccess::accept, error -> onErrorHandler(error, errorListener), token, params);
+        queue.add(request);
     }
 
     public void createGroceryList(GroceryList groceryList, Consumer<String> onSuccess, Response.ErrorListener errorListener){

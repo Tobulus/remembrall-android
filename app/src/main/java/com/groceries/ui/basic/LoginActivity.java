@@ -1,4 +1,4 @@
-package com.groceries.ui;
+package com.groceries.ui.basic;
 
 
 import android.content.Intent;
@@ -35,9 +35,12 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
+        registerButton.setEnabled(true);
         loginButton.setEnabled(true);
+
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
@@ -46,6 +49,11 @@ public class LoginActivity extends AppCompatActivity {
                 switchToGroceryLists();
             }, error -> {
                 Toast.makeText(getApplicationContext(), "Failed:" + error.getMessage(), Toast.LENGTH_LONG).show();});
+        });
+
+        registerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+            startActivity(intent);
         });
     }
 
