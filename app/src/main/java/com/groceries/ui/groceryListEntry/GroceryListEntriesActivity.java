@@ -1,5 +1,6 @@
 package com.groceries.ui.groceryListEntry;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.groceries.ui.groceryList.GroceryListsActivity;
 
 public class GroceryListEntriesActivity extends AppCompatActivity implements GroceryListEntryFragment.OnGroceryListEntryFragmentInteractionListener {
 
+    private static final int LAUNCH_CREATE_ACTIVITY = 1;
+
     private Long groceryListId;
 
     @Override
@@ -32,8 +35,22 @@ public class GroceryListEntriesActivity extends AppCompatActivity implements Gro
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, LAUNCH_CREATE_ACTIVITY);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_CREATE_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK){
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

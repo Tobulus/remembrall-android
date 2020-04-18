@@ -1,5 +1,6 @@
 package com.groceries.ui.groceryList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,8 @@ import com.groceries.ui.groceryListEntry.GroceryListEntriesActivity;
 
 public class GroceryListsActivity extends AppCompatActivity implements GroceryListFragment.OnGroceryListFragmentInteractionListener {
 
+    private static final int LAUNCH_CREATE_ACTIVITY = 1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +23,7 @@ public class GroceryListsActivity extends AppCompatActivity implements GroceryLi
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             Intent intent = new Intent(GroceryListsActivity.this, CreateGroceryListActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, LAUNCH_CREATE_ACTIVITY);
         });
     }
 
@@ -31,6 +34,20 @@ public class GroceryListsActivity extends AppCompatActivity implements GroceryLi
         bundle.putLong("id", list.getId());
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_CREATE_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK){
+                Intent intent = getIntent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                startActivity(intent);
+            }
+        }
     }
 
     @Override

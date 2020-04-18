@@ -1,5 +1,6 @@
 package com.groceries.ui.groceryList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,7 +31,7 @@ public class CreateGroceryListActivity extends AppCompatActivity {
             GroceryList groceryList = new GroceryList();
             groceryList.setName(name.getText().toString());
             backend.createGroceryList(groceryList,
-                    json -> finish(),
+                    json -> {setResult(Activity.RESULT_OK); finish();},
                     error -> Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show());
         });
     }
