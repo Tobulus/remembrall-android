@@ -22,6 +22,7 @@ public class GroceryListEntryFragment extends Fragment {
 
     private Long mGroceryListId = -1L;
     private OnGroceryListEntryFragmentInteractionListener mListener;
+    private Backend backend;
 
     public GroceryListEntryFragment() {
     }
@@ -30,6 +31,7 @@ public class GroceryListEntryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGroceryListId = getActivity().getIntent().getExtras().getLong(ARG_ID);
+        backend = new Backend(getActivity().getApplicationContext());
     }
 
     @Override
@@ -43,7 +45,7 @@ public class GroceryListEntryFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            Backend.get().getGroceryListEntries(mGroceryListId, entries -> {
+            backend.getGroceryListEntries(mGroceryListId, entries -> {
                 recyclerView.setAdapter(new GroceryListEntryViewAdapter(entries, mListener));
             }, new Response.ErrorListener() {
                 @Override

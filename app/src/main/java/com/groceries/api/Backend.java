@@ -28,68 +28,68 @@ public class Backend {
     private final static String BACKEND_PREFS = "Backend";
     private final static String TOKEN_KEY = "token";
 
-    private static Backend instance;
-    private static final Object singletonLock = new Object();
-    private final Context appCtx;
+    private final Context ctx;
 
     private RequestQueue queue;
     private String url;
 
     private String token;
 
-    private Backend(Context appCtx){
-        this.appCtx = appCtx;
-        this.queue  = Volley.newRequestQueue(appCtx);
+    public Backend(Context ctx) {
+        this.ctx = ctx;
+        this.queue  = Volley.newRequestQueue(ctx);
         this.url = "http://192.168.0.248:8080";
     }
 
-    public static void initBackend(Context ctx){
-        if (instance == null) {
-            synchronized (singletonLock) {
-                if (instance == null) {
-                    instance = new Backend(ctx);
-                } else {
-                    throw new IllegalStateException("Backend was already initialized!");
+    public boolean restoreSession() {
+        token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE).getString(TOKEN_KEY, null);
+        return token != null;
+    }
+
+    private void initToken(){
+        if (token == null) {
+            synchronized (this) {
+                if (token == null) {
+                    restoreSession();
                 }
             }
-        } else {
-            throw new IllegalStateException("Backend was already initialized!");
         }
-    }
-
-    public static Backend get() {
-        if (instance == null) {
-            throw new IllegalStateException("Backend isn't initialized!");
-        }
-
-        return instance;
-    }
-
-    public boolean restoreSession() {
-        token = appCtx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE).getString(TOKEN_KEY, null);
-        return token != null;
     }
 
     public void login(String user, String password, Response.Listener<JSONObject> onSuccess, Response.ErrorListener onError) {
         AtomicReference<ApiLoginRequest> request = new AtomicReference<>();
         request.set(new ApiLoginRequest(url +  "/api/auth", user, password, json -> {
             token = request.get().getToken();
-            appCtx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE).edit().putString(TOKEN_KEY, token).apply();
+            ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE).edit().putString(TOKEN_KEY, token).apply();
             onSuccess.onResponse(json);
         }, onError));
         queue.add(request.get());
     }
 
     public void createGroceryList(GroceryList groceryList, Consumer<String> onSuccess, Response.ErrorListener errorListener){
+        initToken();
+
         Map<String, String> postParams = new HashMap<>();
         postParams.put("name", groceryList.getName());
 
         ApiPostRequest request = new ApiPostRequest(url + "/api/grocery-list/new", onSuccess::accept, error -> onErrorHandler(error, errorListener), token, postParams);
+        queue.add(request);
+    }
 
+    public void createGroceryListEntry(Long groceryListId, GroceryListEntry entry, Consumer<String> onSuccess, Response.ErrorListener errorListener){
+        initToken();
+
+        Map<String, String> postParams = new HashMap<>();
+        postParams.put("name", entry.getName());
+        String requestUrl = url + "/api/grocery-list/" + groceryListId + "/entry/new";
+
+        ApiPostRequest request = new ApiPostRequest(requestUrl, onSuccess::accept, error -> onErrorHandler(error, errorListener), token, postParams);
         queue.add(request);
     }
 
     public void getGroceryLists(Consumer<List<GroceryList>> listConsumer, Response.ErrorListener errorListener) {
+        initToken();
+
         ApiArrayRequest json = new ApiArrayRequest(url +  "/api/grocery-lists", response -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -103,6 +103,7 @@ public class Backend {
     }
 
     public void getGroceryListEntries(Long groceryList, Consumer<List<GroceryListEntry>> listConsumer, Response.ErrorListener errorListener) {
+        initToken();
         String requestUrl = url +  "/api/grocery-list/" + groceryList + "/entries";
 
         ApiArrayRequest json = new ApiArrayRequest(requestUrl, response -> {
@@ -123,8 +124,8 @@ public class Backend {
         if (code == HttpURLConnection.HTTP_FORBIDDEN || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // session invalid or expired
             // TODO: this is not working
-            Intent showLogin = new Intent(appCtx, LoginActivity.class);
-            appCtx.startActivity(showLogin);
+            Intent showLogin = new Intent(ctx, LoginActivity.class);
+            ctx.startActivity(showLogin);
             return;
         }
 

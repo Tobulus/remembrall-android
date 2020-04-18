@@ -18,12 +18,14 @@ import com.groceries.ui.groceryList.GroceryListsActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private Backend backend;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Backend.initBackend(getApplicationContext());
+        backend = new Backend(getApplicationContext());
 
-        if (Backend.get().restoreSession()) {
+        if (backend.restoreSession()) {
             switchToGroceryLists();
             return;
         }
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            Backend.get().login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), json -> {
+            backend.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), json -> {
                 loadingProgressBar.setVisibility(View.INVISIBLE);
                 switchToGroceryLists();
             }, error -> {

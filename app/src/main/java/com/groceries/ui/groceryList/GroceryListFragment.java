@@ -26,29 +26,16 @@ import com.groceries.model.GroceryList;
  */
 public class GroceryListFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
     private OnGroceryListFragmentInteractionListener mListener;
+    private Backend backend;
 
     public GroceryListFragment() {
-    }
-
-    @SuppressWarnings("unused")
-    public static GroceryListFragment newInstance(int columnCount) {
-        GroceryListFragment fragment = new GroceryListFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
+        backend = new Backend(getActivity().getApplicationContext());
     }
 
     @Override
@@ -60,12 +47,9 @@ public class GroceryListFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            Backend.get().getGroceryLists(list -> {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+            backend.getGroceryLists(list -> {
                 recyclerView.setAdapter(new GroceryListViewAdapter(list, mListener));
             }, new Response.ErrorListener() {
                 @Override

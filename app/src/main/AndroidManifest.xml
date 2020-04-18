@@ -30,6 +30,7 @@
         </activity>
         <activity android:name=".ui.groceryListEntry.GroceryListEntriesActivity" />
         <activity android:name=".ui.groceryList.CreateGroceryListActivity" />
+        <activity android:name=".ui.groceryListEntry.CreateGroceryListEntryActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
