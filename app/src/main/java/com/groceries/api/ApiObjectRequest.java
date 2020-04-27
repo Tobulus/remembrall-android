@@ -1,10 +1,8 @@
 package com.groceries.api;
 
 import androidx.annotation.Nullable;
-
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -14,14 +12,18 @@ public class ApiObjectRequest extends JsonObjectRequest {
 
     private String token;
 
-    public ApiObjectRequest(String url, @Nullable JSONObject jsonRequest, Response.Listener<JSONObject> listener, @Nullable Response.ErrorListener errorListener, String token) {
+    public ApiObjectRequest(String url,
+                            @Nullable JSONObject jsonRequest,
+                            Response.Listener<JSONObject> listener,
+                            @Nullable Response.ErrorListener errorListener,
+                            String token) {
         super(url, jsonRequest, listener, errorListener);
         this.token = token;
     }
 
     @Override
-    public Map<String,String> getHeaders() {
-        Map<String,String> params = new HashMap<>();
+    public Map<String, String> getHeaders() {
+        Map<String, String> params = new HashMap<>();
         params.put("X-AUTH-TOKEN", token);
         return params;
     }

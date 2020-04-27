@@ -10,6 +10,12 @@ public class GroceryList {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("numberOfEntries")
+    private Integer numberOfEntries;
+
+    @JsonProperty("numberOfCheckedEntries")
+    private Integer numberOfCheckedEntries;
+
     public Long getId() {
         return id;
     }
@@ -24,5 +30,21 @@ public class GroceryList {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getNumberOfEntries() {
+        return numberOfEntries;
+    }
+
+    public void setNumberOfEntries(Integer numberOfEntries) {
+        this.numberOfEntries = numberOfEntries;
+    }
+
+    public Integer getNumberOfCheckedEntries() {
+        return numberOfCheckedEntries;
+    }
+
+    public void setNumberOfCheckedEntries(Integer numberOfCheckedEntries) {
+        this.numberOfCheckedEntries = numberOfCheckedEntries;
     }
 }

@@ -3,35 +3,37 @@ package com.groceries.ui.groceryListEntry;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-
+import com.android.volley.Response;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.groceries.R;
-import com.groceries.model.GroceryList;
+import com.groceries.api.Backend;
 import com.groceries.model.GroceryListEntry;
-import com.groceries.ui.groceryList.CreateGroceryListActivity;
-import com.groceries.ui.groceryList.GroceryListsActivity;
 
-public class GroceryListEntriesActivity extends AppCompatActivity implements GroceryListEntryFragment.OnGroceryListEntryFragmentInteractionListener {
+import java.util.List;
+import java.util.function.Consumer;
+
+public class GroceryListEntriesActivity extends AppCompatActivity
+        implements GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener {
 
     private static final int LAUNCH_CREATE_ACTIVITY = 1;
 
     private Long groceryListId;
 
+    private Backend backend;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        backend = new Backend(getApplicationContext());
+        groceryListId = getIntent().getExtras().getLong("id");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocerylistentries);
 
-        groceryListId = getIntent().getExtras().getLong("id");
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            Intent intent = new Intent(GroceryListEntriesActivity.this, CreateGroceryListEntryActivity.class);
+            Intent intent = new Intent(GroceryListEntriesActivity.this,
+                                       CreateGroceryListEntryActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
             intent.putExtras(bundle);
@@ -44,7 +46,7 @@ public class GroceryListEntriesActivity extends AppCompatActivity implements Gro
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LAUNCH_CREATE_ACTIVITY) {
-            if (resultCode == Activity.RESULT_OK){
+            if (resultCode == Activity.RESULT_OK) {
                 Intent intent = getIntent();
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 finish();
@@ -54,7 +56,20 @@ public class GroceryListEntriesActivity extends AppCompatActivity implements Gro
     }
 
     @Override
-    public void onClickGroceryListEntry(GroceryListEntry entry) {
+    public void onClick(GroceryListEntry entry) {
+    }
+
+    @Override
+    public void toggleChecked(GroceryListEntry entry, Runnable onError) {
+        entry.setChecked(!entry.isChecked());
+        backend.updateGroceryListEntry(groceryListId, entry, s -> {
+        }, e -> onError.run());
+    }
+
+    @Override
+    public void loadListEntries(Consumer<List<GroceryListEntry>> listConsumer,
+                                Response.ErrorListener errorListener) {
+        backend.getGroceryListEntries(groceryListId, listConsumer, errorListener);
     }
 
     @Override

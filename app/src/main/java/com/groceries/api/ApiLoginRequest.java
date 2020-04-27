@@ -1,11 +1,9 @@
 package com.groceries.api;
 
 import androidx.annotation.Nullable;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
-
 import org.json.JSONObject;
 
 import java.util.Base64;
@@ -18,7 +16,11 @@ public class ApiLoginRequest extends JsonObjectRequest {
     private String user;
     private String password;
 
-    public ApiLoginRequest(String url, String user, String password, Response.Listener<JSONObject> listener, @Nullable Response.ErrorListener errorListener) {
+    public ApiLoginRequest(String url,
+                           String user,
+                           String password,
+                           Response.Listener<JSONObject> listener,
+                           @Nullable Response.ErrorListener errorListener) {
         super(url, null, listener, errorListener);
         this.user = user;
         this.password = password;
@@ -31,11 +33,12 @@ public class ApiLoginRequest extends JsonObjectRequest {
     }
 
     @Override
-    public Map<String,String> getHeaders() {
-        Map<String,String> params = new HashMap<>();
+    public Map<String, String> getHeaders() {
+        Map<String, String> params = new HashMap<>();
         String phrase = user + ":" + password;
         params.put("X-AUTH-TOKEN", "(empty)");
-        params.put("Authorization", "Basic " + Base64.getEncoder().encodeToString(phrase.getBytes()));
+        params.put("Authorization",
+                   "Basic " + Base64.getEncoder().encodeToString(phrase.getBytes()));
         return params;
     }
 

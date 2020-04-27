@@ -1,6 +1,5 @@
 package com.groceries.ui.basic;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.ui.groceryList.GroceryListsActivity;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -36,13 +32,18 @@ public class RegistrationActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            backend.register(usernameEditText.getText().toString(), passwordEditText.getText().toString(), matchingPasswordEditText.getText().toString()
-                    , json -> {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }, error -> Toast.makeText(getApplicationContext(), "Failed:" + error.getMessage(), Toast.LENGTH_LONG).show());
+            backend.register(usernameEditText.getText().toString(),
+                             passwordEditText.getText().toString(),
+                             matchingPasswordEditText.getText().toString(),
+                             json -> {
+                                 loadingProgressBar.setVisibility(View.INVISIBLE);
+                                 Intent intent = new Intent(this, LoginActivity.class);
+                                 startActivity(intent);
+                                 finish();
+                             },
+                             error -> Toast.makeText(getApplicationContext(),
+                                                     "Failed:" + error.getMessage(),
+                                                     Toast.LENGTH_LONG).show());
         });
     }
 }

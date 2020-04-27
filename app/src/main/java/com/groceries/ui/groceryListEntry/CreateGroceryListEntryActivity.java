@@ -5,12 +5,9 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
 
 public class CreateGroceryListEntryActivity extends AppCompatActivity {
@@ -33,9 +30,15 @@ public class CreateGroceryListEntryActivity extends AppCompatActivity {
         save.setOnClickListener(v -> {
             GroceryListEntry entry = new GroceryListEntry();
             entry.setName(name.getText().toString());
-            backend.createGroceryListEntry(groceryListId, entry,
-                    json -> { setResult(Activity.RESULT_OK); finish(); },
-                    error -> Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show());
+            backend.createGroceryListEntry(groceryListId,
+                                           entry,
+                                           json -> {
+                                               setResult(Activity.RESULT_OK);
+                                               finish();
+                                           },
+                                           error -> Toast.makeText(getApplicationContext(),
+                                                                   error.getMessage(),
+                                                                   Toast.LENGTH_LONG).show());
         });
     }
 }

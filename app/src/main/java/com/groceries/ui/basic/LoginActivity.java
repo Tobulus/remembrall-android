@@ -1,17 +1,13 @@
 package com.groceries.ui.basic;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
 import com.groceries.ui.groceryList.GroceryListsActivity;
@@ -44,11 +40,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            backend.login(usernameEditText.getText().toString(), passwordEditText.getText().toString(), json -> {
-                loadingProgressBar.setVisibility(View.INVISIBLE);
-                switchToGroceryLists();
-            }, error -> {
-                Toast.makeText(getApplicationContext(), "Failed:" + error.getMessage(), Toast.LENGTH_LONG).show();});
+            backend.login(usernameEditText.getText().toString(),
+                          passwordEditText.getText().toString(),
+                          json -> {
+                              loadingProgressBar.setVisibility(View.INVISIBLE);
+                              switchToGroceryLists();
+                          },
+                          error -> {
+                              Toast.makeText(getApplicationContext(),
+                                             "Failed:" + error.getMessage(),
+                                             Toast.LENGTH_LONG).show();
+                          });
         });
 
         registerButton.setOnClickListener(v -> {

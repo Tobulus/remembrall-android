@@ -3,68 +3,65 @@ package com.groceries.ui.groceryListEntry;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.groceries.R;
 import com.groceries.model.GroceryListEntry;
 
 import java.util.List;
 
-public class GroceryListEntryViewAdapter extends RecyclerView.Adapter<GroceryListEntryViewAdapter.ViewHolder> {
+public class GroceryListEntryViewAdapter
+        extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
-    private final List<GroceryListEntry> mValues;
-    private final GroceryListEntryFragment.OnGroceryListEntryFragmentInteractionListener mListener;
+    private final List<GroceryListEntry> groceryListEntries;
+    private final GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener
+            grocerListEntryActivity;
 
-    public GroceryListEntryViewAdapter(List<GroceryListEntry> items, GroceryListEntryFragment.OnGroceryListEntryFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public GroceryListEntryViewAdapter(List<GroceryListEntry> items,
+                                       GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener listener) {
+        groceryListEntries = items;
+        grocerListEntryActivity = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GroceryListEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
-        return new ViewHolder(view);
+                                  .inflate(R.layout.fragment_grocery_list_entry, parent, false);
+        return new GroceryListEntryHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-        holder.mContentView.setText(mValues.get(position).getName());
-
-        holder.mView.setOnClickListener(v -> {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onClickGroceryListEntry(holder.mItem);
-            }
-        });
+    public void onBindViewHolder(final GroceryListEntryHolder holder, int position) {
+        holder.groceryListEntry = groceryListEntries.get(position);
+        holder.name.setText(holder.groceryListEntry.getName());
+        holder.checked.setChecked(holder.groceryListEntry.isChecked());
+        holder.name.setOnClickListener(v -> grocerListEntryActivity.onClick(holder.groceryListEntry));
+        holder.checked.setOnClickListener(v -> grocerListEntryActivity.toggleChecked(holder.groceryListEntry, holder.checked::toggle));
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return groceryListEntries.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public GroceryListEntry mItem;
+    public class GroceryListEntryHolder extends RecyclerView.ViewHolder {
+        public final View view;
+        public final TextView name;
+        public final CheckBox checked;
 
-        public ViewHolder(View view) {
+        public GroceryListEntry groceryListEntry;
+
+        public GroceryListEntryHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = view.findViewById(R.id.item_number);
-            mContentView = view.findViewById(R.id.content);
+            this.view = view;
+            name = view.findViewById(R.id.name);
+            checked = view.findViewById(R.id.checked);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + name.getText() + "'";
         }
     }
 }

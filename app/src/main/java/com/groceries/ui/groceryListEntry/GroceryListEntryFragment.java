@@ -5,24 +5,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.groceries.R;
-import com.groceries.api.Backend;
 import com.groceries.model.GroceryListEntry;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class GroceryListEntryFragment extends Fragment {
 
-    private static final String ARG_ID = "id";
-
-    private Long mGroceryListId = -1L;
-    private OnGroceryListEntryFragmentInteractionListener mListener;
-    private Backend backend;
+    private GroceryListEntryFragmentInteractionListener mListener;
 
     public GroceryListEntryFragment() {
     }
@@ -30,41 +25,37 @@ public class GroceryListEntryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGroceryListId = getActivity().getIntent().getExtras().getLong(ARG_ID);
-        backend = new Backend(getActivity().getApplicationContext());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_grocery_list_entries, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            backend.getGroceryListEntries(mGroceryListId, entries -> {
-                recyclerView.setAdapter(new GroceryListEntryViewAdapter(entries, mListener));
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
+            mListener.loadListEntries(entries -> recyclerView.setAdapter(new GroceryListEntryViewAdapter(
+                    entries,
+                    mListener)), error -> {
             });
         }
+
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnGroceryListEntryFragmentInteractionListener) {
-            mListener = (OnGroceryListEntryFragmentInteractionListener) context;
+
+        if (context instanceof GroceryListEntryFragmentInteractionListener) {
+            mListener = (GroceryListEntryFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                                       + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -74,7 +65,12 @@ public class GroceryListEntryFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnGroceryListEntryFragmentInteractionListener {
-        void onClickGroceryListEntry(GroceryListEntry entry);
+    public interface GroceryListEntryFragmentInteractionListener {
+        void onClick(GroceryListEntry entry);
+
+        void toggleChecked(GroceryListEntry entry, Runnable onError);
+
+        void loadListEntries(Consumer<List<GroceryListEntry>> listConsumer,
+                             Response.ErrorListener errorListener);
     }
 }

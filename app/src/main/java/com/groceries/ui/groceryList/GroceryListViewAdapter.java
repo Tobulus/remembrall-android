@@ -1,74 +1,61 @@
 package com.groceries.ui.groceryList;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.List;
-
+import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.model.GroceryList;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link GroceryList} and makes a call to the
- * specified {@link GroceryListFragment.OnGroceryListFragmentInteractionListener}.
- */
-public class GroceryListViewAdapter extends RecyclerView.Adapter<GroceryListViewAdapter.ViewHolder> {
+import java.util.List;
 
-    private final List<GroceryList> mValues;
-    private final GroceryListFragment.OnGroceryListFragmentInteractionListener mListener;
+public class GroceryListViewAdapter
+        extends RecyclerView.Adapter<GroceryListViewAdapter.GroceryListHolder> {
 
-    public GroceryListViewAdapter(List<GroceryList> items, GroceryListFragment.OnGroceryListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    private final List<GroceryList> groceryLists;
+    private final GroceryListFragment.GroceryListFragmentInteractionListener groceryListActivity;
+
+    public GroceryListViewAdapter(List<GroceryList> items,
+                                  GroceryListFragment.GroceryListFragmentInteractionListener listener) {
+        groceryLists = items;
+        groceryListActivity = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GroceryListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
-        return new ViewHolder(view);
+                                  .inflate(R.layout.fragment_grocery_list, parent, false);
+        return new GroceryListHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(String.valueOf(mValues.get(position).getId()));
-        holder.mContentView.setText(mValues.get(position).getName());
-
-        holder.mView.setOnClickListener(v -> {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onClickGroceryList(holder.mItem);
-            }
-        });
+    public void onBindViewHolder(final GroceryListHolder holder, int position) {
+        holder.groceryList = groceryLists.get(position);
+        holder.name.setText(groceryLists.get(position).getName());
+        holder.view.setOnClickListener(v -> groceryListActivity.onClickGroceryList(holder.groceryList));
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return groceryLists.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public GroceryList mItem;
+    public class GroceryListHolder extends RecyclerView.ViewHolder {
+        public final View view;
+        public final TextView name;
 
-        public ViewHolder(View view) {
+        public GroceryList groceryList;
+
+        public GroceryListHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = view.findViewById(R.id.item_number);
-            mContentView = view.findViewById(R.id.content);
+            this.view = view;
+            name = view.findViewById(R.id.name);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + name.getText() + "'";
         }
     }
 }
