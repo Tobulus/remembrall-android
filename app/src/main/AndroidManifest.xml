@@ -32,6 +32,7 @@
         <activity android:name=".ui.groceryList.CreateGroceryListActivity" />
         <activity android:name=".ui.groceryListEntry.CreateGroceryListEntryActivity" />
         <activity android:name=".ui.basic.RegistrationActivity" />
+        <activity android:name=".ui.invitation.InvitationsActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
