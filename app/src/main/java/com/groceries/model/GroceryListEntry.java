@@ -43,6 +43,14 @@ public class GroceryListEntry {
         this.checked = checked;
     }
 
+    public GroceryList getGroceryList() {
+        return groceryList;
+    }
+
+    public void setGroceryList(GroceryList groceryList) {
+        this.groceryList = groceryList;
+    }
+
     public Map<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", id.toString());

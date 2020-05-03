@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 public class GroceryListEntryFragment extends Fragment {
 
     private GroceryListEntryFragmentInteractionListener mListener;
+    private Long groceryListId;
 
     public GroceryListEntryFragment() {
     }
@@ -25,6 +26,7 @@ public class GroceryListEntryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        groceryListId = getArguments().getLong("id");
     }
 
     @Override
@@ -38,10 +40,12 @@ public class GroceryListEntryFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            mListener.loadListEntries(entries -> recyclerView.setAdapter(new GroceryListEntryViewAdapter(
-                    entries,
-                    mListener)), error -> {
-            });
+            mListener.loadListEntries(groceryListId,
+                                      entries -> recyclerView.setAdapter(new GroceryListEntryViewAdapter(
+                                              entries,
+                                              mListener)),
+                                      error -> {
+                                      });
         }
 
         return view;
@@ -70,7 +74,8 @@ public class GroceryListEntryFragment extends Fragment {
 
         void toggleChecked(GroceryListEntry entry, Runnable onError);
 
-        void loadListEntries(Consumer<List<GroceryListEntry>> listConsumer,
+        void loadListEntries(Long groceryListId,
+                             Consumer<List<GroceryListEntry>> listConsumer,
                              Response.ErrorListener errorListener);
     }
 }

@@ -16,12 +16,12 @@ public class GroceryListEntryViewAdapter
 
     private final List<GroceryListEntry> groceryListEntries;
     private final GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener
-            grocerListEntryActivity;
+            groceriesActivity;
 
     public GroceryListEntryViewAdapter(List<GroceryListEntry> items,
                                        GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener listener) {
         groceryListEntries = items;
-        grocerListEntryActivity = listener;
+        groceriesActivity = listener;
     }
 
     @Override
@@ -35,9 +35,10 @@ public class GroceryListEntryViewAdapter
     public void onBindViewHolder(final GroceryListEntryHolder holder, int position) {
         holder.groceryListEntry = groceryListEntries.get(position);
         holder.name.setText(holder.groceryListEntry.getName());
+        holder.name.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryListEntry));
         holder.checked.setChecked(holder.groceryListEntry.isChecked());
-        holder.name.setOnClickListener(v -> grocerListEntryActivity.onClick(holder.groceryListEntry));
-        holder.checked.setOnClickListener(v -> grocerListEntryActivity.toggleChecked(holder.groceryListEntry, holder.checked::toggle));
+        holder.checked.setOnClickListener(v -> groceriesActivity.toggleChecked(holder.groceryListEntry,
+                                                                               holder.checked::toggle));
     }
 
     @Override

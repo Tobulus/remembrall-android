@@ -2,7 +2,6 @@ package com.groceries.api;
 
 import android.content.Context;
 import android.content.Intent;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -12,8 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
 import com.groceries.model.Invitation;
-import com.groceries.ui.basic.LoginActivity;
 
+import com.groceries.ui.activity.LoginActivity;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class Backend {
 
     public boolean restoreSession() {
         token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
-                .getString(TOKEN_KEY, null);
+                   .getString(TOKEN_KEY, null);
         return token != null;
     }
 
@@ -66,9 +65,9 @@ public class Backend {
         request.set(new ApiLoginRequest(url + "/api/auth", user, password, json -> {
             token = request.get().getToken();
             ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
-                    .edit()
-                    .putString(TOKEN_KEY, token)
-                    .apply();
+               .edit()
+               .putString(TOKEN_KEY, token)
+               .apply();
             onSuccess.onResponse(json);
         }, onError));
         queue.add(request.get());
@@ -87,10 +86,10 @@ public class Backend {
         params.put("matchingPassword", matchingPassword);
 
         ApiPostRequest request = new ApiPostRequest(requestUrl,
-                onSuccess::accept,
-                error -> onErrorHandler(error, errorListener),
-                token,
-                params);
+                                                    onSuccess::accept,
+                                                    error -> onErrorHandler(error, errorListener),
+                                                    token,
+                                                    params);
         queue.add(request);
     }
 
@@ -120,10 +119,10 @@ public class Backend {
         postParams.put("name", groceryList.getName());
 
         ApiPostRequest request = new ApiPostRequest(url + "/api/grocery-list/new",
-                onSuccess::accept,
-                error -> onErrorHandler(error, errorListener),
-                token,
-                postParams);
+                                                    onSuccess::accept,
+                                                    error -> onErrorHandler(error, errorListener),
+                                                    token,
+                                                    postParams);
         queue.add(request);
     }
 
@@ -138,10 +137,10 @@ public class Backend {
         String requestUrl = url + "/api/grocery-list/" + groceryListId + "/entry/new";
 
         ApiPostRequest request = new ApiPostRequest(requestUrl,
-                onSuccess::accept,
-                error -> onErrorHandler(error, errorListener),
-                token,
-                postParams);
+                                                    onSuccess::accept,
+                                                    error -> onErrorHandler(error, errorListener),
+                                                    token,
+                                                    postParams);
         queue.add(request);
     }
 
@@ -171,8 +170,8 @@ public class Backend {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
-                        new TypeReference<List<GroceryList>>() {
-                        }));
+                                                     new TypeReference<List<GroceryList>>() {
+                                                     }));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -191,8 +190,8 @@ public class Backend {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
-                        new TypeReference<List<GroceryListEntry>>() {
-                        }));
+                                                     new TypeReference<List<GroceryListEntry>>() {
+                                                     }));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -205,7 +204,7 @@ public class Backend {
         int code = error.networkResponse.statusCode;
 
         if (code == HttpURLConnection.HTTP_FORBIDDEN
-                || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+            || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // session invalid or expired
             // TODO: this is not working
             Intent showLogin = new Intent(ctx, LoginActivity.class);

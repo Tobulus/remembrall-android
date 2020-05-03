@@ -1,4 +1,4 @@
-package com.groceries.ui.basic;
+package com.groceries.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

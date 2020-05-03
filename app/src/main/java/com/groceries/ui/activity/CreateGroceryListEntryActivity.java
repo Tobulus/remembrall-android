@@ -1,4 +1,4 @@
-package com.groceries.ui.groceryListEntry;
+package com.groceries.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

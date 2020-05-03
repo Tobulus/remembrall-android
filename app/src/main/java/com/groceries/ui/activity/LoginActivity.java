@@ -1,4 +1,4 @@
-package com.groceries.ui.basic;
+package com.groceries.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.ui.groceryList.GroceryListsActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -60,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void switchToGroceryLists() {
-        Intent intent = new Intent(this, GroceryListsActivity.class);
+        Intent intent = new Intent(this, GroceriesActivity.class);
         startActivity(intent);
         finish();
     }
