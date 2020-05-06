@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.groceryListEntry.GroceryListEntriesActivity" />
         <activity android:name=".ui.activity.CreateGroceryListActivity" />
         <activity android:name=".ui.activity.CreateGroceryListEntryActivity" />
         <activity android:name=".ui.activity.RegistrationActivity" />

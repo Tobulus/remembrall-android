@@ -13,4 +13,6 @@
     <string name="create_grocerylist_save">Save</string>
     <string name="activity_registration_register">Register</string>
     <string name="activity_login_register">Register?</string>
+    <string name="navigation_lists">Lists</string>
+    <string name="navigation_invitations">Invitations</string>
 </resources>
