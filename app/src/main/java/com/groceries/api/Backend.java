@@ -1,7 +1,6 @@
 package com.groceries.api;
 
 import android.content.Context;
-import android.content.Intent;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -11,8 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
 import com.groceries.model.Invitation;
-
-import com.groceries.ui.activity.LoginActivity;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -207,8 +204,8 @@ public class Backend {
             || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
             // session invalid or expired
             // TODO: this is not working
-            Intent showLogin = new Intent(ctx, LoginActivity.class);
-            ctx.startActivity(showLogin);
+            //Intent showLogin = new Intent(ctx, LoginActivity.class);
+            //ctx.startActivity(showLogin);
             return;
         }
 

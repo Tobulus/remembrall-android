@@ -39,7 +39,7 @@ public class GroceryListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
             startActivityForResult(intent, LAUNCH_CREATE_ACTIVITY);
