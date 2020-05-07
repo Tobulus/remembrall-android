@@ -9,17 +9,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import com.android.volley.Response;
 import com.groceries.R;
-import com.groceries.ui.login.LoginFragment;
-
-import java.util.function.Consumer;
+import com.groceries.api.BackendProvider;
 
 public class RegistrationFragment extends Fragment {
 
-    private RegistrationFragmentInteractionListener mListener;
+    private RegistrationListener mListener;
+    private BackendProvider backendProvider;
 
     public RegistrationFragment() {
     }
@@ -33,8 +32,11 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        return inflater.inflate(R.layout.fragment_registration, container, false);
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         final EditText usernameEditText = view.findViewById(R.id.username);
         final EditText passwordEditText = view.findViewById(R.id.password);
         final EditText matchingPasswordEditText = view.findViewById(R.id.matchingPassword);
@@ -45,34 +47,35 @@ public class RegistrationFragment extends Fragment {
         loginButton.setEnabled(true);
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-
-            mListener.register(usernameEditText.getText().toString(),
-                               passwordEditText.getText().toString(),
-                               matchingPasswordEditText.getText().toString(),
-                               json -> {
-                                   loadingProgressBar.setVisibility(View.INVISIBLE);
-                                   switchToLogin();
-                               },
-                               error -> Toast.makeText(getContext(),
-                                                       "Failed:" + error.getMessage(),
-                                                       Toast.LENGTH_LONG).show());
+            backendProvider.getBackend()
+                           .register(usernameEditText.getText().toString(),
+                                     passwordEditText.getText().toString(),
+                                     matchingPasswordEditText.getText().toString(),
+                                     json -> {
+                                         loadingProgressBar.setVisibility(View.INVISIBLE);
+                                         mListener.onRegistrationComplete();
+                                     },
+                                     error -> {
+                                         loadingProgressBar.setVisibility(View.INVISIBLE);
+                                         Toast.makeText(getContext(),
+                                                        "Failed:" + error.getMessage(),
+                                                        Toast.LENGTH_LONG).show();
+                                     });
         });
-        return view;
-    }
-
-    private void switchToLogin() {
-        LoginFragment fragment = new LoginFragment();
-        FragmentTransaction transaction =
-                getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof RegistrationFragmentInteractionListener) {
-            mListener = (RegistrationFragmentInteractionListener) context;
+        if (context instanceof RegistrationListener) {
+            mListener = (RegistrationListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                                       + " must implement LoginFragmentInteractionListener");
+        }
+
+        if (context instanceof BackendProvider) {
+            backendProvider = (BackendProvider) context;
         } else {
             throw new RuntimeException(context.toString()
                                        + " must implement LoginFragmentInteractionListener");
@@ -83,13 +86,10 @@ public class RegistrationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        backendProvider = null;
     }
 
-    public interface RegistrationFragmentInteractionListener {
-        void register(String user,
-                      String password,
-                      String matchingPassword,
-                      Consumer<String> onSuccess,
-                      Response.ErrorListener errorListener);
+    public interface RegistrationListener {
+        void onRegistrationComplete();
     }
 }

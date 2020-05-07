@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.android.volley.Response;
 import com.groceries.R;
+import com.groceries.api.BackendProvider;
 import com.groceries.model.Invitation;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class InvitationFragment extends Fragment {
 
-    private InvitationFragmentInteractionListener mListener;
+    private BackendProvider backendProvider;
 
     public InvitationFragment() {
     }
@@ -39,9 +37,13 @@ public class InvitationFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mListener.loadInvitations(invitations -> recyclerView.setAdapter(new InvitationViewAdapter(
-                    invitations,
-                    mListener)), error -> {
+            List<Invitation> invitations = new ArrayList<>();
+            InvitationViewAdapter adapter = new InvitationViewAdapter(invitations);
+            recyclerView.setAdapter(adapter);
+            backendProvider.getBackend().getInvitations(i -> {
+                invitations.addAll(i);
+                adapter.notifyDataSetChanged();
+            }, error -> {
             });
         }
         return view;
@@ -50,26 +52,16 @@ public class InvitationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof InvitationFragmentInteractionListener) {
-            mListener = (InvitationFragmentInteractionListener) context;
+        if (context instanceof BackendProvider) {
+            backendProvider = (BackendProvider) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement BackendProvider");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-    }
-
-    public interface InvitationFragmentInteractionListener {
-        void ackInvitation(Invitation item);
-
-        void denyInvitation(Invitation item);
-
-        void loadInvitations(Consumer<List<Invitation>> listConsumer,
-                             Response.ErrorListener errorListener);
+        backendProvider = null;
     }
 }

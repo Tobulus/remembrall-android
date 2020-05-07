@@ -1,29 +1,29 @@
 package com.groceries.ui.groceryList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.volley.Response;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.groceries.R;
+import com.groceries.api.BackendProvider;
 import com.groceries.model.GroceryList;
 import com.groceries.ui.activity.CreateGroceryListActivity;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class GroceryListFragment extends Fragment {
 
-    private static final int LAUNCH_CREATE_ACTIVITY = 1;
-
-    private GroceryListFragmentInteractionListener mListener;
+    private GroceryListListener mListener;
+    private BackendProvider backendProvider;
 
     public GroceryListFragment() {
     }
@@ -39,32 +39,46 @@ public class GroceryListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
 
-        FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
-        fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
-            startActivityForResult(intent, LAUNCH_CREATE_ACTIVITY);
-        });
-
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mListener.loadGroceryLists(lists -> recyclerView.setAdapter(new GroceryListViewAdapter(
-                    lists,
-                    mListener)), error -> {
+            List<GroceryList> lists = new ArrayList<>();
+            GroceryListViewAdapter adapter = new GroceryListViewAdapter(lists, mListener);
+            recyclerView.setAdapter(adapter);
+            backendProvider.getBackend().getGroceryLists(l -> {
+                lists.addAll(l);
+                adapter.notifyDataSetChanged();
+            }, error -> {
             });
         }
+
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
+        fab.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof GroceryListFragmentInteractionListener) {
-            mListener = (GroceryListFragmentInteractionListener) context;
+
+        if (context instanceof GroceryListListener) {
+            mListener = (GroceryListListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                                       + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement GroceryListListener");
+        }
+
+        if (context instanceof BackendProvider) {
+            backendProvider = (BackendProvider) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement BackendProvider");
         }
     }
 
@@ -72,25 +86,10 @@ public class GroceryListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        backendProvider = null;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == LAUNCH_CREATE_ACTIVITY) {
-            if (resultCode == Activity.RESULT_OK) {
-                /*Intent intent = getIntent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                finish();
-                startActivity(intent);*/
-            }
-        }
-    }
-    public interface GroceryListFragmentInteractionListener {
-        void onClickGroceryList(GroceryList item);
-
-        void loadGroceryLists(Consumer<List<GroceryList>> listConsumer,
-                              Response.ErrorListener errorListener);
+    public interface GroceryListListener {
+        void onClick(GroceryList item);
     }
 }

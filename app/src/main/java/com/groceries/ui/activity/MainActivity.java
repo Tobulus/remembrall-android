@@ -9,31 +9,25 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
-import com.android.volley.Response;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.groceries.R;
 import com.groceries.api.Backend;
+import com.groceries.api.BackendProvider;
 import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
-import com.groceries.model.Invitation;
 import com.groceries.ui.groceryList.GroceryListFragment;
 import com.groceries.ui.groceryListEntry.GroceryListEntryFragment;
 import com.groceries.ui.invitation.InvitationFragment;
 import com.groceries.ui.login.LoginFragment;
 import com.groceries.ui.registration.RegistrationFragment;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity
-        implements GroceryListFragment.GroceryListFragmentInteractionListener,
-                   GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener,
-                   InvitationFragment.InvitationFragmentInteractionListener,
-                   LoginFragment.LoginFragmentInteractionListener,
-                   RegistrationFragment.RegistrationFragmentInteractionListener {
+        implements BackendProvider, GroceryListFragment.GroceryListListener,
+                   GroceryListEntryFragment.GroceryListEntryListener, LoginFragment.LoginListener,
+                   RegistrationFragment.RegistrationListener {
 
     private Backend backend;
 
@@ -43,29 +37,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.inflateMenu(R.menu.main_navigation_bottom);
-        navigation.setOnNavigationItemSelectedListener(menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.action_lists:
-                    showGroceryLists();
-                    break;
-                case R.id.action_invitations:
-                    showInvitations();
-                    break;
-            }
-            return true;
-        });
+        initNavigation();
 
         if (!backend.restoreSession()) {
-            showLogin();
+            initAndShowLoginRegistration();
             return;
         }
 
-        navigation.setVisibility(View.VISIBLE);
-        findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.navigation).setVisibility(View.VISIBLE);
-        findViewById(R.id.view_pager).setVisibility(View.INVISIBLE);
+        loginFulfilled();
 
         if (findViewById(R.id.main_fragment) != null) {
             if (savedInstanceState != null) {
@@ -79,7 +58,30 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showLogin() {
+    private void loginFulfilled() {
+        findViewById(R.id.navigation).setVisibility(View.VISIBLE);
+        findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.main_fragment).setVisibility(View.VISIBLE);
+        findViewById(R.id.view_pager).setVisibility(View.GONE);
+    }
+
+    private void initNavigation() {
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.inflateMenu(R.menu.main_navigation_bottom);
+        navigation.setOnNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.action_lists:
+                    showGroceryLists();
+                    break;
+                case R.id.action_invitations:
+                    showInvitations();
+                    break;
+            }
+            return true;
+        });
+    }
+
+    private void initAndShowLoginRegistration() {
         ViewPager pager = findViewById(R.id.view_pager);
         TabLayout tabs = findViewById(R.id.view_pager_tabs);
         LoginFragment loginFragment = new LoginFragment();
@@ -109,28 +111,21 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onClickGroceryList(GroceryList list) {
+    private void showGroceryListEntries(Long listId) {
         Bundle bundle = new Bundle();
-        bundle.putLong("id", list.getId());
-
         GroceryListEntryFragment fragment = new GroceryListEntryFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        bundle.putLong("id", listId);
         fragment.setArguments(bundle);
+
         transaction.replace(R.id.main_fragment, fragment);
-        transaction.addToBackStack("showListEntries");
         transaction.commit();
     }
 
     @Override
-    public void loadGroceryLists(Consumer<List<GroceryList>> listConsumer,
-                                 Response.ErrorListener errorListener) {
-        backend.getGroceryLists(listConsumer, errorListener);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -138,57 +133,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public Backend getBackend() {
+        return backend;
+    }
+
+    @Override
+    public void onClick(GroceryList item) {
+        showGroceryListEntries(item.getId());
+    }
+
+    @Override
     public void onClick(GroceryListEntry entry) {
-    }
-
-    @Override
-    public void toggleChecked(GroceryListEntry entry, Runnable onError) {
-        entry.setChecked(!entry.isChecked());
-        backend.updateGroceryListEntry(entry.getGroceryList().getId(), entry, s -> {
-        }, e -> onError.run());
-    }
-
-    @Override
-    public void loadListEntries(Long groceryListId,
-                                Consumer<List<GroceryListEntry>> listConsumer,
-                                Response.ErrorListener errorListener) {
-        backend.getGroceryListEntries(groceryListId, listConsumer, errorListener);
-    }
-
-    @Override
-    public void ackInvitation(Invitation item) {
 
     }
 
     @Override
-    public void denyInvitation(Invitation item) {
-
+    public void onLoginComplete() {
+        loginFulfilled();
+        showGroceryLists();
     }
 
     @Override
-    public void loadInvitations(Consumer<List<Invitation>> listConsumer,
-                                Response.ErrorListener errorListener) {
-        backend.getInvitations(listConsumer, errorListener);
+    public void onRegistrationComplete() {
+        ViewPager pager = findViewById(R.id.view_pager);
+        pager.setCurrentItem(0);
     }
 
-    @Override
-    public void login(String username,
-                      String password,
-                      Response.Listener<JSONObject> onSuccess,
-                      Response.ErrorListener onError) {
-        backend.login(username, password, onSuccess, onError);
-    }
-
-    @Override
-    public void register(String user,
-                         String password,
-                         String matchingPassword,
-                         Consumer<String> onSuccess,
-                         Response.ErrorListener errorListener) {
-        backend.register(user, password, matchingPassword, onSuccess, errorListener);
-    }
-
-    class PagerAdapter extends FragmentPagerAdapter {
+    static class PagerAdapter extends FragmentPagerAdapter {
 
         private ArrayList<Fragment> fragments = new ArrayList<>();
 

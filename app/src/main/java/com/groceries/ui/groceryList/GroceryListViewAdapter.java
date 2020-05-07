@@ -14,10 +14,10 @@ public class GroceryListViewAdapter
         extends RecyclerView.Adapter<GroceryListViewAdapter.GroceryListHolder> {
 
     private final List<GroceryList> groceryLists;
-    private final GroceryListFragment.GroceryListFragmentInteractionListener groceriesActivity;
+    private final GroceryListFragment.GroceryListListener groceriesActivity;
 
-    public GroceryListViewAdapter(List<GroceryList> items,
-                                  GroceryListFragment.GroceryListFragmentInteractionListener listener) {
+    GroceryListViewAdapter(List<GroceryList> items,
+                           GroceryListFragment.GroceryListListener listener) {
         groceryLists = items;
         groceriesActivity = listener;
     }
@@ -33,7 +33,7 @@ public class GroceryListViewAdapter
     public void onBindViewHolder(final GroceryListHolder holder, int position) {
         holder.groceryList = groceryLists.get(position);
         holder.name.setText(groceryLists.get(position).getName());
-        holder.view.setOnClickListener(v -> groceriesActivity.onClickGroceryList(holder.groceryList));
+        holder.view.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class GroceryListViewAdapter
         return groceryLists.size();
     }
 
-    public class GroceryListHolder extends RecyclerView.ViewHolder {
+    public static class GroceryListHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
 

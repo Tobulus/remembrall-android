@@ -5,8 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
+import com.groceries.api.BackendProvider;
 import com.groceries.model.GroceryListEntry;
 
 import java.util.List;
@@ -15,15 +17,19 @@ public class GroceryListEntryViewAdapter
         extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
     private final List<GroceryListEntry> groceryListEntries;
-    private final GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener
+    private final GroceryListEntryFragment.GroceryListEntryListener
             groceriesActivity;
+    private final BackendProvider backendProvider;
 
-    public GroceryListEntryViewAdapter(List<GroceryListEntry> items,
-                                       GroceryListEntryFragment.GroceryListEntryFragmentInteractionListener listener) {
+    GroceryListEntryViewAdapter(List<GroceryListEntry> items,
+                                GroceryListEntryFragment.GroceryListEntryListener listener,
+                                BackendProvider provider) {
         groceryListEntries = items;
         groceriesActivity = listener;
+        backendProvider = provider;
     }
 
+    @NonNull
     @Override
     public GroceryListEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -37,8 +43,15 @@ public class GroceryListEntryViewAdapter
         holder.name.setText(holder.groceryListEntry.getName());
         holder.name.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryListEntry));
         holder.checked.setChecked(holder.groceryListEntry.isChecked());
-        holder.checked.setOnClickListener(v -> groceriesActivity.toggleChecked(holder.groceryListEntry,
-                                                                               holder.checked::toggle));
+        holder.checked.setOnClickListener(v -> {
+            holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
+            backendProvider.getBackend()
+                           .updateGroceryListEntry(holder.groceryListEntry.getGroceryList().getId(),
+                                                   holder.groceryListEntry,
+                                                   response -> {
+                                                   },
+                                                   e -> holder.checked.toggle());
+        });
     }
 
     @Override
@@ -46,20 +59,21 @@ public class GroceryListEntryViewAdapter
         return groceryListEntries.size();
     }
 
-    public class GroceryListEntryHolder extends RecyclerView.ViewHolder {
+    public static class GroceryListEntryHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
         public final CheckBox checked;
 
         public GroceryListEntry groceryListEntry;
 
-        public GroceryListEntryHolder(View view) {
+        GroceryListEntryHolder(View view) {
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
             checked = view.findViewById(R.id.checked);
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + name.getText() + "'";

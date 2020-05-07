@@ -4,9 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.groceries.R;
 import com.groceries.model.Invitation;
 
@@ -16,12 +14,9 @@ public class InvitationViewAdapter
         extends RecyclerView.Adapter<InvitationViewAdapter.InvitationHolder> {
 
     private final List<Invitation> invitations;
-    private final InvitationFragment.InvitationFragmentInteractionListener invitationActivity;
 
-    public InvitationViewAdapter(List<Invitation> items,
-                                 InvitationFragment.InvitationFragmentInteractionListener listener) {
+    public InvitationViewAdapter(List<Invitation> items) {
         invitations = items;
-        invitationActivity = listener;
     }
 
     @Override
