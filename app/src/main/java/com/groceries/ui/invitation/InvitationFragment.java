@@ -38,7 +38,7 @@ public class InvitationFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             List<Invitation> invitations = new ArrayList<>();
-            InvitationViewAdapter adapter = new InvitationViewAdapter(invitations);
+            InvitationViewAdapter adapter = new InvitationViewAdapter(invitations, backendProvider);
             recyclerView.setAdapter(adapter);
             backendProvider.getBackend().getInvitations(i -> {
                 invitations.addAll(i);

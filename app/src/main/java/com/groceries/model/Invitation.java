@@ -1,14 +1,19 @@
 package com.groceries.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Invitation {
 
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("title")
-    private String title;
+    @JsonProperty("sender")
+    private User sender;
+
+    @JsonProperty("groceryList")
+    private GroceryList groceryList;
 
     public Long getId() {
         return id;
@@ -18,11 +23,19 @@ public class Invitation {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public User getSender() {
+        return sender;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSender(User sender) {
+        this.sender = sender;
+    }
+
+    public GroceryList getGroceryList() {
+        return groceryList;
+    }
+
+    public void setGroceryList(GroceryList groceryList) {
+        this.groceryList = groceryList;
     }
 }

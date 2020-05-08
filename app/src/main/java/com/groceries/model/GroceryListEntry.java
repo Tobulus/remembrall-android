@@ -1,10 +1,12 @@
 package com.groceries.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GroceryListEntry {
 
     @JsonProperty("id")
