@@ -3,6 +3,7 @@ package com.groceries.ui.groceryList;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
@@ -33,7 +34,7 @@ public class GroceryListViewAdapter
     public void onBindViewHolder(final GroceryListHolder holder, int position) {
         holder.groceryList = groceryLists.get(position);
         holder.name.setText(groceryLists.get(position).getName());
-        holder.view.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
+        holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
     }
 
     @Override
@@ -44,6 +45,7 @@ public class GroceryListViewAdapter
     public static class GroceryListHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
+        public final LinearLayout parent;
 
         public GroceryList groceryList;
 
@@ -51,6 +53,7 @@ public class GroceryListViewAdapter
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
+            parent = view.findViewById(R.id.parentLayout);
         }
 
         @Override
