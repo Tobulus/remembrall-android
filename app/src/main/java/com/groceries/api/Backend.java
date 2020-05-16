@@ -34,6 +34,7 @@ public class Backend {
 
     private String token;
 
+    // TODO: better approach for the loginlistener?
     public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);

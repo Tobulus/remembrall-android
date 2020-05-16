@@ -5,22 +5,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.model.GroceryList;
+import com.groceries.model.GroceryListModel;
 
 import java.util.List;
 
 public class GroceryListViewAdapter
         extends RecyclerView.Adapter<GroceryListViewAdapter.GroceryListHolder> {
 
-    private final List<GroceryList> groceryLists;
+    private final GroceryListModel groceryListModel;
     private final GroceryListFragment.GroceryListListener groceriesActivity;
 
-    GroceryListViewAdapter(List<GroceryList> items,
+    GroceryListViewAdapter(LifecycleOwner owner, GroceryListModel items,
                            GroceryListFragment.GroceryListListener listener) {
-        groceryLists = items;
+        groceryListModel = items;
         groceriesActivity = listener;
+        items.getLiveData().observe(owner, groceryLists -> this.notifyDataSetChanged());
     }
 
     @Override
@@ -31,15 +35,20 @@ public class GroceryListViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(final GroceryListHolder holder, int position) {
-        holder.groceryList = groceryLists.get(position);
-        holder.name.setText(groceryLists.get(position).getName());
-        holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
+    public void onBindViewHolder(@NonNull final GroceryListHolder holder, int position) {
+        List<GroceryList> groceryLists = groceryListModel.getLiveData().getValue();
+        if (groceryLists != null) {
+            holder.groceryList = groceryLists.get(position);
+            holder.name.setText(groceryLists.get(position).getName());
+            holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return groceryLists.size();
+        return groceryListModel.getLiveData().getValue() != null ?
+               groceryListModel.getLiveData().getValue().size() :
+               0;
     }
 
     public static class GroceryListHolder extends RecyclerView.ViewHolder {

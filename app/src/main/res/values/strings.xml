@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">groceries</string>
+    <string name="app_name">RememberMe</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
