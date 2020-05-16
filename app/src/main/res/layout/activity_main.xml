@@ -15,10 +15,25 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <FrameLayout
-            android:id="@+id/main_fragment"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent">
+
+        <LinearLayout
+                android:id="@+id/main_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floating_plus_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add_black_24dp"
+                android:visibility="invisible" />
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             xmlns:app="http://schema.android.com/apk/res/res-auto"
@@ -28,13 +43,4 @@
             android:layout_gravity="start"
             android:visibility="invisible"
             app:menu="@menu/main_navigation_bottom" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_plus_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_add_black_24dp"
-            android:visibility="invisible" />
 </LinearLayout>

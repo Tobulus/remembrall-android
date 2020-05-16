@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity
     private void loginFulfilled() {
         findViewById(R.id.navigation).setVisibility(View.VISIBLE);
         findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.main_fragment).setVisibility(View.VISIBLE);
-        findViewById(R.id.view_pager).setVisibility(View.GONE);
     }
 
     private void initNavigation() {
