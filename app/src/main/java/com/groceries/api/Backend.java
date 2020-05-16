@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListEntry;
 import com.groceries.model.Invitation;
+import com.groceries.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -26,16 +27,18 @@ public class Backend {
     private final static String TOKEN_KEY = "token";
 
     private final Context ctx;
+    private final LoginRequiredListener mListener;
 
     private RequestQueue queue;
     private String url;
 
     private String token;
 
-    public Backend(Context ctx) {
+    public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);
         this.url = "http://192.168.0.248:8080";
+        this.mListener = listener;
     }
 
     public boolean restoreSession() {
@@ -202,10 +205,7 @@ public class Backend {
 
         if (code == HttpURLConnection.HTTP_FORBIDDEN
             || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            // session invalid or expired
-            // TODO: this is not working
-            //Intent showLogin = new Intent(ctx, LoginActivity.class);
-            //ctx.startActivity(showLogin);
+            mListener.onLoginRequired();
             return;
         }
 

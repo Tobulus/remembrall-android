@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.groceries.R;
 import com.groceries.api.Backend;
 import com.groceries.api.BackendProvider;
@@ -20,21 +16,20 @@ import com.groceries.model.GroceryListEntry;
 import com.groceries.ui.groceryList.GroceryListFragment;
 import com.groceries.ui.groceryListEntry.GroceryListEntryFragment;
 import com.groceries.ui.invitation.InvitationFragment;
-import com.groceries.ui.login.LoginFragment;
-import com.groceries.ui.registration.RegistrationFragment;
-
-import java.util.ArrayList;
+import com.groceries.ui.login_registration.LoginFragment;
+import com.groceries.ui.login_registration.LoginRegistrationFragment;
+import com.groceries.ui.login_registration.RegistrationFragment;
 
 public class MainActivity extends AppCompatActivity
         implements BackendProvider, GroceryListFragment.GroceryListListener,
                    GroceryListEntryFragment.GroceryListEntryListener, LoginFragment.LoginListener,
-                   RegistrationFragment.RegistrationListener {
+                   RegistrationFragment.RegistrationListener, LoginRequiredListener {
 
     private Backend backend;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        backend = new Backend(getApplicationContext());
+        backend = new Backend(getApplicationContext(), this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = findViewById(R.id.toolbar);
@@ -43,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         initNavigation();
 
         if (!backend.restoreSession()) {
-            initAndShowLoginRegistration();
+            showLoginRegistration();
             return;
         }
 
@@ -84,25 +79,24 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void initAndShowLoginRegistration() {
-        ViewPager pager = findViewById(R.id.view_pager);
-        TabLayout tabs = findViewById(R.id.view_pager_tabs);
-        LoginFragment loginFragment = new LoginFragment();
-        RegistrationFragment registrationFragment = new RegistrationFragment();
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        tabs.setupWithViewPager(pager);
+    private void showLoginRegistration() {
+        LoginRegistrationFragment fragment = new LoginRegistrationFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment, fragment);
+        transaction.commit();
+    }
 
-        adapter.add(loginFragment);
-        adapter.add(registrationFragment);
-        pager.setAdapter(adapter);
-        pager.setVisibility(View.VISIBLE);
+    private void showLogin() {
+        LoginFragment fragment = new LoginFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.main_fragment, fragment);
+        transaction.commit();
     }
 
     private void showInvitations() {
         InvitationFragment fragment = new InvitationFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment, fragment);
-        //transaction.addToBackStack("showLists");
         transaction.commit();
     }
 
@@ -110,7 +104,6 @@ public class MainActivity extends AppCompatActivity
         GroceryListFragment fragment = new GroceryListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment, fragment);
-        //transaction.addToBackStack("showInvitations");
         transaction.commit();
     }
 
@@ -162,35 +155,8 @@ public class MainActivity extends AppCompatActivity
         pager.setCurrentItem(0);
     }
 
-    static class PagerAdapter extends FragmentPagerAdapter {
-
-        private ArrayList<Fragment> fragments = new ArrayList<>();
-
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        void add(Fragment fragment) {
-            this.fragments.add(fragment);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (position == 0) {
-                return "Login";
-            } else {
-                return "Registration";
-            }
-        }
+    @Override
+    public void onLoginRequired() {
+        showLogin();
     }
 }

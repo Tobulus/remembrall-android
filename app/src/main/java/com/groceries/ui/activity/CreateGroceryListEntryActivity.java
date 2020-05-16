@@ -20,7 +20,8 @@ public class CreateGroceryListEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_grocerylist_entry);
 
-        backend = new Backend(getApplicationContext());
+        // TODO:
+        backend = new Backend(getApplicationContext(), null);
         groceryListId = getIntent().getExtras().getLong("id");
 
         final TextView name = findViewById(R.id.name);

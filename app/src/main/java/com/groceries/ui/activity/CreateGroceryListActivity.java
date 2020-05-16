@@ -16,7 +16,8 @@ public class CreateGroceryListActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        backend = new Backend(getApplicationContext());
+        //TODO
+        backend = new Backend(getApplicationContext(), null);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_grocerylist);

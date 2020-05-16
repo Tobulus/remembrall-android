@@ -18,29 +18,7 @@
             android:id="@+id/main_fragment"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:visibility="invisible" />
-
-    <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
-
-        <com.google.android.material.tabs.TabLayout
-                android:id="@+id/view_pager_tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-    </androidx.viewpager.widget.ViewPager>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_plus_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/ic_add_black_24dp"
-            android:layout_margin="16dp"
-            android:visibility="invisible" />
+            android:layout_width="match_parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             xmlns:app="http://schema.android.com/apk/res/res-auto"
@@ -50,4 +28,13 @@
             android:layout_gravity="start"
             android:visibility="invisible"
             app:menu="@menu/main_navigation_bottom" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add_black_24dp"
+            android:visibility="invisible" />
 </LinearLayout>

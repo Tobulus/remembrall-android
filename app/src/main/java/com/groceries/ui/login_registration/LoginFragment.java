@@ -1,4 +1,4 @@
-package com.groceries.ui.login;
+package com.groceries.ui.login_registration;
 
 import android.content.Context;
 import android.os.Bundle;
