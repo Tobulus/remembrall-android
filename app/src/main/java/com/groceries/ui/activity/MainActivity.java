@@ -10,9 +10,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.api.BackendProvider;
-import com.groceries.model.GroceryList;
-import com.groceries.model.GroceryListEntry;
+import com.groceries.api.NetworkResponseHandler;
+import com.groceries.model.pojo.GroceryList;
+import com.groceries.model.pojo.GroceryListEntry;
+import com.groceries.servicelocater.ServiceLocator;
 import com.groceries.ui.groceryList.GroceryListFragment;
 import com.groceries.ui.groceryListEntry.GroceryListEntryFragment;
 import com.groceries.ui.invitation.InvitationFragment;
@@ -21,23 +22,23 @@ import com.groceries.ui.login_registration.LoginRegistrationFragment;
 import com.groceries.ui.login_registration.RegistrationFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements BackendProvider, GroceryListFragment.GroceryListListener,
+        implements GroceryListFragment.GroceryListListener,
                    GroceryListEntryFragment.GroceryListEntryListener, LoginFragment.LoginListener,
                    RegistrationFragment.RegistrationListener, LoginRequiredListener {
 
-    private Backend backend;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        backend = new Backend(getApplicationContext(), this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+        ServiceLocator.getInstance().get(NetworkResponseHandler.class).register(this);
+
         initNavigation();
 
-        if (!backend.restoreSession()) {
+        if (!ServiceLocator.getInstance().get(Backend.class).restoreSession()) {
             showLoginRegistration();
             return;
         }
@@ -124,11 +125,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
-    }
-
-    @Override
-    public Backend getBackend() {
-        return backend;
     }
 
     @Override

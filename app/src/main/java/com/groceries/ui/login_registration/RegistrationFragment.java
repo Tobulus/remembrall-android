@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.groceries.R;
-import com.groceries.api.BackendProvider;
+import com.groceries.api.Backend;
+import com.groceries.servicelocater.ServiceLocator;
 
 public class RegistrationFragment extends Fragment {
 
     private RegistrationListener mListener;
-    private BackendProvider backendProvider;
 
     public RegistrationFragment() {
     }
@@ -47,8 +47,8 @@ public class RegistrationFragment extends Fragment {
         loginButton.setEnabled(true);
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            backendProvider.getBackend()
-                           .register(usernameEditText.getText().toString(),
+            ServiceLocator.getInstance().get(Backend.class)
+                          .register(usernameEditText.getText().toString(),
                                      passwordEditText.getText().toString(),
                                      matchingPasswordEditText.getText().toString(),
                                      json -> {
@@ -74,19 +74,12 @@ public class RegistrationFragment extends Fragment {
                                        + " must implement LoginFragmentInteractionListener");
         }
 
-        if (context instanceof BackendProvider) {
-            backendProvider = (BackendProvider) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                                       + " must implement LoginFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        backendProvider = null;
     }
 
     public interface RegistrationListener {

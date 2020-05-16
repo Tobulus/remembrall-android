@@ -5,22 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
-import com.groceries.api.BackendProvider;
-import com.groceries.model.Invitation;
+import com.groceries.api.Backend;
+import com.groceries.model.InvitationModel;
+import com.groceries.model.pojo.Invitation;
+import com.groceries.servicelocater.ServiceLocator;
 
 import java.util.List;
 
 public class InvitationViewAdapter
         extends RecyclerView.Adapter<InvitationViewAdapter.InvitationHolder> {
 
-    private final List<Invitation> invitations;
-    private final BackendProvider backendProvider;
+    private final InvitationModel invitationModel;
 
-    public InvitationViewAdapter(List<Invitation> items, BackendProvider provider) {
-        invitations = items;
-        backendProvider = provider;
+    public InvitationViewAdapter(LifecycleOwner owner, InvitationModel invitationModel) {
+        this.invitationModel = invitationModel;
+        invitationModel.getLiveData().observe(owner, invitations -> this.notifyDataSetChanged());
     }
 
     @Override
@@ -32,30 +34,37 @@ public class InvitationViewAdapter
 
     @Override
     public void onBindViewHolder(final InvitationHolder holder, int position) {
-        holder.invitation = invitations.get(position);
-        holder.title.setText(invitations.get(position).getSender().getUsername()
-                             + " invites you to list "
-                             + invitations.get(position).getGroceryList().getName());
+        List<Invitation> invitations = invitationModel.getLiveData().getValue();
+        if (invitations != null) {
+            holder.invitation = invitations.get(position);
+            holder.title.setText(invitations.get(position).getSender().getUsername()
+                                 + " invites you to list "
+                                 + invitations.get(position).getGroceryList().getName());
 
-        holder.ack.setOnClickListener(v -> backendProvider.getBackend()
-                                                          .acknowledge(holder.invitation.getId(),
-                                                                       s -> invitations.remove(
-                                                                               position),
-                                                                       e -> {
+            holder.ack.setOnClickListener(v -> ServiceLocator.getInstance()
+                                                             .get(Backend.class)
+                                                             .acknowledge(holder.invitation.getId(),
+                                                                          s -> invitations.remove(
+                                                                                  position),
+                                                                          e -> {
 
-                                                                       }));
+                                                                          }));
 
-        holder.deny.setOnClickListener(v -> backendProvider.getBackend()
-                                                           .deny(holder.invitation.getId(),
-                                                                 s -> invitations.remove(position),
-                                                                 e -> {
+            holder.deny.setOnClickListener(v -> ServiceLocator.getInstance()
+                                                              .get(Backend.class)
+                                                              .deny(holder.invitation.getId(),
+                                                                    s -> invitations.remove(position),
+                                                                    e -> {
 
-                                                                 }));
+                                                                    }));
+        }
     }
 
     @Override
     public int getItemCount() {
-        return invitations.size();
+        return invitationModel.getLiveData().getValue() != null ?
+               invitationModel.getLiveData().getValue().size() :
+               0;
     }
 
     public class InvitationHolder extends RecyclerView.ViewHolder {

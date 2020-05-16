@@ -14,14 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.groceries.R;
-import com.groceries.model.GroceryList;
 import com.groceries.model.GroceryListModel;
+import com.groceries.model.pojo.GroceryList;
 import com.groceries.ui.activity.CreateGroceryListActivity;
 
 public class GroceryListFragment extends Fragment {
 
     private GroceryListListener mListener;
-    private GroceryListModel model;
 
     public GroceryListFragment() {
     }
@@ -36,7 +35,7 @@ public class GroceryListFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
-        model = ViewModelProviders.of(this).get(GroceryListModel.class);
+        GroceryListModel model = ViewModelProviders.of(this).get(GroceryListModel.class);
 
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

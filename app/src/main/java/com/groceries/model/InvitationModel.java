@@ -6,17 +6,17 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.groceries.api.Backend;
-import com.groceries.model.pojo.GroceryList;
+import com.groceries.model.pojo.Invitation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroceryListModel extends AndroidViewModel {
+public class InvitationModel extends AndroidViewModel {
 
-    private final MutableLiveData<List<GroceryList>> liveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Invitation>> liveData = new MutableLiveData<>();
     private Backend backend;
 
-    public GroceryListModel(@NonNull Application application) {
+    public InvitationModel(@NonNull Application application) {
         super(application);
         backend = new Backend(application.getApplicationContext(), null);
         liveData.setValue(new ArrayList<>());
@@ -24,11 +24,11 @@ public class GroceryListModel extends AndroidViewModel {
     }
 
     private void loadDataFromBackend() {
-        backend.getGroceryLists(liveData::setValue, error -> {
+        backend.getInvitations(liveData::setValue, error -> {
         });
     }
 
-    public LiveData<List<GroceryList>> getLiveData() {
+    public LiveData<List<Invitation>> getLiveData() {
         return liveData;
     }
 }

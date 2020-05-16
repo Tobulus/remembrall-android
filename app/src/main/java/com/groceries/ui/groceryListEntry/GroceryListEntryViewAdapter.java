@@ -6,27 +6,29 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
-import com.groceries.api.BackendProvider;
-import com.groceries.model.GroceryListEntry;
+import com.groceries.api.Backend;
+import com.groceries.model.GroceryListEntryModel;
+import com.groceries.model.pojo.GroceryListEntry;
+import com.groceries.servicelocater.ServiceLocator;
 
 import java.util.List;
 
 public class GroceryListEntryViewAdapter
         extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
-    private final List<GroceryListEntry> groceryListEntries;
+    private final GroceryListEntryModel groceryListEntryModel;
     private final GroceryListEntryFragment.GroceryListEntryListener
             groceriesActivity;
-    private final BackendProvider backendProvider;
 
-    GroceryListEntryViewAdapter(List<GroceryListEntry> items,
-                                GroceryListEntryFragment.GroceryListEntryListener listener,
-                                BackendProvider provider) {
-        groceryListEntries = items;
+    GroceryListEntryViewAdapter(LifecycleOwner owner,
+                                GroceryListEntryModel model,
+                                GroceryListEntryFragment.GroceryListEntryListener listener) {
+        groceryListEntryModel = model;
         groceriesActivity = listener;
-        backendProvider = provider;
+        model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
     }
 
     @NonNull
@@ -39,24 +41,31 @@ public class GroceryListEntryViewAdapter
 
     @Override
     public void onBindViewHolder(final GroceryListEntryHolder holder, int position) {
-        holder.groceryListEntry = groceryListEntries.get(position);
-        holder.name.setText(holder.groceryListEntry.getName());
-        holder.name.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryListEntry));
-        holder.checked.setChecked(holder.groceryListEntry.isChecked());
-        holder.checked.setOnClickListener(v -> {
-            holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
-            backendProvider.getBackend()
-                           .updateGroceryListEntry(holder.groceryListEntry.getGroceryList().getId(),
-                                                   holder.groceryListEntry,
-                                                   response -> {
-                                                   },
-                                                   e -> holder.checked.toggle());
-        });
+        List<GroceryListEntry> groceryListEntries = groceryListEntryModel.getLiveData().getValue();
+        if (groceryListEntries != null) {
+            holder.groceryListEntry = groceryListEntries.get(position);
+            holder.name.setText(holder.groceryListEntry.getName());
+            holder.name.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryListEntry));
+            holder.checked.setChecked(holder.groceryListEntry.isChecked());
+            holder.checked.setOnClickListener(v -> {
+                holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
+                ServiceLocator.getInstance()
+                              .get(Backend.class)
+                              .updateGroceryListEntry(holder.groceryListEntry.getGroceryList()
+                                                                             .getId(),
+                                                      holder.groceryListEntry,
+                                                      response -> {
+                                                      },
+                                                      e -> holder.checked.toggle());
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return groceryListEntries.size();
+        return groceryListEntryModel.getLiveData().getValue() != null ?
+               groceryListEntryModel.getLiveData().getValue().size() :
+               0;
     }
 
     public static class GroceryListEntryHolder extends RecyclerView.ViewHolder {

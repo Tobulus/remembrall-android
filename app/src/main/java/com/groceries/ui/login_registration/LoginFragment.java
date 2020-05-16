@@ -11,12 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.groceries.R;
-import com.groceries.api.BackendProvider;
+import com.groceries.api.Backend;
+import com.groceries.servicelocater.ServiceLocator;
 
 public class LoginFragment extends Fragment {
 
     private LoginListener mListener;
-    private BackendProvider backendProvider;
 
     public LoginFragment() {
     }
@@ -42,8 +42,10 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            backendProvider.getBackend().login(usernameEditText.getText().toString(),
-                                               passwordEditText.getText().toString(),
+            ServiceLocator.getInstance()
+                          .get(Backend.class)
+                          .login(usernameEditText.getText().toString(),
+                                 passwordEditText.getText().toString(),
                             json -> {
                                 loadingProgressBar.setVisibility(View.INVISIBLE);
                                 mListener.onLoginComplete();
@@ -60,13 +62,6 @@ public class LoginFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof BackendProvider) {
-            backendProvider = (BackendProvider) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                                       + " must implement LoginFragmentInteractionListener");
-        }
-
         if (context instanceof LoginListener) {
             mListener = (LoginListener) context;
         } else {
@@ -77,7 +72,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        backendProvider = null;
         mListener = null;
     }
 

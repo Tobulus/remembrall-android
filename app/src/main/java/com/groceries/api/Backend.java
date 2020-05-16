@@ -7,9 +7,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.groceries.model.GroceryList;
-import com.groceries.model.GroceryListEntry;
-import com.groceries.model.Invitation;
+import com.groceries.model.pojo.GroceryList;
+import com.groceries.model.pojo.GroceryListEntry;
+import com.groceries.model.pojo.Invitation;
 import com.groceries.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
 
@@ -27,19 +27,18 @@ public class Backend {
     private final static String TOKEN_KEY = "token";
 
     private final Context ctx;
-    private final LoginRequiredListener mListener;
+    private final LoginRequiredListener loginRequiredListener;
 
     private RequestQueue queue;
     private String url;
 
     private String token;
 
-    // TODO: better approach for the loginlistener?
     public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);
         this.url = "http://192.168.0.248:8080";
-        this.mListener = listener;
+        this.loginRequiredListener = listener;
     }
 
     public boolean restoreSession() {
@@ -206,7 +205,7 @@ public class Backend {
 
         if (code == HttpURLConnection.HTTP_FORBIDDEN
             || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            mListener.onLoginRequired();
+            loginRequiredListener.onLoginRequired();
             return;
         }
 

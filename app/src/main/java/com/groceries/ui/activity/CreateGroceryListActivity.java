@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.model.GroceryList;
+import com.groceries.model.pojo.GroceryList;
 
 public class CreateGroceryListActivity extends AppCompatActivity {
 
