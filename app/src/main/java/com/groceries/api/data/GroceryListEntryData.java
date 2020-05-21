@@ -1,4 +1,4 @@
-package com.groceries.model.pojo;
+package com.groceries.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GroceryListEntry {
+public class GroceryListEntryData {
 
     @JsonProperty("id")
     private Long id;
@@ -19,7 +19,7 @@ public class GroceryListEntry {
     private boolean checked;
 
     @JsonProperty("groceryList")
-    private GroceryList groceryList;
+    private GroceryListData groceryList;
 
     public Long getId() {
         return id;
@@ -45,11 +45,11 @@ public class GroceryListEntry {
         this.checked = checked;
     }
 
-    public GroceryList getGroceryList() {
+    public GroceryListData getGroceryList() {
         return groceryList;
     }
 
-    public void setGroceryList(GroceryList groceryList) {
+    public void setGroceryList(GroceryListData groceryList) {
         this.groceryList = groceryList;
     }
 
@@ -59,5 +59,15 @@ public class GroceryListEntry {
         map.put("name", name);
         map.put("checked", Boolean.toString(checked));
         return map;
+    }
+
+    public com.groceries.model.database.GroceryListEntry toEntity() {
+        com.groceries.model.database.GroceryListEntry entity =
+                new com.groceries.model.database.GroceryListEntry();
+        entity.setId(id);
+        entity.setName(name);
+        entity.setChecked(checked);
+        entity.setGroceryList(getGroceryList().getId());
+        return entity;
     }
 }

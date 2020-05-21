@@ -1,10 +1,10 @@
-package com.groceries.model.pojo;
+package com.groceries.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GroceryList {
+public class GroceryListData {
 
     @JsonProperty("id")
     private Long id;
@@ -48,5 +48,15 @@ public class GroceryList {
 
     public void setNumberOfCheckedEntries(Integer numberOfCheckedEntries) {
         this.numberOfCheckedEntries = numberOfCheckedEntries;
+    }
+
+    public com.groceries.model.database.GroceryList toEntity() {
+        com.groceries.model.database.GroceryList entity =
+                new com.groceries.model.database.GroceryList();
+        entity.setId(id);
+        entity.setName(name);
+        entity.setNumberOfCheckedEntries(numberOfCheckedEntries);
+        entity.setNumberOfEntries(numberOfEntries);
+        return entity;
     }
 }

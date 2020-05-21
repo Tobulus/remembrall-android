@@ -3,7 +3,6 @@ package com.groceries.model.database.repository;
 import androidx.room.Dao;
 import androidx.room.Query;
 import androidx.room.Transaction;
-
 import com.groceries.model.database.GroceryList;
 
 import java.util.List;

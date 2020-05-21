@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.groceries.R;
-import com.groceries.model.GroceryListModel;
-import com.groceries.model.pojo.GroceryList;
+import com.groceries.model.database.GroceryList;
+import com.groceries.model.view.GroceryListModel;
 import com.groceries.ui.activity.CreateGroceryListActivity;
 
 public class GroceryListFragment extends Fragment {

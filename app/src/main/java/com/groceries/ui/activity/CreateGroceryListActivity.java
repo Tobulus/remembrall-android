@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.model.pojo.GroceryList;
+import com.groceries.api.data.GroceryListData;
 
 public class CreateGroceryListActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class CreateGroceryListActivity extends AppCompatActivity {
         save.setEnabled(true);
 
         save.setOnClickListener(v -> {
-            GroceryList groceryList = new GroceryList();
+            GroceryListData groceryList = new GroceryListData();
             groceryList.setName(name.getText().toString());
             backend.createGroceryList(groceryList,
                                       json -> {

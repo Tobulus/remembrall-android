@@ -1,19 +1,19 @@
-package com.groceries.model.pojo;
+package com.groceries.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Invitation {
+public class InvitationData {
 
     @JsonProperty("id")
     private Long id;
 
     @JsonProperty("sender")
-    private User sender;
+    private UserData sender;
 
     @JsonProperty("groceryList")
-    private GroceryList groceryList;
+    private GroceryListData groceryList;
 
     public Long getId() {
         return id;
@@ -23,19 +23,19 @@ public class Invitation {
         this.id = id;
     }
 
-    public User getSender() {
+    public UserData getSender() {
         return sender;
     }
 
-    public void setSender(User sender) {
+    public void setSender(UserData sender) {
         this.sender = sender;
     }
 
-    public GroceryList getGroceryList() {
+    public GroceryListData getGroceryList() {
         return groceryList;
     }
 
-    public void setGroceryList(GroceryList groceryList) {
+    public void setGroceryList(GroceryListData groceryList) {
         this.groceryList = groceryList;
     }
 }

@@ -11,9 +11,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groceries.R;
 import com.groceries.api.Backend;
 import com.groceries.api.NetworkResponseHandler;
-import com.groceries.model.pojo.GroceryList;
-import com.groceries.model.pojo.GroceryListEntry;
-import com.groceries.servicelocater.ServiceLocator;
+import com.groceries.locator.ServiceLocator;
+import com.groceries.model.database.GroceryList;
+import com.groceries.model.database.GroceryListEntry;
 import com.groceries.ui.groceryList.GroceryListFragment;
 import com.groceries.ui.groceryListEntry.GroceryListEntryFragment;
 import com.groceries.ui.invitation.InvitationFragment;
@@ -134,7 +134,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(GroceryListEntry entry) {
-
     }
 
     @Override

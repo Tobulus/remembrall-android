@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.servicelocater.ServiceLocator;
+import com.groceries.locator.ServiceLocator;
 
 public class LoginFragment extends Fragment {
 

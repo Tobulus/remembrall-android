@@ -1,10 +1,10 @@
-package com.groceries.model.factory;
+package com.groceries.model.view.factory;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import com.groceries.model.GroceryListEntryModel;
+import com.groceries.model.view.GroceryListEntryModel;
 
 public class GroceryListEntryModelFactory implements ViewModelProvider.Factory {
 

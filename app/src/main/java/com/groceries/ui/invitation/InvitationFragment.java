@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
-import com.groceries.model.InvitationModel;
+import com.groceries.model.view.InvitationModel;
 
 public class InvitationFragment extends Fragment {
 

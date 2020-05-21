@@ -1,10 +1,10 @@
-package com.groceries.model.pojo;
+package com.groceries.api.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class UserData {
 
     @JsonProperty("id")
     private Long id;

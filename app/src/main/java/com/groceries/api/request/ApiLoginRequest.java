@@ -1,4 +1,4 @@
-package com.groceries.api;
+package com.groceries.api.request;
 
 import androidx.annotation.Nullable;
 import com.android.volley.NetworkResponse;

@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
-import com.groceries.model.GroceryListModel;
-import com.groceries.model.pojo.GroceryList;
+import com.groceries.model.database.GroceryList;
+import com.groceries.model.view.GroceryListModel;
 
 import java.util.List;
 

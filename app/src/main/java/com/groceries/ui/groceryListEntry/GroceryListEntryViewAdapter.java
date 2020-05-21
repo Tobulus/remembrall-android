@@ -10,9 +10,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.model.GroceryListEntryModel;
-import com.groceries.model.pojo.GroceryListEntry;
-import com.groceries.servicelocater.ServiceLocator;
+import com.groceries.locator.ServiceLocator;
+import com.groceries.model.database.GroceryListEntry;
+import com.groceries.model.view.GroceryListEntryModel;
 
 import java.util.List;
 
@@ -51,8 +51,7 @@ public class GroceryListEntryViewAdapter
                 holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
                 ServiceLocator.getInstance()
                               .get(Backend.class)
-                              .updateGroceryListEntry(holder.groceryListEntry.getGroceryList()
-                                                                             .getId(),
+                              .updateGroceryListEntry(holder.groceryListEntry.getGroceryList(),
                                                       holder.groceryListEntry,
                                                       response -> {
                                                       },

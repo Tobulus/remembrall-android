@@ -2,6 +2,8 @@ package com.groceries.model.database;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import com.groceries.api.data.GroceryListData;
+import com.groceries.api.data.GroceryListEntryData;
 
 @Entity
 public class GroceryListEntry {
@@ -47,4 +49,15 @@ public class GroceryListEntry {
         this.groceryList = groceryList;
     }
 
+    public GroceryListEntryData toData() {
+        GroceryListEntryData data = new GroceryListEntryData();
+        data.setId(id);
+        data.setName(name);
+        data.setChecked(checked);
+        GroceryListData list = new GroceryListData();
+        list.setId(groceryList);
+        data.setGroceryList(list);
+
+        return data;
+    }
 }

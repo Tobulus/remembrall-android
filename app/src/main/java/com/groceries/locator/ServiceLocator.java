@@ -1,4 +1,4 @@
-package com.groceries.servicelocater;
+package com.groceries.locator;
 
 import java.util.HashMap;
 

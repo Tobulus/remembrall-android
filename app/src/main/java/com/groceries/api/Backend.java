@@ -7,9 +7,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.groceries.model.pojo.GroceryList;
-import com.groceries.model.pojo.GroceryListEntry;
-import com.groceries.model.pojo.Invitation;
+import com.groceries.api.data.GroceryListData;
+import com.groceries.api.data.GroceryListEntryData;
+import com.groceries.api.data.InvitationData;
+import com.groceries.api.request.ApiArrayRequest;
+import com.groceries.api.request.ApiLoginRequest;
+import com.groceries.api.request.ApiPostRequest;
+import com.groceries.model.database.GroceryList;
+import com.groceries.model.database.GroceryListEntry;
 import com.groceries.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
 
@@ -110,7 +115,7 @@ public class Backend {
         queue.add(request);
     }
 
-    public void createGroceryList(GroceryList groceryList,
+    public void createGroceryList(GroceryListData groceryList,
                                   Consumer<String> onSuccess,
                                   Response.ErrorListener errorListener) {
         initToken();
@@ -126,8 +131,7 @@ public class Backend {
         queue.add(request);
     }
 
-    public void createGroceryListEntry(Long groceryListId,
-                                       GroceryListEntry entry,
+    public void createGroceryListEntry(Long groceryListId, GroceryListEntryData entry,
                                        Consumer<String> onSuccess,
                                        Response.ErrorListener errorListener) {
         initToken();
@@ -144,7 +148,7 @@ public class Backend {
         queue.add(request);
     }
 
-    public void getInvitations(Consumer<List<Invitation>> listConsumer,
+    public void getInvitations(Consumer<List<InvitationData>> listConsumer,
                                Response.ErrorListener errorListener) {
         initToken();
 
@@ -152,7 +156,7 @@ public class Backend {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
-                        new TypeReference<List<Invitation>>() {
+                                                     new TypeReference<List<InvitationData>>() {
                         }));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -162,7 +166,7 @@ public class Backend {
         queue.add(json);
     }
 
-    public void getGroceryLists(Consumer<List<GroceryList>> listConsumer,
+    public void getGroceryLists(Consumer<List<GroceryListData>> listConsumer,
                                 Response.ErrorListener errorListener) {
         initToken();
 
@@ -170,7 +174,7 @@ public class Backend {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
-                                                     new TypeReference<List<GroceryList>>() {
+                                                     new TypeReference<List<GroceryListData>>() {
                                                      }));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -181,7 +185,7 @@ public class Backend {
     }
 
     public void getGroceryListEntries(Long groceryList,
-                                      Consumer<List<GroceryListEntry>> listConsumer,
+                                      Consumer<List<GroceryListEntryData>> listConsumer,
                                       Response.ErrorListener errorListener) {
         initToken();
         String requestUrl = url + "/api/grocery-list/" + groceryList + "/entries";
@@ -190,7 +194,7 @@ public class Backend {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
-                                                     new TypeReference<List<GroceryListEntry>>() {
+                                                     new TypeReference<List<GroceryListEntryData>>() {
                                                      }));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -217,8 +221,11 @@ public class Backend {
                                        Response.Listener<String> onSuccess,
                                        Response.ErrorListener errorListener) {
         String requestUrl = url + "/api/grocery-list/" + groceryListId + "/entry/" + entry.getId();
-        ApiPostRequest request =
-                new ApiPostRequest(requestUrl, onSuccess, errorListener, token, entry.toMap());
+        ApiPostRequest request = new ApiPostRequest(requestUrl,
+                                                    onSuccess,
+                                                    errorListener,
+                                                    token,
+                                                    entry.toData().toMap());
         queue.add(request);
     }
 

@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.servicelocater.ServiceLocator;
+import com.groceries.locator.ServiceLocator;
 
 public class RegistrationFragment extends Fragment {
 

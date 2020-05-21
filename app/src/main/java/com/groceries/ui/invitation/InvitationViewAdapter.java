@@ -9,9 +9,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.api.Backend;
-import com.groceries.model.InvitationModel;
-import com.groceries.model.pojo.Invitation;
-import com.groceries.servicelocater.ServiceLocator;
+import com.groceries.api.data.InvitationData;
+import com.groceries.locator.ServiceLocator;
+import com.groceries.model.view.InvitationModel;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class InvitationViewAdapter
 
     @Override
     public void onBindViewHolder(final InvitationHolder holder, int position) {
-        List<Invitation> invitations = invitationModel.getLiveData().getValue();
+        List<InvitationData> invitations = invitationModel.getLiveData().getValue();
         if (invitations != null) {
             holder.invitation = invitations.get(position);
             holder.title.setText(invitations.get(position).getSender().getUsername()
@@ -73,7 +73,7 @@ public class InvitationViewAdapter
         public final ImageView ack;
         public final ImageView deny;
 
-        public Invitation invitation;
+        public InvitationData invitation;
 
         public InvitationHolder(View view) {
             super(view);
