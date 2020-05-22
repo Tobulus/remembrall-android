@@ -13,7 +13,6 @@ import com.groceries.api.data.InvitationData;
 import com.groceries.api.request.ApiArrayRequest;
 import com.groceries.api.request.ApiLoginRequest;
 import com.groceries.api.request.ApiPostRequest;
-import com.groceries.model.database.GroceryList;
 import com.groceries.model.database.GroceryListEntry;
 import com.groceries.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
@@ -98,16 +97,17 @@ public class Backend {
         queue.add(request);
     }
 
-    public void createInvitation(GroceryList groceryList,
+    public void createInvitation(Long groceryListId,
                                  String email,
                                  Consumer<String> onSuccess,
                                  Response.ErrorListener errorListener) {
         initToken();
 
         Map<String, String> postParams = new HashMap<>();
-        postParams.put("user", email);
+        postParams.put("email", email);
 
-        ApiPostRequest request = new ApiPostRequest(url + "/api/grocery-list/" + groceryList.getId() + "/invite",
+        ApiPostRequest request =
+                new ApiPostRequest(url + "/api/grocery-list/" + groceryListId + "/invite",
                 onSuccess::accept,
                 error -> onErrorHandler(error, errorListener),
                 token,
@@ -205,12 +205,14 @@ public class Backend {
     }
 
     private void onErrorHandler(VolleyError error, Response.ErrorListener customErrorListener) {
-        int code = error.networkResponse.statusCode;
+        if (error.networkResponse != null) {
+            int code = error.networkResponse.statusCode;
 
-        if (code == HttpURLConnection.HTTP_FORBIDDEN
-            || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            loginRequiredListener.onLoginRequired();
-            return;
+            if (code == HttpURLConnection.HTTP_FORBIDDEN
+                || code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                loginRequiredListener.onLoginRequired();
+                return;
+            }
         }
 
         customErrorListener.onErrorResponse(error);

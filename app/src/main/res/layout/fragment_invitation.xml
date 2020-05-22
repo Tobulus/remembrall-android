@@ -6,19 +6,22 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="5"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <ImageView
             android:id="@+id/ack"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_check_black_24dp" />
 
     <ImageView
             android:id="@+id/deny"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_remove_circle_outline_black_24dp" />

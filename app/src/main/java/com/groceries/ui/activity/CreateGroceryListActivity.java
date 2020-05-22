@@ -9,16 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
 import com.groceries.api.data.GroceryListData;
+import com.groceries.locator.ServiceLocator;
 
 public class CreateGroceryListActivity extends AppCompatActivity {
 
-    private Backend backend;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //TODO
-        backend = new Backend(getApplicationContext(), null);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_grocerylist);
 
@@ -29,7 +25,7 @@ public class CreateGroceryListActivity extends AppCompatActivity {
         save.setOnClickListener(v -> {
             GroceryListData groceryList = new GroceryListData();
             groceryList.setName(name.getText().toString());
-            backend.createGroceryList(groceryList,
+            ServiceLocator.getInstance().get(Backend.class).createGroceryList(groceryList,
                                       json -> {
                                           setResult(Activity.RESULT_OK);
                                           finish();

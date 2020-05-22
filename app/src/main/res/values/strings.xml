@@ -15,4 +15,5 @@
     <string name="activity_login_register">Register?</string>
     <string name="navigation_lists">Lists</string>
     <string name="navigation_invitations">Invitations</string>
+    <string name="create_invitation">Invite email</string>
 </resources>

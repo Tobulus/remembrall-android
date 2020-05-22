@@ -9,10 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.groceries.R;
 import com.groceries.api.Backend;
 import com.groceries.api.data.GroceryListEntryData;
+import com.groceries.locator.ServiceLocator;
 
 public class CreateGroceryListEntryActivity extends AppCompatActivity {
-
-    private Backend backend;
     private Long groceryListId;
 
     @Override
@@ -20,8 +19,6 @@ public class CreateGroceryListEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_grocerylist_entry);
 
-        // TODO:
-        backend = new Backend(getApplicationContext(), null);
         groceryListId = getIntent().getExtras().getLong("id");
 
         final TextView name = findViewById(R.id.name);
@@ -31,8 +28,9 @@ public class CreateGroceryListEntryActivity extends AppCompatActivity {
         save.setOnClickListener(v -> {
             GroceryListEntryData entry = new GroceryListEntryData();
             entry.setName(name.getText().toString());
-            backend.createGroceryListEntry(groceryListId,
-                                           entry,
+            ServiceLocator.getInstance()
+                          .get(Backend.class)
+                          .createGroceryListEntry(groceryListId, entry,
                                            json -> {
                                                setResult(Activity.RESULT_OK);
                                                finish();

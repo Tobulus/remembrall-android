@@ -1,5 +1,8 @@
 package com.groceries.ui.groceryList;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.model.database.GroceryList;
 import com.groceries.model.view.GroceryListModel;
+import com.groceries.ui.activity.CreateInvitationActivity;
 
 import java.util.List;
 
@@ -20,8 +24,9 @@ public class GroceryListViewAdapter
     private final GroceryListModel groceryListModel;
     private final GroceryListFragment.GroceryListListener groceriesActivity;
 
-    GroceryListViewAdapter(LifecycleOwner owner, GroceryListModel items,
-                           GroceryListFragment.GroceryListListener listener) {
+    public GroceryListViewAdapter(LifecycleOwner owner,
+                                  GroceryListModel items,
+                                  GroceryListFragment.GroceryListListener listener) {
         groceryListModel = items;
         groceriesActivity = listener;
         items.getLiveData().observe(owner, groceryLists -> this.notifyDataSetChanged());
@@ -31,7 +36,7 @@ public class GroceryListViewAdapter
     public GroceryListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.fragment_grocery_list, parent, false);
-        return new GroceryListHolder(view);
+        return new GroceryListHolder(view, parent.getContext());
     }
 
     @Override
@@ -41,6 +46,14 @@ public class GroceryListViewAdapter
             holder.groceryList = groceryLists.get(position);
             holder.name.setText(groceryLists.get(position).getName());
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
+
+            holder.view.findViewById(R.id.invite).setOnClickListener(v -> {
+                Intent intent = new Intent(holder.ctx, CreateInvitationActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", holder.groceryList.getId());
+                intent.putExtras(bundle);
+                holder.ctx.startActivity(intent);
+            });
         }
     }
 
@@ -55,14 +68,16 @@ public class GroceryListViewAdapter
         public final View view;
         public final TextView name;
         public final LinearLayout parent;
+        public final Context ctx;
 
         public GroceryList groceryList;
 
-        public GroceryListHolder(View view) {
+        public GroceryListHolder(View view, Context context) {
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
             parent = view.findViewById(R.id.parentLayout);
+            ctx = context;
         }
 
         @Override

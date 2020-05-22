@@ -3,7 +3,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
     <LinearLayout
             android:id="@+id/parentLayout"
@@ -20,10 +20,11 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
             <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:orientation="vertical">
@@ -44,18 +45,26 @@
                         android:layout_marginEnd="10dp"
                         android:clickable="false"
                         android:maxLines="2"
-                        android:text="loremIpsum"
+                        android:text=""
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textColor="#999999" />
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="5dp"
-                        android:background="#e6e6e6" />
             </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/invite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_person_add_black_24dp" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="#e6e6e6" />
 </LinearLayout>

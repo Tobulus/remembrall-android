@@ -6,7 +6,7 @@ import com.groceries.api.Backend;
 import com.groceries.api.NetworkResponseHandler;
 import com.groceries.model.database.Database;
 
-public class ServiceLocationInitializer extends Application {
+public class ServiceLocatorInitializer extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
