@@ -1,6 +1,7 @@
 package com.groceries.api;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,10 +19,12 @@ import com.groceries.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -41,7 +44,17 @@ public class Backend {
     public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);
-        this.url = "http://192.168.0.248:8080";
+
+        Properties properties = new Properties();
+        AssetManager assetManager = ctx.getAssets();
+        try {
+            InputStream inputStream = assetManager.open("application.properties");
+            properties.load(inputStream);
+            this.url = properties.getProperty("host");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.loginRequiredListener = listener;
     }
 
