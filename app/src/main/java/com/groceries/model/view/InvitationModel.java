@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.groceries.api.Backend;
 import com.groceries.api.data.InvitationData;
+import com.groceries.locator.ServiceLocator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class InvitationModel extends AndroidViewModel {
 
     public InvitationModel(@NonNull Application application) {
         super(application);
-        backend = new Backend(application.getApplicationContext(), null);
+        backend = ServiceLocator.getInstance().get(Backend.class);
         liveData.setValue(new ArrayList<>());
         loadDataFromBackend();
     }

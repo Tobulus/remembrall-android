@@ -21,7 +21,7 @@ public class GroceryListModel extends AndroidViewModel {
 
     public GroceryListModel(@NonNull Application application) {
         super(application);
-        backend = new Backend(application.getApplicationContext(), null);
+        backend = ServiceLocator.getInstance().get(Backend.class);
         liveData.setValue(ServiceLocator.getInstance()
                                         .get(Database.class)
                                         .groceryListRepository()

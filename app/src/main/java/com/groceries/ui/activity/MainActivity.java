@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.groceries.R;
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity
         implements GroceryListFragment.GroceryListListener,
                    GroceryListEntryFragment.GroceryListEntryListener, LoginFragment.LoginListener,
                    RegistrationFragment.RegistrationListener, LoginRequiredListener {
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,42 +78,44 @@ public class MainActivity extends AppCompatActivity
 
     private void showLoginRegistration() {
         LoginRegistrationFragment fragment = new LoginRegistrationFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .commit();
     }
 
     private void showLogin() {
         LoginFragment fragment = new LoginFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .commit();
     }
 
     private void showInvitations() {
         InvitationFragment fragment = new InvitationFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .addToBackStack("invitations")
+                                   .commit();
     }
 
     private void showGroceryLists() {
         GroceryListFragment fragment = new GroceryListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .addToBackStack("lists")
+                                   .commit();
     }
 
     private void showGroceryListEntries(Long listId) {
         Bundle bundle = new Bundle();
-        GroceryListEntryFragment fragment = new GroceryListEntryFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
         bundle.putLong("id", listId);
-        fragment.setArguments(bundle);
 
-        transaction.replace(R.id.main_fragment, fragment);
-        transaction.commit();
+        GroceryListEntryFragment fragment = new GroceryListEntryFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .addToBackStack("entries")
+                                   .commit();
     }
 
     @Override
