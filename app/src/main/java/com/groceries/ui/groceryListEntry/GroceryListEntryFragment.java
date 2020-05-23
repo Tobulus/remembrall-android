@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -18,6 +21,7 @@ import com.groceries.model.database.GroceryListEntry;
 import com.groceries.model.view.GroceryListEntryModel;
 import com.groceries.model.view.factory.GroceryListEntryModelFactory;
 import com.groceries.ui.activity.CreateGroceryListEntryActivity;
+import com.groceries.ui.activity.CreateInvitationActivity;
 
 public class GroceryListEntryFragment extends Fragment {
 
@@ -30,10 +34,30 @@ public class GroceryListEntryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         if (getArguments() != null) {
             groceryListId = getArguments().getLong("id");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.invitation, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_invitation) {
+            Intent intent = new Intent(getContext(), CreateInvitationActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", groceryListId);
+            intent.putExtras(bundle);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

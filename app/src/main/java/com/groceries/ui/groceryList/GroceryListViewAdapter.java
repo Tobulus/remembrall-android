@@ -46,14 +46,6 @@ public class GroceryListViewAdapter
                                                     holder.groceryList.getNumberOfCheckedEntries(),
                                                     holder.groceryList.getNumberOfEntries()));
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
-
-            /*holder.view.findViewById(R.id.invite).setOnClickListener(v -> {
-                Intent intent = new Intent(holder.ctx, CreateInvitationActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putLong("id", holder.groceryList.getId());
-                intent.putExtras(bundle);
-                holder.ctx.startActivity(intent);
-            });*/
         }
     }
 
