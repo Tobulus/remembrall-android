@@ -77,14 +77,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showLoginRegistration() {
+        findViewById(R.id.navigation).setVisibility(View.INVISIBLE);
+        findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
         LoginRegistrationFragment fragment = new LoginRegistrationFragment();
-        getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.main_fragment, fragment)
-                                   .commit();
-    }
-
-    private void showLogin() {
-        LoginFragment fragment = new LoginFragment();
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.main_fragment, fragment)
                                    .commit();
@@ -150,6 +145,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoginRequired() {
-        showLogin();
+        showLoginRegistration();
     }
 }
