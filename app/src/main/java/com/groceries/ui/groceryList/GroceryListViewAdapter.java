@@ -1,8 +1,6 @@
 package com.groceries.ui.groceryList;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.groceries.R;
 import com.groceries.model.database.GroceryList;
 import com.groceries.model.view.GroceryListModel;
-import com.groceries.ui.activity.CreateInvitationActivity;
 
 import java.util.List;
 
@@ -45,15 +42,18 @@ public class GroceryListViewAdapter
         if (groceryLists != null) {
             holder.groceryList = groceryLists.get(position);
             holder.name.setText(groceryLists.get(position).getName());
+            holder.numberInfo.setText(String.format("%s / %s",
+                                                    holder.groceryList.getNumberOfCheckedEntries(),
+                                                    holder.groceryList.getNumberOfEntries()));
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
 
-            holder.view.findViewById(R.id.invite).setOnClickListener(v -> {
+            /*holder.view.findViewById(R.id.invite).setOnClickListener(v -> {
                 Intent intent = new Intent(holder.ctx, CreateInvitationActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putLong("id", holder.groceryList.getId());
                 intent.putExtras(bundle);
                 holder.ctx.startActivity(intent);
-            });
+            });*/
         }
     }
 
@@ -67,6 +67,7 @@ public class GroceryListViewAdapter
     public static class GroceryListHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
+        public final TextView numberInfo;
         public final LinearLayout parent;
         public final Context ctx;
 
@@ -76,6 +77,7 @@ public class GroceryListViewAdapter
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
+            numberInfo = view.findViewById(R.id.numberInfo);
             parent = view.findViewById(R.id.parentLayout);
             ctx = context;
         }
