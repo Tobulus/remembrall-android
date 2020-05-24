@@ -12,4 +12,7 @@ public interface GroceryListEntryRepository extends BaseRepository<GroceryListEn
     @Transaction
     @Query("SELECT * FROM GroceryListEntry WHERE groceryList = :groceryListId")
     List<GroceryListEntry> getGroceryListEntries(Long groceryListId);
+
+    @Query("DELETE FROM GroceryListEntry")
+    void deleteAll();
 }

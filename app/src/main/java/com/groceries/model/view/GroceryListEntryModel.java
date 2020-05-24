@@ -38,6 +38,9 @@ public class GroceryListEntryModel extends AndroidViewModel {
                                                                .collect(Collectors.toList());
             ServiceLocator.getInstance()
                           .get(Database.class)
+                          .groceryListEntryRepository().deleteAll();
+            ServiceLocator.getInstance()
+                          .get(Database.class)
                           .groceryListEntryRepository()
                           .upsert(entries);
             liveData.setValue(entries);

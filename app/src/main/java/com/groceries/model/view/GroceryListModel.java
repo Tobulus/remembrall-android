@@ -29,18 +29,23 @@ public class GroceryListModel extends AndroidViewModel {
         loadDataFromBackend();
     }
 
+    public void refresh() {
+        loadDataFromBackend();
+    }
+
+    public LiveData<List<GroceryList>> getLiveData() {
+        return liveData;
+    }
+
     private void loadDataFromBackend() {
         backend.getGroceryLists(groceryLists -> {
             List<GroceryList> lists = groceryLists.stream()
                                                   .map(GroceryListData::toEntity)
                                                   .collect(Collectors.toList());
+            ServiceLocator.getInstance().get(Database.class).groceryListRepository().deleteAll();
             ServiceLocator.getInstance().get(Database.class).groceryListRepository().upsert(lists);
             liveData.setValue(lists);
         }, error -> {
         });
-    }
-
-    public LiveData<List<GroceryList>> getLiveData() {
-        return liveData;
     }
 }

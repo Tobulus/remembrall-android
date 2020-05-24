@@ -12,4 +12,7 @@ public interface GroceryListRepository extends BaseRepository<GroceryList> {
     @Transaction
     @Query("SELECT * FROM GroceryList")
     List<GroceryList> getGroceryLists();
+
+    @Query("DELETE FROM GroceryList")
+    void deleteAll();
 }

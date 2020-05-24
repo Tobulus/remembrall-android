@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.groceries.R;
 import com.groceries.model.database.GroceryList;
@@ -37,13 +38,17 @@ public class GroceryListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
         GroceryListModel model = ViewModelProviders.of(this).get(GroceryListModel.class);
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            GroceryListViewAdapter adapter = new GroceryListViewAdapter(this, model, mListener);
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        GroceryListViewAdapter adapter = new GroceryListViewAdapter(this, model, mListener);
+        recyclerView.setAdapter(adapter);
+
+        ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
+            adapter.refresh();
+            ((SwipeRefreshLayout) view).setRefreshing(false);
+        });
+
 
         return view;
     }
