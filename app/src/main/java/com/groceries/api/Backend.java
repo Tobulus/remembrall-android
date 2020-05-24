@@ -90,7 +90,7 @@ public class Backend {
         queue.add(request.get());
     }
 
-    public void register(String user,
+    public void register(String user, String firstname, String lastname,
                          String password,
                          String matchingPassword,
                          Consumer<String> onSuccess,
@@ -99,6 +99,8 @@ public class Backend {
 
         Map<String, String> params = new HashMap<>();
         params.put("username", user);
+        params.put("firstname", firstname);
+        params.put("lastname", lastname);
         params.put("password", password);
         params.put("matchingPassword", matchingPassword);
 

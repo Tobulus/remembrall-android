@@ -16,4 +16,6 @@
     <string name="navigation_lists">Lists</string>
     <string name="navigation_invitations">Invitations</string>
     <string name="create_invitation">Invite email</string>
+    <string name="prompt_lastname">lastname</string>
+    <string name="prompt_firstname">firstname</string>
 </resources>

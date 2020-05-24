@@ -38,6 +38,8 @@ public class RegistrationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         final EditText usernameEditText = view.findViewById(R.id.username);
+        final EditText firstnameEditText = view.findViewById(R.id.firstname);
+        final EditText lastnameEditText = view.findViewById(R.id.lastname);
         final EditText passwordEditText = view.findViewById(R.id.password);
         final EditText matchingPasswordEditText = view.findViewById(R.id.matchingPassword);
 
@@ -49,8 +51,10 @@ public class RegistrationFragment extends Fragment {
             loadingProgressBar.setVisibility(View.VISIBLE);
             ServiceLocator.getInstance().get(Backend.class)
                           .register(usernameEditText.getText().toString(),
-                                     passwordEditText.getText().toString(),
-                                     matchingPasswordEditText.getText().toString(),
+                                    firstnameEditText.getText().toString(),
+                                    lastnameEditText.getText().toString(),
+                                    passwordEditText.getText().toString(),
+                                    matchingPasswordEditText.getText().toString(),
                                      json -> {
                                          loadingProgressBar.setVisibility(View.INVISIBLE);
                                          mListener.onRegistrationComplete();
