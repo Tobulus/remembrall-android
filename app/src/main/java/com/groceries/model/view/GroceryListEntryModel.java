@@ -31,6 +31,14 @@ public class GroceryListEntryModel extends AndroidViewModel {
         loadDataFromBackend();
     }
 
+    public LiveData<List<GroceryListEntry>> getLiveData() {
+        return liveData;
+    }
+
+    public void refresh() {
+        loadDataFromBackend();
+    }
+
     private void loadDataFromBackend() {
         backend.getGroceryListEntries(groceryListId, groceryListEntries -> {
             List<GroceryListEntry> entries = groceryListEntries.stream()
@@ -46,9 +54,5 @@ public class GroceryListEntryModel extends AndroidViewModel {
             liveData.setValue(entries);
         }, error -> {
         });
-    }
-
-    public LiveData<List<GroceryListEntry>> getLiveData() {
-        return liveData;
     }
 }

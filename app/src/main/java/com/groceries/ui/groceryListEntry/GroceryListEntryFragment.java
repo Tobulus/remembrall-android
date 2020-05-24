@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.groceries.R;
 import com.groceries.model.database.GroceryListEntry;
@@ -71,14 +72,17 @@ public class GroceryListEntryFragment extends Fragment {
                                                                     requireActivity().getApplication()))
                                                         .get(GroceryListEntryModel.class);
 
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            GroceryListEntryViewAdapter adapter =
-                    new GroceryListEntryViewAdapter(this, model, mListener);
-            recyclerView.setAdapter(adapter);
-        }
+        Context context = view.getContext();
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        GroceryListEntryViewAdapter adapter =
+                new GroceryListEntryViewAdapter(this, model, mListener);
+        recyclerView.setAdapter(adapter);
+
+        ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
+            adapter.refresh();
+            ((SwipeRefreshLayout) view).setRefreshing(false);
+        });
 
         return view;
     }

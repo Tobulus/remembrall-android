@@ -67,6 +67,10 @@ public class GroceryListEntryViewAdapter
                0;
     }
 
+    public void refresh() {
+        groceryListEntryModel.refresh();
+    }
+
     public static class GroceryListEntryHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
