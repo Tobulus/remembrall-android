@@ -62,7 +62,7 @@ public class GroceryListFragment extends Fragment {
         FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, LAUNCH_CREATE_GROCERY_LIST);
         });
     }
 

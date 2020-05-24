@@ -98,7 +98,7 @@ public class GroceryListEntryFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
             intent.putExtras(bundle);
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
         });
     }
 
