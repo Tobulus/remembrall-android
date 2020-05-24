@@ -10,6 +10,7 @@ import com.groceries.api.data.GroceryListData;
 import com.groceries.locator.ServiceLocator;
 import com.groceries.model.database.Database;
 import com.groceries.model.database.GroceryList;
+import com.groceries.model.database.repository.GroceryListRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +19,12 @@ public class GroceryListModel extends AndroidViewModel {
 
     private final MutableLiveData<List<GroceryList>> liveData = new MutableLiveData<>();
     private Backend backend;
+    private GroceryListRepository repository;
 
     public GroceryListModel(@NonNull Application application) {
         super(application);
         backend = ServiceLocator.getInstance().get(Backend.class);
+        repository = ServiceLocator.getInstance().get(Database.class).groceryListRepository();
         liveData.setValue(ServiceLocator.getInstance()
                                         .get(Database.class)
                                         .groceryListRepository()
@@ -42,8 +45,8 @@ public class GroceryListModel extends AndroidViewModel {
             List<GroceryList> lists = groceryLists.stream()
                                                   .map(GroceryListData::toEntity)
                                                   .collect(Collectors.toList());
-            ServiceLocator.getInstance().get(Database.class).groceryListRepository().deleteAll();
-            ServiceLocator.getInstance().get(Database.class).groceryListRepository().upsert(lists);
+            repository.deleteAll();
+            repository.upsert(lists);
             liveData.setValue(lists);
         }, error -> {
         });

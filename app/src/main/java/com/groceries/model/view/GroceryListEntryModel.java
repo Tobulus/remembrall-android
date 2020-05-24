@@ -10,6 +10,7 @@ import com.groceries.api.data.GroceryListEntryData;
 import com.groceries.locator.ServiceLocator;
 import com.groceries.model.database.Database;
 import com.groceries.model.database.GroceryListEntry;
+import com.groceries.model.database.repository.GroceryListEntryRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,15 +20,15 @@ public class GroceryListEntryModel extends AndroidViewModel {
     private final MutableLiveData<List<GroceryListEntry>> liveData = new MutableLiveData<>();
     private Backend backend;
     private Long groceryListId;
+    private GroceryListEntryRepository repository;
 
     public GroceryListEntryModel(@NonNull Application application, Long groceryListId) {
         super(application);
         this.backend = ServiceLocator.getInstance().get(Backend.class);
+        this.repository =
+                ServiceLocator.getInstance().get(Database.class).groceryListEntryRepository();
         this.groceryListId = groceryListId;
-        this.liveData.setValue(ServiceLocator.getInstance()
-                                             .get(Database.class)
-                                             .groceryListEntryRepository()
-                                             .getGroceryListEntries(groceryListId));
+        this.liveData.setValue(repository.getGroceryListEntries(groceryListId));
         loadDataFromBackend();
     }
 
@@ -44,13 +45,8 @@ public class GroceryListEntryModel extends AndroidViewModel {
             List<GroceryListEntry> entries = groceryListEntries.stream()
                                                                .map(GroceryListEntryData::toEntity)
                                                                .collect(Collectors.toList());
-            ServiceLocator.getInstance()
-                          .get(Database.class)
-                          .groceryListEntryRepository().deleteAll();
-            ServiceLocator.getInstance()
-                          .get(Database.class)
-                          .groceryListEntryRepository()
-                          .upsert(entries);
+            repository.deleteAll();
+            repository.upsert(entries);
             liveData.setValue(entries);
         }, error -> {
         });

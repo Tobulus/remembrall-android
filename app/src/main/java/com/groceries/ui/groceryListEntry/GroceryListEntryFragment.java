@@ -1,5 +1,6 @@
 package com.groceries.ui.groceryListEntry;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,8 +27,10 @@ import com.groceries.ui.activity.CreateInvitationActivity;
 
 public class GroceryListEntryFragment extends Fragment {
 
+    public static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
     private GroceryListEntryListener mListener;
     private Long groceryListId;
+    private GroceryListEntryViewAdapter adapter;
 
     public GroceryListEntryFragment() {
     }
@@ -75,7 +78,7 @@ public class GroceryListEntryFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        GroceryListEntryViewAdapter adapter =
+        adapter =
                 new GroceryListEntryViewAdapter(this, model, mListener);
         recyclerView.setAdapter(adapter);
 
@@ -95,8 +98,17 @@ public class GroceryListEntryFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY && resultCode == Activity.RESULT_OK) {
+            adapter.refresh();
+        }
     }
 
     @Override
@@ -115,6 +127,7 @@ public class GroceryListEntryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        // TODO: adapter = null; ?
     }
 
     public interface GroceryListEntryListener {

@@ -1,5 +1,6 @@
 package com.groceries.ui.groceryList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +22,10 @@ import com.groceries.ui.activity.CreateGroceryListActivity;
 
 public class GroceryListFragment extends Fragment {
 
+    private static final int LAUNCH_CREATE_GROCERY_LIST = 1;
+
     private GroceryListListener mListener;
+    private GroceryListViewAdapter adapter;
 
     public GroceryListFragment() {
     }
@@ -41,7 +45,7 @@ public class GroceryListFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        GroceryListViewAdapter adapter = new GroceryListViewAdapter(this, model, mListener);
+        adapter = new GroceryListViewAdapter(this, model, mListener);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
@@ -58,8 +62,17 @@ public class GroceryListFragment extends Fragment {
         FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LAUNCH_CREATE_GROCERY_LIST && resultCode == Activity.RESULT_OK) {
+            adapter.refresh();
+        }
     }
 
     @Override
