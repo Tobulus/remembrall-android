@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
-            tools:context="com.groceries.ui.groceryList.GroceryListFragment"
+            tools:context="com.remembrall.ui.groceryList.GroceryListFragment"
             tools:listitem="@layout/fragment_grocery_list" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
