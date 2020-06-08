@@ -23,14 +23,10 @@ public class GroceryListEntryViewAdapter
         extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
     private final GroceryListEntryModel groceryListEntryModel;
-    private final GroceryListEntryFragment.GroceryListEntryListener groceriesActivity;
     private final GroceryListEntryFragment fragment;
 
-    GroceryListEntryViewAdapter(LifecycleOwner owner,
-                                GroceryListEntryModel model,
-                                GroceryListEntryFragment.GroceryListEntryListener listener) {
+    GroceryListEntryViewAdapter(LifecycleOwner owner, GroceryListEntryModel model) {
         groceryListEntryModel = model;
-        groceriesActivity = listener;
         fragment = (GroceryListEntryFragment) owner;
         model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
     }

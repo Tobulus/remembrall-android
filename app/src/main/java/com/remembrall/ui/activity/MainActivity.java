@@ -12,7 +12,6 @@ import com.remembrall.api.Backend;
 import com.remembrall.api.NetworkResponseHandler;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
-import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.ui.groceryList.GroceryListFragment;
 import com.remembrall.ui.groceryListEntry.GroceryListEntryFragment;
 import com.remembrall.ui.invitation.InvitationFragment;
@@ -21,8 +20,7 @@ import com.remembrall.ui.login_registration.LoginRegistrationFragment;
 import com.remembrall.ui.login_registration.RegistrationFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements GroceryListFragment.GroceryListListener,
-                   GroceryListEntryFragment.GroceryListEntryListener, LoginFragment.LoginListener,
+        implements GroceryListFragment.GroceryListListener, LoginFragment.LoginListener,
                    RegistrationFragment.RegistrationListener, LoginRequiredListener {
 
     @Override
@@ -125,10 +123,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(GroceryList item) {
         showGroceryListEntries(item.getId());
-    }
-
-    @Override
-    public void onClick(GroceryListEntry entry) {
     }
 
     @Override

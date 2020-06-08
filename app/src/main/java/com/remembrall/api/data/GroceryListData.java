@@ -3,6 +3,9 @@ package com.remembrall.api.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GroceryListData {
 
@@ -48,6 +51,13 @@ public class GroceryListData {
 
     public void setNumberOfCheckedEntries(Integer numberOfCheckedEntries) {
         this.numberOfCheckedEntries = numberOfCheckedEntries;
+    }
+
+    public Map<String, String> toMap() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("id", id.toString());
+        map.put("name", name);
+        return map;
     }
 
     public com.remembrall.model.database.GroceryList toEntity() {

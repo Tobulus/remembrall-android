@@ -21,7 +21,7 @@ import com.remembrall.model.view.GroceryListModel;
 
 public class GroceryListFragment extends Fragment {
 
-    private static final int LAUNCH_CREATE_GROCERY_LIST = 1;
+    static final int LAUNCH_CREATE_GROCERY_LIST = 1;
 
     private GroceryListListener mListener;
     private GroceryListViewAdapter adapter;

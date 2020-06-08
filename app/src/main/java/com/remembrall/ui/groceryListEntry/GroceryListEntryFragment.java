@@ -28,7 +28,6 @@ public class GroceryListEntryFragment extends Fragment {
 
     static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
 
-    private GroceryListEntryListener mListener;
     private Long groceryListId;
     private GroceryListEntryViewAdapter adapter;
 
@@ -78,8 +77,7 @@ public class GroceryListEntryFragment extends Fragment {
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter =
-                new GroceryListEntryViewAdapter(this, model, mListener);
+        adapter = new GroceryListEntryViewAdapter(this, model);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
@@ -110,25 +108,6 @@ public class GroceryListEntryFragment extends Fragment {
         if (requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY && resultCode == Activity.RESULT_OK) {
             adapter.refresh();
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        if (context instanceof GroceryListEntryListener) {
-            mListener = (GroceryListEntryListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                                       + " must implement GroceryListEntryListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-        // TODO: adapter = null; ?
     }
 
     public interface GroceryListEntryListener {

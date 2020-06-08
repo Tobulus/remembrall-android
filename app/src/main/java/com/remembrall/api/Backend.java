@@ -14,6 +14,7 @@ import com.remembrall.api.data.InvitationData;
 import com.remembrall.api.request.ApiArrayRequest;
 import com.remembrall.api.request.ApiLoginRequest;
 import com.remembrall.api.request.ApiPostRequest;
+import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
@@ -146,7 +147,20 @@ public class Backend {
         queue.add(request);
     }
 
-    public void createGroceryListEntry(Long groceryListId, GroceryListEntryData entry,
+    public void updateGroceryList(GroceryList list,
+                                  Response.Listener<String> onSuccess,
+                                  Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/grocery-list/" + list.getId();
+        ApiPostRequest request = new ApiPostRequest(requestUrl,
+                                                    onSuccess,
+                                                    errorListener,
+                                                    token,
+                                                    list.toData().toMap());
+        queue.add(request);
+    }
+
+    public void createGroceryListEntry(Long groceryListId,
+                                       GroceryListEntryData entry,
                                        Consumer<String> onSuccess,
                                        Response.ErrorListener errorListener) {
         initToken();

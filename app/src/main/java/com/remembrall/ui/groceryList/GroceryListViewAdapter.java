@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.remembrall.R;
@@ -20,12 +21,14 @@ public class GroceryListViewAdapter
 
     private final GroceryListModel groceryListModel;
     private final GroceryListFragment.GroceryListListener groceriesActivity;
+    private final Fragment fragment;
 
     public GroceryListViewAdapter(LifecycleOwner owner,
                                   GroceryListModel items,
                                   GroceryListFragment.GroceryListListener listener) {
         groceryListModel = items;
         groceriesActivity = listener;
+        fragment = (GroceryListFragment) owner;
         items.getLiveData().observe(owner, groceryLists -> this.notifyDataSetChanged());
     }
 

@@ -2,6 +2,7 @@ package com.remembrall.model.database;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import com.remembrall.api.data.GroceryListData;
 
 @Entity
 public class GroceryList {
@@ -45,5 +46,12 @@ public class GroceryList {
 
     public void setNumberOfCheckedEntries(Integer numberOfCheckedEntries) {
         this.numberOfCheckedEntries = numberOfCheckedEntries;
+    }
+
+    public GroceryListData toData() {
+        GroceryListData data = new GroceryListData();
+        data.setId(id);
+        data.setName(name);
+        return data;
     }
 }
