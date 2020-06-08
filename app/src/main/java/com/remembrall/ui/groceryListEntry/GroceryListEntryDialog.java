@@ -15,8 +15,18 @@ import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.locator.ServiceLocator;
+import com.remembrall.model.database.GroceryListEntry;
 
 public class GroceryListEntryDialog extends DialogFragment {
+
+    private GroceryListEntry groceryListEntry;
+
+    public GroceryListEntryDialog() {
+    }
+
+    public GroceryListEntryDialog(GroceryListEntry groceryListEntry) {
+        this.groceryListEntry = groceryListEntry;
+    }
 
     @NonNull
     @Override
@@ -29,26 +39,52 @@ public class GroceryListEntryDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_grocery_list_entry, null);
         final TextView name = view.findViewById(R.id.name);
 
+        if (groceryListEntry != null) {
+            name.setText(groceryListEntry.getName());
+        }
+
         builder.setView(view)
                .setPositiveButton(R.string.save, (dialog, id) -> {
-                   GroceryListEntryData entry = new GroceryListEntryData();
-                   entry.setName(name.getText().toString());
-                   ServiceLocator.getInstance()
-                                 .get(Backend.class)
-                                 .createGroceryListEntry(groceryListId,
-                                                         entry,
-                                                         json -> getTargetFragment().onActivityResult(
-                                                                 getTargetRequestCode(),
-                                                                 Activity.RESULT_OK,
-                                                                 null),
-                                                         error -> Toast.makeText(getContext(),
-                                                                                 error.getMessage(),
-                                                                                 Toast.LENGTH_LONG)
-                                                                       .show());
+                   if (groceryListEntry == null) {
+                       createEntry(groceryListId, name.getText().toString());
+                   } else {
+                       groceryListEntry.setName(name.getText().toString());
+                       updateEntry(groceryListId, groceryListEntry);
+                   }
                })
                .setNegativeButton(R.string.cancel,
                                   (dialog, id) -> GroceryListEntryDialog.this.getDialog().cancel());
 
         return builder.create();
+    }
+
+    private void createEntry(Long groceryListId, String name) {
+        GroceryListEntryData entry = new GroceryListEntryData();
+        entry.setName(name);
+        ServiceLocator.getInstance()
+                      .get(Backend.class)
+                      .createGroceryListEntry(groceryListId,
+                                              entry,
+                                              json -> getTargetFragment().onActivityResult(
+                                                      getTargetRequestCode(),
+                                                      Activity.RESULT_OK,
+                                                      null),
+                                              error -> Toast.makeText(getContext(),
+                                                                      error.getMessage(),
+                                                                      Toast.LENGTH_LONG).show());
+    }
+
+    private void updateEntry(Long groceryListId, GroceryListEntry entry) {
+        ServiceLocator.getInstance()
+                      .get(Backend.class)
+                      .updateGroceryListEntry(groceryListId,
+                                              entry,
+                                              json -> getTargetFragment().onActivityResult(
+                                                      getTargetRequestCode(),
+                                                      Activity.RESULT_OK,
+                                                      null),
+                                              error -> Toast.makeText(getContext(),
+                                                                      error.getMessage(),
+                                                                      Toast.LENGTH_LONG).show());
     }
 }

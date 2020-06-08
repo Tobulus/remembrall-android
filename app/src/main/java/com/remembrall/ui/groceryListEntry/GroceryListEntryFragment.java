@@ -26,7 +26,8 @@ import com.remembrall.ui.activity.CreateInvitationActivity;
 
 public class GroceryListEntryFragment extends Fragment {
 
-    public static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
+    static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
+
     private GroceryListEntryListener mListener;
     private Long groceryListId;
     private GroceryListEntryViewAdapter adapter;

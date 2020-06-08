@@ -1,5 +1,6 @@
 package com.remembrall.ui.groceryListEntry;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +17,21 @@ import com.remembrall.model.view.GroceryListEntryModel;
 
 import java.util.List;
 
+import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH_CREATE_GROCERY_LIST_ENTRY;
+
 public class GroceryListEntryViewAdapter
         extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
     private final GroceryListEntryModel groceryListEntryModel;
-    private final GroceryListEntryFragment.GroceryListEntryListener
-            groceriesActivity;
+    private final GroceryListEntryFragment.GroceryListEntryListener groceriesActivity;
+    private final GroceryListEntryFragment fragment;
 
     GroceryListEntryViewAdapter(LifecycleOwner owner,
                                 GroceryListEntryModel model,
                                 GroceryListEntryFragment.GroceryListEntryListener listener) {
         groceryListEntryModel = model;
         groceriesActivity = listener;
+        fragment = (GroceryListEntryFragment) owner;
         model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
     }
 
@@ -44,8 +48,17 @@ public class GroceryListEntryViewAdapter
         List<GroceryListEntry> groceryListEntries = groceryListEntryModel.getLiveData().getValue();
         if (groceryListEntries != null) {
             holder.groceryListEntry = groceryListEntries.get(position);
+
             holder.name.setText(holder.groceryListEntry.getName());
-            holder.name.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryListEntry));
+            holder.name.setOnClickListener(v -> {
+                GroceryListEntryDialog dialog = new GroceryListEntryDialog(holder.groceryListEntry);
+                Bundle bundle = new Bundle();
+                bundle.putLong("id", holder.groceryListEntry.getGroceryList());
+                dialog.setArguments(bundle);
+                dialog.setTargetFragment(fragment, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+                dialog.show(fragment.getFragmentManager(), "create-grocery-list-entry");
+            });
+
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
             holder.checked.setOnClickListener(v -> {
                 holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
