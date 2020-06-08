@@ -18,7 +18,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.view.GroceryListModel;
-import com.remembrall.ui.activity.CreateGroceryListActivity;
 
 public class GroceryListFragment extends Fragment {
 
@@ -61,8 +60,9 @@ public class GroceryListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), CreateGroceryListActivity.class);
-            startActivityForResult(intent, LAUNCH_CREATE_GROCERY_LIST);
+            GroceryListDialog dialog = new GroceryListDialog();
+            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
+            dialog.show(requireFragmentManager(), "dialog-grocery-list");
         });
     }
 

@@ -22,7 +22,6 @@ import com.remembrall.R;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 import com.remembrall.model.view.factory.GroceryListEntryModelFactory;
-import com.remembrall.ui.activity.CreateGroceryListEntryActivity;
 import com.remembrall.ui.activity.CreateInvitationActivity;
 
 public class GroceryListEntryFragment extends Fragment {
@@ -94,11 +93,12 @@ public class GroceryListEntryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), CreateGroceryListEntryActivity.class);
+            GroceryListEntryDialog dialog = new GroceryListEntryDialog();
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+            dialog.setArguments(bundle);
+            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+            dialog.show(requireFragmentManager(), "create-grocery-list-entry");
         });
     }
 

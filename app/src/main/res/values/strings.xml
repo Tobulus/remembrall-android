@@ -14,4 +14,6 @@
     <string name="create_invitation">Invite email</string>
     <string name="prompt_lastname">Lastname</string>
     <string name="prompt_firstname">Firstname</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>
