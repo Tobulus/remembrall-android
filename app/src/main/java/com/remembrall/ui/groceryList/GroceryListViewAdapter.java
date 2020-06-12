@@ -14,7 +14,9 @@ import com.remembrall.R;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.view.GroceryListModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GroceryListViewAdapter
         extends RecyclerView.Adapter<GroceryListViewAdapter.GroceryListHolder> {
@@ -22,6 +24,8 @@ public class GroceryListViewAdapter
     private final GroceryListModel groceryListModel;
     private final GroceryListFragment.GroceryListListener groceriesActivity;
     private final Fragment fragment;
+
+    private List<Integer> selected = new ArrayList<>();
 
     public GroceryListViewAdapter(LifecycleOwner owner,
                                   GroceryListModel items,
@@ -49,6 +53,11 @@ public class GroceryListViewAdapter
                                                     holder.groceryList.getNumberOfCheckedEntries(),
                                                     holder.groceryList.getNumberOfEntries()));
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
+            holder.parent.setOnLongClickListener(v -> {
+                selected.add(position);
+                fragment.requireActivity().invalidateOptionsMenu();
+                return true;
+            });
         }
     }
 
@@ -59,8 +68,31 @@ public class GroceryListViewAdapter
                0;
     }
 
+    public int getNofSelectedItems() {
+        return selected.size();
+    }
+
+    public GroceryList getSelectedGroceryList() {
+        return groceryListModel.getLiveData().getValue().get(selected.get(0));
+    }
+
+    public List<GroceryList> getSelectedGroceryLists() {
+        return selected.stream()
+                       .map(position -> groceryListModel.getLiveData().getValue().get(position))
+                       .collect(Collectors.toList());
+    }
+
     public void refresh() {
+        // clear selection as the dataset might not match the dataset the selection is based on
+        selected.clear();
         groceryListModel.refresh();
+    }
+
+    public boolean unselect() {
+        boolean isNotEmpty = selected.size() > 0;
+        selected.clear();
+        fragment.requireActivity().invalidateOptionsMenu();
+        return isNotEmpty;
     }
 
     public static class GroceryListHolder extends RecyclerView.ViewHolder {

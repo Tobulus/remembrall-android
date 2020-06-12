@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,12 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
+import com.remembrall.api.Backend;
+import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 import com.remembrall.model.view.factory.GroceryListEntryModelFactory;
+import com.remembrall.ui.activity.BackPressedListener;
 import com.remembrall.ui.activity.CreateInvitationActivity;
 
-public class GroceryListEntryFragment extends Fragment {
+public class GroceryListEntryFragment extends Fragment implements BackPressedListener {
 
     static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
 
@@ -46,7 +50,21 @@ public class GroceryListEntryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.invitation, menu);
+        inflater.inflate(R.menu.menu_grocery_list_entry, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_edit).setEnabled(adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_edit).setVisible(adapter.getNofSelectedItems() == 1);
+
+        menu.findItem(R.id.action_delete).setEnabled(adapter.getNofSelectedItems() > 0);
+        menu.findItem(R.id.action_delete).setVisible(adapter.getNofSelectedItems() > 0);
+
+        menu.findItem(R.id.action_invitation).setEnabled(adapter.getNofSelectedItems() == 0);
+        menu.findItem(R.id.action_invitation).setVisible(adapter.getNofSelectedItems() == 0);
+
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -60,6 +78,34 @@ public class GroceryListEntryFragment extends Fragment {
             return true;
         }
 
+        if (item.getItemId() == R.id.action_edit) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("id", groceryListId);
+            GroceryListEntryDialog dialog =
+                    new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry());
+            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+            dialog.setArguments(bundle);
+            dialog.show(requireFragmentManager(), "edit-grocery-list-entry");
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_delete) {
+            adapter.getSelectedGroceryListEntries()
+                   .forEach(entry -> ServiceLocator.getInstance()
+                                                   .get(Backend.class)
+                                                   .deleteGroceryListEntry(groceryListId,
+                                                                           entry,
+                                                                           json -> {
+                                                                               adapter.refresh();
+                                                                               requireActivity().invalidateOptionsMenu();
+                                                                           },
+                                                                           error -> Toast.makeText(
+                                                                                   getContext(),
+                                                                                   error.getMessage(),
+                                                                                   Toast.LENGTH_LONG)
+                                                                                         .show()));
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -108,6 +154,11 @@ public class GroceryListEntryFragment extends Fragment {
         if (requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY && resultCode == Activity.RESULT_OK) {
             adapter.refresh();
         }
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return adapter.unselect();
     }
 
     public interface GroceryListEntryListener {

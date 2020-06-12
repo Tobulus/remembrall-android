@@ -121,6 +121,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onBackPressed() {
+        boolean processed = getSupportFragmentManager().getFragments()
+                                                       .stream()
+                                                       .filter(fragment -> fragment instanceof BackPressedListener
+                                                                           && fragment.isVisible())
+                                                       .map(fragment -> ((BackPressedListener) fragment)
+                                                               .onBackPressed())
+                                                       .reduce(false, (a, b) -> a || b);
+        if (!processed) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onClick(GroceryList item) {
         showGroceryListEntries(item.getId());
     }

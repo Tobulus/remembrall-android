@@ -2,22 +2,20 @@ package com.remembrall.api.request;
 
 import androidx.annotation.Nullable;
 import com.android.volley.Response;
-import com.android.volley.toolbox.JsonObjectRequest;
-import org.json.JSONObject;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ApiObjectRequest extends JsonObjectRequest {
+public class ApiDeleteRequest extends StringRequest {
 
     private String token;
 
-    public ApiObjectRequest(String url,
-                            @Nullable JSONObject jsonRequest,
-                            Response.Listener<JSONObject> listener,
+    public ApiDeleteRequest(String url,
+                            Response.Listener<String> listener,
                             @Nullable Response.ErrorListener errorListener,
                             String token) {
-        super(url, jsonRequest, listener, errorListener);
+        super(Method.DELETE, url, listener, errorListener);
         this.token = token;
     }
 

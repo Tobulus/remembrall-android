@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,10 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
+import com.remembrall.api.Backend;
+import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.view.GroceryListModel;
+import com.remembrall.ui.activity.BackPressedListener;
 
-public class GroceryListFragment extends Fragment {
+public class GroceryListFragment extends Fragment implements BackPressedListener {
 
     static final int LAUNCH_CREATE_GROCERY_LIST = 1;
 
@@ -32,6 +39,7 @@ public class GroceryListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -52,8 +60,52 @@ public class GroceryListFragment extends Fragment {
             ((SwipeRefreshLayout) view).setRefreshing(false);
         });
 
-
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_grocery_list, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_edit).setEnabled(adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_edit).setVisible(adapter.getNofSelectedItems() == 1);
+
+        menu.findItem(R.id.action_delete).setEnabled(adapter.getNofSelectedItems() > 0);
+        menu.findItem(R.id.action_delete).setVisible(adapter.getNofSelectedItems() > 0);
+
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_edit) {
+            GroceryListDialog dialog = new GroceryListDialog(adapter.getSelectedGroceryList());
+            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
+            dialog.show(requireFragmentManager(), "edit-grocery-list");
+            return true;
+        }
+
+        if (item.getItemId() == R.id.action_delete) {
+            adapter.getSelectedGroceryLists()
+                   .forEach(groceryList -> ServiceLocator.getInstance()
+                                                         .get(Backend.class)
+                                                         .deleteGroceryList(groceryList,
+                                                                            json -> {
+                                                                                adapter.refresh();
+                                                                                requireActivity().invalidateOptionsMenu();
+                                                                            },
+                                                                            error -> Toast.makeText(
+                                                                                    getContext(),
+                                                                                    error.getMessage(),
+                                                                                    Toast.LENGTH_LONG)
+                                                                                          .show()));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -84,13 +136,17 @@ public class GroceryListFragment extends Fragment {
         } else {
             throw new RuntimeException(context.toString() + " must implement GroceryListListener");
         }
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return adapter.unselect();
     }
 
     public interface GroceryListListener {

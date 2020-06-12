@@ -12,6 +12,7 @@ import com.remembrall.api.data.GroceryListData;
 import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.api.data.InvitationData;
 import com.remembrall.api.request.ApiArrayRequest;
+import com.remembrall.api.request.ApiDeleteRequest;
 import com.remembrall.api.request.ApiLoginRequest;
 import com.remembrall.api.request.ApiPostRequest;
 import com.remembrall.model.database.GroceryList;
@@ -156,6 +157,26 @@ public class Backend {
                                                     errorListener,
                                                     token,
                                                     list.toData().toMap());
+        queue.add(request);
+    }
+
+    public void deleteGroceryList(GroceryList list,
+                                  Response.Listener<String> onSuccess,
+                                  Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/grocery-list/" + list.getId() + "/delete";
+        ApiDeleteRequest request =
+                new ApiDeleteRequest(requestUrl, onSuccess, errorListener, token);
+        queue.add(request);
+    }
+
+    public void deleteGroceryListEntry(Long listId,
+                                       GroceryListEntry entry,
+                                       Response.Listener<String> onSuccess,
+                                       Response.ErrorListener errorListener) {
+        String requestUrl =
+                url + "/api/grocery-list/" + listId + "/entry/" + entry.getId() + "/delete";
+        ApiDeleteRequest request =
+                new ApiDeleteRequest(requestUrl, onSuccess, errorListener, token);
         queue.add(request);
     }
 

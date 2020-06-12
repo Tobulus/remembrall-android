@@ -1,6 +1,5 @@
 package com.remembrall.ui.groceryListEntry;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,17 @@ import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH_CREATE_GROCERY_LIST_ENTRY;
+import java.util.stream.Collectors;
 
 public class GroceryListEntryViewAdapter
         extends RecyclerView.Adapter<GroceryListEntryViewAdapter.GroceryListEntryHolder> {
 
     private final GroceryListEntryModel groceryListEntryModel;
     private final GroceryListEntryFragment fragment;
+
+    private List<Integer> selected = new ArrayList<>();
 
     GroceryListEntryViewAdapter(LifecycleOwner owner, GroceryListEntryModel model) {
         groceryListEntryModel = model;
@@ -46,13 +47,10 @@ public class GroceryListEntryViewAdapter
             holder.groceryListEntry = groceryListEntries.get(position);
 
             holder.name.setText(holder.groceryListEntry.getName());
-            holder.name.setOnClickListener(v -> {
-                GroceryListEntryDialog dialog = new GroceryListEntryDialog(holder.groceryListEntry);
-                Bundle bundle = new Bundle();
-                bundle.putLong("id", holder.groceryListEntry.getGroceryList());
-                dialog.setArguments(bundle);
-                dialog.setTargetFragment(fragment, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
-                dialog.show(fragment.getFragmentManager(), "create-grocery-list-entry");
+            holder.name.setOnLongClickListener(v -> {
+                selected.add(position);
+                fragment.requireActivity().invalidateOptionsMenu();
+                return true;
             });
 
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
@@ -69,6 +67,22 @@ public class GroceryListEntryViewAdapter
         }
     }
 
+    public int getNofSelectedItems() {
+        return selected.size();
+    }
+
+    public GroceryListEntry getSelectedGroceryListEntry() {
+        return groceryListEntryModel.getLiveData().getValue().get(selected.get(0));
+    }
+
+    public List<GroceryListEntry> getSelectedGroceryListEntries() {
+        return selected.stream()
+                       .map(position -> groceryListEntryModel.getLiveData()
+                                                             .getValue()
+                                                             .get(position))
+                       .collect(Collectors.toList());
+    }
+
     @Override
     public int getItemCount() {
         return groceryListEntryModel.getLiveData().getValue() != null ?
@@ -76,7 +90,16 @@ public class GroceryListEntryViewAdapter
                0;
     }
 
+    public boolean unselect() {
+        boolean isNotEmpty = selected.size() > 0;
+        selected.clear();
+        fragment.requireActivity().invalidateOptionsMenu();
+        return isNotEmpty;
+    }
+
     public void refresh() {
+        // clear selection as the dataset might not match the dataset the selection is based on
+        selected.clear();
         groceryListEntryModel.refresh();
     }
 
