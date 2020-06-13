@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,15 +25,18 @@ public class GroceryListViewAdapter
     private final GroceryListModel groceryListModel;
     private final GroceryListFragment.GroceryListListener groceriesActivity;
     private final Fragment fragment;
+    private final RecyclerView recyclerView;
 
     private List<Integer> selected = new ArrayList<>();
 
     public GroceryListViewAdapter(LifecycleOwner owner,
                                   GroceryListModel items,
-                                  GroceryListFragment.GroceryListListener listener) {
+                                  GroceryListFragment.GroceryListListener listener,
+                                  RecyclerView recycler) {
         groceryListModel = items;
         groceriesActivity = listener;
         fragment = (GroceryListFragment) owner;
+        recyclerView = recycler;
         items.getLiveData().observe(owner, groceryLists -> this.notifyDataSetChanged());
     }
 
@@ -55,6 +59,8 @@ public class GroceryListViewAdapter
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
             holder.parent.setOnLongClickListener(v -> {
                 selected.add(position);
+                holder.parent.setBackgroundColor(ContextCompat.getColor(holder.ctx,
+                                                                        R.color.colorAccent));
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });
@@ -84,12 +90,15 @@ public class GroceryListViewAdapter
 
     public void refresh() {
         // clear selection as the dataset might not match the dataset the selection is based on
-        selected.clear();
+        unselect();
         groceryListModel.refresh();
     }
 
     public boolean unselect() {
         boolean isNotEmpty = selected.size() > 0;
+        selected.forEach(id -> ((GroceryListHolder) recyclerView.findViewHolderForAdapterPosition(id)).parent
+                .setBackgroundColor(ContextCompat.getColor(fragment.getContext(),
+                                                           R.color.background)));
         selected.clear();
         fragment.requireActivity().invalidateOptionsMenu();
         return isNotEmpty;

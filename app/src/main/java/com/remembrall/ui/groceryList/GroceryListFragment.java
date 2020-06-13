@@ -52,7 +52,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new GroceryListViewAdapter(this, model, mListener);
+        adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
@@ -82,26 +82,12 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_edit) {
-            GroceryListDialog dialog = new GroceryListDialog(adapter.getSelectedGroceryList());
-            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
-            dialog.show(requireFragmentManager(), "edit-grocery-list");
+            showGroceryListDialog();
             return true;
         }
 
         if (item.getItemId() == R.id.action_delete) {
-            adapter.getSelectedGroceryLists()
-                   .forEach(groceryList -> ServiceLocator.getInstance()
-                                                         .get(Backend.class)
-                                                         .deleteGroceryList(groceryList,
-                                                                            json -> {
-                                                                                adapter.refresh();
-                                                                                requireActivity().invalidateOptionsMenu();
-                                                                            },
-                                                                            error -> Toast.makeText(
-                                                                                    getContext(),
-                                                                                    error.getMessage(),
-                                                                                    Toast.LENGTH_LONG)
-                                                                                          .show()));
+            deleteSelectedItems();
             return true;
         }
 
@@ -147,6 +133,25 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
     @Override
     public boolean onBackPressed() {
         return adapter.unselect();
+    }
+
+    private void showGroceryListDialog() {
+        GroceryListDialog dialog = new GroceryListDialog(adapter.getSelectedGroceryList());
+        dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
+        dialog.show(requireFragmentManager(), "edit-grocery-list");
+    }
+
+    private void deleteSelectedItems() {
+        adapter.getSelectedGroceryLists()
+               .forEach(groceryList -> ServiceLocator.getInstance()
+                                                     .get(Backend.class)
+                                                     .deleteGroceryList(groceryList,
+                                                                        json -> adapter.refresh(),
+                                                                        error -> Toast.makeText(
+                                                                                getContext(),
+                                                                                error.getMessage(),
+                                                                                Toast.LENGTH_LONG)
+                                                                                      .show()));
     }
 
     public interface GroceryListListener {

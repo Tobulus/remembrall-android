@@ -1,11 +1,13 @@
 package com.remembrall.ui.groceryListEntry;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.remembrall.R;
@@ -23,12 +25,16 @@ public class GroceryListEntryViewAdapter
 
     private final GroceryListEntryModel groceryListEntryModel;
     private final GroceryListEntryFragment fragment;
+    private final RecyclerView recyclerView;
 
     private List<Integer> selected = new ArrayList<>();
 
-    GroceryListEntryViewAdapter(LifecycleOwner owner, GroceryListEntryModel model) {
+    GroceryListEntryViewAdapter(LifecycleOwner owner,
+                                GroceryListEntryModel model,
+                                RecyclerView recycler) {
         groceryListEntryModel = model;
         fragment = (GroceryListEntryFragment) owner;
+        recyclerView = recycler;
         model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
     }
 
@@ -37,7 +43,7 @@ public class GroceryListEntryViewAdapter
     public GroceryListEntryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                                   .inflate(R.layout.fragment_grocery_list_entry, parent, false);
-        return new GroceryListEntryHolder(view);
+        return new GroceryListEntryHolder(view, parent.getContext());
     }
 
     @Override
@@ -49,6 +55,8 @@ public class GroceryListEntryViewAdapter
             holder.name.setText(holder.groceryListEntry.getName());
             holder.name.setOnLongClickListener(v -> {
                 selected.add(position);
+                holder.view.setBackgroundColor(ContextCompat.getColor(holder.ctx,
+                                                                      R.color.colorAccent));
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });
@@ -92,6 +100,9 @@ public class GroceryListEntryViewAdapter
 
     public boolean unselect() {
         boolean isNotEmpty = selected.size() > 0;
+        selected.forEach(id -> ((GroceryListEntryViewAdapter.GroceryListEntryHolder) recyclerView.findViewHolderForAdapterPosition(
+                id)).view.setBackgroundColor(ContextCompat.getColor(fragment.getContext(),
+                                                                    R.color.background)));
         selected.clear();
         fragment.requireActivity().invalidateOptionsMenu();
         return isNotEmpty;
@@ -99,7 +110,7 @@ public class GroceryListEntryViewAdapter
 
     public void refresh() {
         // clear selection as the dataset might not match the dataset the selection is based on
-        selected.clear();
+        unselect();
         groceryListEntryModel.refresh();
     }
 
@@ -107,14 +118,16 @@ public class GroceryListEntryViewAdapter
         public final View view;
         public final TextView name;
         public final CheckBox checked;
+        public final Context ctx;
 
         public GroceryListEntry groceryListEntry;
 
-        GroceryListEntryHolder(View view) {
+        GroceryListEntryHolder(View view, Context context) {
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
             checked = view.findViewById(R.id.checked);
+            ctx = context;
         }
 
         @NonNull

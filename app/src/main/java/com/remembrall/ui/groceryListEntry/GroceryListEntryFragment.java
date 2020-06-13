@@ -71,41 +71,17 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_invitation) {
-            InvitationDialog dialog = new InvitationDialog();
-            Bundle bundle = new Bundle();
-            bundle.putLong("id", groceryListId);
-            dialog.setTargetFragment(this, LAUNCH_CREATE_INVITATION);
-            dialog.setArguments(bundle);
-            dialog.show(requireFragmentManager(), "create-invitation");
+            showInvitationDialog();
             return true;
         }
 
         if (item.getItemId() == R.id.action_edit) {
-            Bundle bundle = new Bundle();
-            bundle.putLong("id", groceryListId);
-            GroceryListEntryDialog dialog =
-                    new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry());
-            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
-            dialog.setArguments(bundle);
-            dialog.show(requireFragmentManager(), "edit-grocery-list-entry");
+            showGroceryListEntryDialog();
             return true;
         }
 
         if (item.getItemId() == R.id.action_delete) {
-            adapter.getSelectedGroceryListEntries()
-                   .forEach(entry -> ServiceLocator.getInstance()
-                                                   .get(Backend.class)
-                                                   .deleteGroceryListEntry(groceryListId,
-                                                                           entry,
-                                                                           json -> {
-                                                                               adapter.refresh();
-                                                                               requireActivity().invalidateOptionsMenu();
-                                                                           },
-                                                                           error -> Toast.makeText(
-                                                                                   getContext(),
-                                                                                   error.getMessage(),
-                                                                                   Toast.LENGTH_LONG)
-                                                                                         .show()));
+            deleteSelectedItems();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -125,7 +101,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new GroceryListEntryViewAdapter(this, model);
+        adapter = new GroceryListEntryViewAdapter(this, model, recyclerView);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
@@ -165,6 +141,39 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     @Override
     public boolean onBackPressed() {
         return adapter.unselect();
+    }
+
+    private void showInvitationDialog() {
+        InvitationDialog dialog = new InvitationDialog();
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", groceryListId);
+        dialog.setTargetFragment(this, LAUNCH_CREATE_INVITATION);
+        dialog.setArguments(bundle);
+        dialog.show(requireFragmentManager(), "create-invitation");
+    }
+
+    private void showGroceryListEntryDialog() {
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", groceryListId);
+        GroceryListEntryDialog dialog =
+                new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry());
+        dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+        dialog.setArguments(bundle);
+        dialog.show(requireFragmentManager(), "edit-grocery-list-entry");
+    }
+
+    private void deleteSelectedItems() {
+        adapter.getSelectedGroceryListEntries()
+               .forEach(entry -> ServiceLocator.getInstance()
+                                               .get(Backend.class)
+                                               .deleteGroceryListEntry(groceryListId,
+                                                                       entry,
+                                                                       json -> adapter.refresh(),
+                                                                       error -> Toast.makeText(
+                                                                               getContext(),
+                                                                               error.getMessage(),
+                                                                               Toast.LENGTH_LONG)
+                                                                                     .show()));
     }
 
     public interface GroceryListEntryListener {
