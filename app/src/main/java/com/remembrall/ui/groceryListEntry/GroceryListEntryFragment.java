@@ -21,16 +21,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
+import com.remembrall.listener.BackPressedListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 import com.remembrall.model.view.factory.GroceryListEntryModelFactory;
-import com.remembrall.ui.activity.BackPressedListener;
-import com.remembrall.ui.activity.CreateInvitationActivity;
+import com.remembrall.ui.invitation.InvitationDialog;
 
 public class GroceryListEntryFragment extends Fragment implements BackPressedListener {
 
     static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
+    static final int LAUNCH_CREATE_INVITATION = 2;
 
     private Long groceryListId;
     private GroceryListEntryViewAdapter adapter;
@@ -70,11 +71,12 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_invitation) {
-            Intent intent = new Intent(getContext(), CreateInvitationActivity.class);
+            InvitationDialog dialog = new InvitationDialog();
             Bundle bundle = new Bundle();
             bundle.putLong("id", groceryListId);
-            intent.putExtras(bundle);
-            startActivity(intent);
+            dialog.setTargetFragment(this, LAUNCH_CREATE_INVITATION);
+            dialog.setArguments(bundle);
+            dialog.show(requireFragmentManager(), "create-invitation");
             return true;
         }
 
@@ -151,8 +153,12 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY) && resultCode == Activity.RESULT_OK) {
             adapter.refresh();
+        }
+
+        if (requestCode == LAUNCH_CREATE_INVITATION && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(getContext(), "Invitation has been created", Toast.LENGTH_LONG).show();
         }
     }
 

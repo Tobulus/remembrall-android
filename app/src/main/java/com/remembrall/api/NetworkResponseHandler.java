@@ -1,6 +1,6 @@
 package com.remembrall.api;
 
-import com.remembrall.ui.activity.LoginRequiredListener;
+import com.remembrall.listener.LoginRequiredListener;
 
 import java.util.ArrayList;
 import java.util.List;

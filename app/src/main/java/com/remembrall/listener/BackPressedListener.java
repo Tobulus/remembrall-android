@@ -1,4 +1,4 @@
-package com.remembrall.ui.activity;
+package com.remembrall.listener;
 
 public interface BackPressedListener {
     boolean onBackPressed();

@@ -21,10 +21,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
+import com.remembrall.listener.BackPressedListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.view.GroceryListModel;
-import com.remembrall.ui.activity.BackPressedListener;
 
 public class GroceryListFragment extends Fragment implements BackPressedListener {
 

@@ -1,4 +1,4 @@
-package com.remembrall.ui.activity;
+package com.remembrall.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.api.NetworkResponseHandler;
+import com.remembrall.listener.BackPressedListener;
+import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.ui.groceryList.GroceryListFragment;

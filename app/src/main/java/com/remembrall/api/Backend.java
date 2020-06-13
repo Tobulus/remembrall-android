@@ -15,9 +15,9 @@ import com.remembrall.api.request.ApiArrayRequest;
 import com.remembrall.api.request.ApiDeleteRequest;
 import com.remembrall.api.request.ApiLoginRequest;
 import com.remembrall.api.request.ApiPostRequest;
+import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.database.GroceryListEntry;
-import com.remembrall.ui.activity.LoginRequiredListener;
 import org.json.JSONObject;
 
 import java.io.IOException;
