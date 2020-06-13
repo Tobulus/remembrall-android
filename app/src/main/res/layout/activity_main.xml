@@ -42,5 +42,6 @@
             android:layout_height="56dp"
             android:layout_gravity="start"
             android:visibility="invisible"
+            android:background="@color/colorPrimaryDark"
             app:menu="@menu/main_navigation_bottom" />
 </LinearLayout>

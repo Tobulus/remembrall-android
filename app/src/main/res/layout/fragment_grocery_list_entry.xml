@@ -3,57 +3,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:id="@+id/parentLayout"
+        android:clickable="true"
         android:background="@drawable/layout_bg_rounded"
-        android:orientation="horizontal">
+        android:minHeight="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    <LinearLayout
-            android:id="@+id/parentLayout"
-            android:layout_width="match_parent"
+    <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:minHeight="?attr/actionBarSize"
-            android:orientation="horizontal">
+            android:layout_weight="9"
+            android:clickable="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#263238" />
 
-        <View
-                android:layout_width="5dp"
-                android:layout_height="0dp" />
+    <CheckBox
+            android:id="@+id/checked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layoutDirection="rtl" />
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_weight="5"
-                            android:clickable="false"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="#263238" />
-
-                    <CheckBox
-                            android:id="@+id/checked"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_weight="1" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
 </LinearLayout>
