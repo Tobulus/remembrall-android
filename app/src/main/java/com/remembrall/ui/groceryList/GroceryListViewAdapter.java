@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,8 +58,7 @@ public class GroceryListViewAdapter
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
             holder.parent.setOnLongClickListener(v -> {
                 selected.add(position);
-                holder.parent.setBackgroundColor(ContextCompat.getColor(holder.ctx,
-                                                                        R.color.colorAccent));
+                holder.view.setSelected(true);
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });
@@ -96,9 +94,8 @@ public class GroceryListViewAdapter
 
     public boolean unselect() {
         boolean isNotEmpty = selected.size() > 0;
-        selected.forEach(id -> ((GroceryListHolder) recyclerView.findViewHolderForAdapterPosition(id)).parent
-                .setBackgroundColor(ContextCompat.getColor(fragment.getContext(),
-                                                           R.color.background)));
+        selected.forEach(id -> ((GroceryListHolder) recyclerView.findViewHolderForAdapterPosition(id)).view
+                .setSelected(false));
         selected.clear();
         fragment.requireActivity().invalidateOptionsMenu();
         return isNotEmpty;

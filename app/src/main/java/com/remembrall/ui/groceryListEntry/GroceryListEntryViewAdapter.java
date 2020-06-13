@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.remembrall.R;
@@ -55,8 +54,7 @@ public class GroceryListEntryViewAdapter
             holder.name.setText(holder.groceryListEntry.getName());
             holder.name.setOnLongClickListener(v -> {
                 selected.add(position);
-                holder.view.setBackgroundColor(ContextCompat.getColor(holder.ctx,
-                                                                      R.color.colorAccent));
+                holder.view.setSelected(true);
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });
@@ -101,8 +99,7 @@ public class GroceryListEntryViewAdapter
     public boolean unselect() {
         boolean isNotEmpty = selected.size() > 0;
         selected.forEach(id -> ((GroceryListEntryViewAdapter.GroceryListEntryHolder) recyclerView.findViewHolderForAdapterPosition(
-                id)).view.setBackgroundColor(ContextCompat.getColor(fragment.getContext(),
-                                                                    R.color.background)));
+                id)).view.setSelected(false));
         selected.clear();
         fragment.requireActivity().invalidateOptionsMenu();
         return isNotEmpty;
