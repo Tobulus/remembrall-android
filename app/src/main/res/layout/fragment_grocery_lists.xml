@@ -13,6 +13,8 @@
             android:layout_height="match_parent"
             app:layoutManager="LinearLayoutManager"
             tools:context="com.remembrall.ui.groceryList.GroceryListFragment"
+            android:clipToPadding="false"
+            android:paddingBottom="75dp"
             tools:listitem="@layout/fragment_grocery_list" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
