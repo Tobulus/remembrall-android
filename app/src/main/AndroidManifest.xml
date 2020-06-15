@@ -20,9 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.remembrall.ui.activity.CreateGroceryListActivity" />
-        <activity android:name="com.remembrall.ui.activity.CreateGroceryListEntryActivity" />
-        <activity android:name="com.remembrall.ui.activity.CreateInvitationActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
