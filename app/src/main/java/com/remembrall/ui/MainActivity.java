@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity
 
     private void initNavigation() {
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.inflateMenu(R.menu.main_navigation_bottom);
         navigation.setOnNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.action_lists:

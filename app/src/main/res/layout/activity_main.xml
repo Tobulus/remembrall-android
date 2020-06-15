@@ -9,7 +9,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -36,12 +35,14 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-            xmlns:app="http://schema.android.com/apk/res/res-auto"
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_gravity="start"
             android:visibility="invisible"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/colorPrimary"
+            app:itemIconTint="@color/color_nav_bottom"
+            app:itemTextColor="@color/color_nav_bottom"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/main_navigation_bottom" />
 </LinearLayout>
