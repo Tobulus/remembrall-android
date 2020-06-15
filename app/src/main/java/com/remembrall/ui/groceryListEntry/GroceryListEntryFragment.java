@@ -11,14 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.listener.BackPressedListener;
@@ -30,8 +27,8 @@ import com.remembrall.ui.invitation.InvitationDialog;
 
 public class GroceryListEntryFragment extends Fragment implements BackPressedListener {
 
-    static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
-    static final int LAUNCH_CREATE_INVITATION = 2;
+    public static final int LAUNCH_CREATE_GROCERY_LIST_ENTRY = 1;
+    public static final int LAUNCH_CREATE_INVITATION = 2;
 
     private Long groceryListId;
     private GroceryListEntryViewAdapter adapter;
@@ -110,19 +107,6 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         });
 
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
-        fab.setOnClickListener(v -> {
-            GroceryListEntryDialog dialog = new GroceryListEntryDialog();
-            Bundle bundle = new Bundle();
-            bundle.putLong("id", groceryListId);
-            dialog.setArguments(bundle);
-            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
-            dialog.show(requireFragmentManager(), "create-grocery-list-entry");
-        });
     }
 
     @Override

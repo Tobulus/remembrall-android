@@ -11,14 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.listener.BackPressedListener;
@@ -28,7 +25,7 @@ import com.remembrall.model.view.GroceryListModel;
 
 public class GroceryListFragment extends Fragment implements BackPressedListener {
 
-    static final int LAUNCH_CREATE_GROCERY_LIST = 1;
+    public static final int LAUNCH_CREATE_GROCERY_LIST = 1;
 
     private GroceryListListener mListener;
     private GroceryListViewAdapter adapter;
@@ -92,16 +89,6 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        FloatingActionButton fab = getActivity().findViewById(R.id.floating_plus_button);
-        fab.setOnClickListener(v -> {
-            GroceryListDialog dialog = new GroceryListDialog();
-            dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
-            dialog.show(requireFragmentManager(), "dialog-grocery-list");
-        });
     }
 
     @Override

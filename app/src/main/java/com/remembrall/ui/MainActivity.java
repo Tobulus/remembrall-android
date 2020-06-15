@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.api.NetworkResponseHandler;
@@ -14,12 +15,17 @@ import com.remembrall.listener.BackPressedListener;
 import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
+import com.remembrall.ui.groceryList.GroceryListDialog;
 import com.remembrall.ui.groceryList.GroceryListFragment;
+import com.remembrall.ui.groceryListEntry.GroceryListEntryDialog;
 import com.remembrall.ui.groceryListEntry.GroceryListEntryFragment;
 import com.remembrall.ui.invitation.InvitationFragment;
 import com.remembrall.ui.login_registration.LoginFragment;
 import com.remembrall.ui.login_registration.LoginRegistrationFragment;
 import com.remembrall.ui.login_registration.RegistrationFragment;
+
+import static com.remembrall.ui.groceryList.GroceryListFragment.LAUNCH_CREATE_GROCERY_LIST;
+import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH_CREATE_GROCERY_LIST_ENTRY;
 
 public class MainActivity extends AppCompatActivity
         implements GroceryListFragment.GroceryListListener, LoginFragment.LoginListener,
@@ -48,10 +54,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            GroceryListFragment groceryListFragment = new GroceryListFragment();
-            getSupportFragmentManager().beginTransaction()
-                                       .add(R.id.main_fragment, groceryListFragment)
-                                       .commit();
+            showGroceryLists();
         }
     }
 
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity
                                    .replace(R.id.main_fragment, fragment)
                                    .addToBackStack("invitations")
                                    .commit();
+        findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
     }
 
     private void showGroceryLists() {
@@ -99,18 +103,36 @@ public class MainActivity extends AppCompatActivity
                                    .replace(R.id.main_fragment, fragment)
                                    .addToBackStack("lists")
                                    .commit();
+
+        findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
+        FloatingActionButton fab = findViewById(R.id.floating_plus_button);
+        fab.setOnClickListener(v -> {
+            GroceryListDialog dialog = new GroceryListDialog();
+            dialog.setTargetFragment(fragment, LAUNCH_CREATE_GROCERY_LIST);
+            dialog.show(getSupportFragmentManager(), "dialog-grocery-list");
+        });
     }
 
     private void showGroceryListEntries(Long listId) {
         Bundle bundle = new Bundle();
         bundle.putLong("id", listId);
-
         GroceryListEntryFragment fragment = new GroceryListEntryFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.main_fragment, fragment)
                                    .addToBackStack("entries")
                                    .commit();
+
+        findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
+        FloatingActionButton fab = findViewById(R.id.floating_plus_button);
+        fab.setOnClickListener(v -> {
+            GroceryListEntryDialog dialog = new GroceryListEntryDialog();
+            Bundle dialogBundle = new Bundle();
+            dialogBundle.putLong("id", listId);
+            dialog.setArguments(dialogBundle);
+            dialog.setTargetFragment(fragment, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
+            dialog.show(getSupportFragmentManager(), "create-grocery-list-entry");
+        });
     }
 
     @Override
