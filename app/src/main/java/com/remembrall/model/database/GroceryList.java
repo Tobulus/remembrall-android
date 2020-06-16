@@ -12,6 +12,8 @@ public class GroceryList {
 
     private String name;
 
+    private boolean archived;
+
     private Integer numberOfEntries;
 
     private Integer numberOfCheckedEntries;
@@ -48,10 +50,19 @@ public class GroceryList {
         this.numberOfCheckedEntries = numberOfCheckedEntries;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
     public GroceryListData toData() {
         GroceryListData data = new GroceryListData();
         data.setId(id);
         data.setName(name);
+        data.setArchived(archived);
         return data;
     }
 }

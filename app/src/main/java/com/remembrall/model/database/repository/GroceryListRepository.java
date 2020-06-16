@@ -10,9 +10,9 @@ import java.util.List;
 @Dao
 public interface GroceryListRepository extends BaseRepository<GroceryList> {
     @Transaction
-    @Query("SELECT * FROM GroceryList")
-    List<GroceryList> getGroceryLists();
+    @Query("SELECT * FROM GroceryList WHERE archived = :archived")
+    List<GroceryList> getGroceryLists(boolean archived);
 
-    @Query("DELETE FROM GroceryList")
-    void deleteAll();
+    @Query("DELETE FROM GroceryList WHERE archived = :archived")
+    void deleteAll(boolean archived);
 }

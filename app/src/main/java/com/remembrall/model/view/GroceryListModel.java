@@ -18,17 +18,19 @@ import java.util.stream.Collectors;
 public class GroceryListModel extends AndroidViewModel {
 
     private final MutableLiveData<List<GroceryList>> liveData = new MutableLiveData<>();
+    private final boolean archived;
     private Backend backend;
     private GroceryListRepository repository;
 
-    public GroceryListModel(@NonNull Application application) {
+    public GroceryListModel(@NonNull Application application, boolean archived) {
         super(application);
+        this.archived = archived;
         backend = ServiceLocator.getInstance().get(Backend.class);
         repository = ServiceLocator.getInstance().get(Database.class).groceryListRepository();
         liveData.setValue(ServiceLocator.getInstance()
                                         .get(Database.class)
                                         .groceryListRepository()
-                                        .getGroceryLists());
+                                        .getGroceryLists(archived));
         loadDataFromBackend();
     }
 
@@ -41,11 +43,11 @@ public class GroceryListModel extends AndroidViewModel {
     }
 
     private void loadDataFromBackend() {
-        backend.getGroceryLists(groceryLists -> {
+        backend.getGroceryLists(archived, groceryLists -> {
             List<GroceryList> lists = groceryLists.stream()
                                                   .map(GroceryListData::toEntity)
                                                   .collect(Collectors.toList());
-            repository.deleteAll();
+            repository.deleteAll(archived);
             repository.upsert(lists);
             liveData.setValue(lists);
         }, error -> {

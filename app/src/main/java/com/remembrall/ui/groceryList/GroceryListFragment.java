@@ -22,6 +22,7 @@ import com.remembrall.listener.BackPressedListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.view.GroceryListModel;
+import com.remembrall.model.view.factory.GroceryListModelFactory;
 
 public class GroceryListFragment extends Fragment implements BackPressedListener {
 
@@ -29,8 +30,10 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     private GroceryListListener mListener;
     private GroceryListViewAdapter adapter;
+    private boolean archived;
 
-    public GroceryListFragment() {
+    public GroceryListFragment(boolean archived) {
+        this.archived = archived;
     }
 
     @Override
@@ -44,12 +47,16 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
-        GroceryListModel model = ViewModelProviders.of(this).get(GroceryListModel.class);
+        GroceryListModel model = ViewModelProviders.of(this,
+                                                       new GroceryListModelFactory(archived,
+                                                                                   requireActivity()
+                                                                                           .getApplication()))
+                                                   .get(GroceryListModel.class);
 
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView);
+        adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView, archived);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
@@ -67,6 +74,9 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_archive).setEnabled(adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_archive).setVisible(adapter.getNofSelectedItems() == 1);
+
         menu.findItem(R.id.action_edit).setEnabled(adapter.getNofSelectedItems() == 1);
         menu.findItem(R.id.action_edit).setVisible(adapter.getNofSelectedItems() == 1);
 
@@ -78,6 +88,11 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_archive) {
+            archiveGroceryList();
+            return true;
+        }
+
         if (item.getItemId() == R.id.action_edit) {
             showGroceryListDialog();
             return true;
@@ -89,6 +104,19 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void archiveGroceryList() {
+        GroceryList list = adapter.getSelectedGroceryList();
+        list.setArchived(true);
+
+        ServiceLocator.getInstance()
+                      .get(Backend.class)
+                      .updateGroceryList(list,
+                                         json -> adapter.refresh(),
+                                         error -> Toast.makeText(getContext(),
+                                                                 error.getMessage(),
+                                                                 Toast.LENGTH_LONG).show());
     }
 
     @Override

@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            showGroceryLists();
+            showGroceryLists(true);
         }
     }
 
@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity
         navigation.setOnNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.action_lists:
-                    showGroceryLists();
+                    showGroceryLists(false);
+                    break;
+                case R.id.action_archived_lists:
+                    showGroceryLists(true);
                     break;
                 case R.id.action_invitations:
                     showInvitations();
@@ -96,8 +99,8 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
     }
 
-    private void showGroceryLists() {
-        GroceryListFragment fragment = new GroceryListFragment();
+    private void showGroceryLists(boolean archived) {
+        GroceryListFragment fragment = new GroceryListFragment(archived);
         getSupportFragmentManager().beginTransaction()
                                    .replace(R.id.main_fragment, fragment)
                                    .addToBackStack("lists")
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginComplete() {
         loginFulfilled();
-        showGroceryLists();
+        showGroceryLists(true);
     }
 
     @Override

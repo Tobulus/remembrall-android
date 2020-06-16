@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+            android:id="@+id/action_archive"
+            android:icon="@drawable/ic_baseline_archive_24"
+            android:orderInCategory="10"
+            android:title="Edit"
+            app:showAsAction="always" />
+    <item
             android:id="@+id/action_edit"
             android:icon="@drawable/ic_baseline_edit_24"
             android:orderInCategory="10"

@@ -216,11 +216,13 @@ public class Backend {
         queue.add(json);
     }
 
-    public void getGroceryLists(Consumer<List<GroceryListData>> listConsumer,
+    public void getGroceryLists(boolean archived,
+                                Consumer<List<GroceryListData>> listConsumer,
                                 Response.ErrorListener errorListener) {
         initToken();
+        String api = archived ? "/api/archived-grocery-lists" : "/api/grocery-lists";
 
-        ApiArrayRequest json = new ApiArrayRequest(url + "/api/grocery-lists", response -> {
+        ApiArrayRequest json = new ApiArrayRequest(url + api, response -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),

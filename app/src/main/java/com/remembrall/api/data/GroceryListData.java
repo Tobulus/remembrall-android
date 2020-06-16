@@ -15,6 +15,9 @@ public class GroceryListData {
     @JsonProperty("name")
     private String name;
 
+    @JsonProperty("archived")
+    private boolean archived;
+
     @JsonProperty("numberOfEntries")
     private Integer numberOfEntries;
 
@@ -53,10 +56,19 @@ public class GroceryListData {
         this.numberOfCheckedEntries = numberOfCheckedEntries;
     }
 
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
     public Map<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", id.toString());
         map.put("name", name);
+        map.put("archived", Boolean.toString(archived));
         return map;
     }
 
@@ -65,6 +77,7 @@ public class GroceryListData {
                 new com.remembrall.model.database.GroceryList();
         entity.setId(id);
         entity.setName(name);
+        entity.setArchived(archived);
         entity.setNumberOfCheckedEntries(numberOfCheckedEntries);
         entity.setNumberOfEntries(numberOfEntries);
         return entity;
