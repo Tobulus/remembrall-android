@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            showGroceryLists(true);
+            showGroceryLists(false);
         }
     }
 
@@ -106,7 +106,9 @@ public class MainActivity extends AppCompatActivity
                                    .addToBackStack("lists")
                                    .commit();
 
-        findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.floating_plus_button).setVisibility(archived ?
+                                                              View.INVISIBLE :
+                                                              View.VISIBLE);
         FloatingActionButton fab = findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
             GroceryListDialog dialog = new GroceryListDialog();

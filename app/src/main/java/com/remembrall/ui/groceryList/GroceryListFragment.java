@@ -56,7 +56,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         Context context = view.getContext();
         RecyclerView recyclerView = view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView, archived);
+        adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView);
         recyclerView.setAdapter(adapter);
 
         ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
