@@ -74,8 +74,15 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_archive).setEnabled(adapter.getNofSelectedItems() == 1);
-        menu.findItem(R.id.action_archive).setVisible(adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_unarchive)
+            .setEnabled(archived && adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_unarchive)
+            .setVisible(archived && adapter.getNofSelectedItems() == 1);
+
+        menu.findItem(R.id.action_archive)
+            .setEnabled(!archived && adapter.getNofSelectedItems() == 1);
+        menu.findItem(R.id.action_archive)
+            .setVisible(!archived && adapter.getNofSelectedItems() == 1);
 
         menu.findItem(R.id.action_edit).setEnabled(adapter.getNofSelectedItems() == 1);
         menu.findItem(R.id.action_edit).setVisible(adapter.getNofSelectedItems() == 1);
@@ -93,6 +100,11 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
             return true;
         }
 
+        if (item.getItemId() == R.id.action_unarchive) {
+            unarchiveGroceryList();
+            return true;
+        }
+
         if (item.getItemId() == R.id.action_edit) {
             showGroceryListDialog();
             return true;
@@ -106,9 +118,17 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         return super.onOptionsItemSelected(item);
     }
 
+    private void unarchiveGroceryList() {
+        setArchived(false);
+    }
+
     private void archiveGroceryList() {
+        setArchived(true);
+    }
+
+    private void setArchived(boolean archived) {
         GroceryList list = adapter.getSelectedGroceryList();
-        list.setArchived(true);
+        list.setArchived(archived);
 
         ServiceLocator.getInstance()
                       .get(Backend.class)
