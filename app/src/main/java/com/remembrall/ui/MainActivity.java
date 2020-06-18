@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
         initNavigation();
 
-        if (!ServiceLocator.getInstance().get(Backend.class).restoreSession()) {
+        if (!ServiceLocator.getInstance().get(Backend.class).isSessionAvailable()) {
             showLoginRegistration();
             return;
         }

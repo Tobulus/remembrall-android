@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "914933425557",
+    "firebase_url": "https://remembrall-app.firebaseio.com",
+    "project_id": "remembrall-app",
+    "storage_bucket": "remembrall-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914933425557:android:bab35e7ea354595b4f829c",
+        "android_client_info": {
+          "package_name": "com.remembrall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "914933425557-b2vc9679j1iclo8pqosb7322ktiedjhk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCM3pIAL7DQ2NJwqjF3WacHkDr3s5sHlfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "914933425557-b2vc9679j1iclo8pqosb7322ktiedjhk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

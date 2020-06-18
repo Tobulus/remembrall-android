@@ -15,6 +15,8 @@ import com.remembrall.api.request.ApiArrayRequest;
 import com.remembrall.api.request.ApiDeleteRequest;
 import com.remembrall.api.request.ApiLoginRequest;
 import com.remembrall.api.request.ApiPostRequest;
+import com.remembrall.api.request.ApiPutRequest;
+import com.remembrall.fcm.FirebaseService;
 import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.database.GroceryListEntry;
@@ -46,7 +48,8 @@ public class Backend {
     public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);
-
+        token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
+                   .getString(TOKEN_KEY, null);
         Properties properties = new Properties();
         AssetManager assetManager = ctx.getAssets();
         try {
@@ -60,20 +63,8 @@ public class Backend {
         this.loginRequiredListener = listener;
     }
 
-    public boolean restoreSession() {
-        token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
-                   .getString(TOKEN_KEY, null);
+    public boolean isSessionAvailable() {
         return token != null;
-    }
-
-    private void initToken() {
-        if (token == null) {
-            synchronized (this) {
-                if (token == null) {
-                    restoreSession();
-                }
-            }
-        }
     }
 
     public void login(String user,
@@ -92,7 +83,9 @@ public class Backend {
         queue.add(request.get());
     }
 
-    public void register(String user, String firstname, String lastname,
+    public void register(String user,
+                         String firstname,
+                         String lastname,
                          String password,
                          String matchingPassword,
                          Consumer<String> onSuccess,
@@ -118,25 +111,21 @@ public class Backend {
                                  String email,
                                  Consumer<String> onSuccess,
                                  Response.ErrorListener errorListener) {
-        initToken();
-
         Map<String, String> postParams = new HashMap<>();
         postParams.put("email", email);
 
         ApiPostRequest request =
                 new ApiPostRequest(url + "/api/grocery-list/" + groceryListId + "/invite",
-                onSuccess::accept,
-                error -> onErrorHandler(error, errorListener),
-                token,
-                postParams);
+                                   onSuccess::accept,
+                                   error -> onErrorHandler(error, errorListener),
+                                   token,
+                                   postParams);
         queue.add(request);
     }
 
     public void createGroceryList(GroceryListData groceryList,
                                   Consumer<String> onSuccess,
                                   Response.ErrorListener errorListener) {
-        initToken();
-
         Map<String, String> postParams = new HashMap<>();
         postParams.put("name", groceryList.getName());
 
@@ -184,8 +173,6 @@ public class Backend {
                                        GroceryListEntryData entry,
                                        Consumer<String> onSuccess,
                                        Response.ErrorListener errorListener) {
-        initToken();
-
         Map<String, String> postParams = new HashMap<>();
         postParams.put("name", entry.getName());
         String requestUrl = url + "/api/grocery-list/" + groceryListId + "/entry/new";
@@ -200,14 +187,12 @@ public class Backend {
 
     public void getInvitations(Consumer<List<InvitationData>> listConsumer,
                                Response.ErrorListener errorListener) {
-        initToken();
-
         ApiArrayRequest json = new ApiArrayRequest(url + "/api/invitations", response -> {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 listConsumer.accept(mapper.readValue(response.toString(),
                                                      new TypeReference<List<InvitationData>>() {
-                        }));
+                                                     }));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -219,7 +204,6 @@ public class Backend {
     public void getGroceryLists(boolean archived,
                                 Consumer<List<GroceryListData>> listConsumer,
                                 Response.ErrorListener errorListener) {
-        initToken();
         String api = archived ? "/api/archived-grocery-lists" : "/api/grocery-lists";
 
         ApiArrayRequest json = new ApiArrayRequest(url + api, response -> {
@@ -239,7 +223,6 @@ public class Backend {
     public void getGroceryListEntries(Long groceryList,
                                       Consumer<List<GroceryListEntryData>> listConsumer,
                                       Response.ErrorListener errorListener) {
-        initToken();
         String requestUrl = url + "/api/grocery-list/" + groceryList + "/entries";
 
         ApiArrayRequest json = new ApiArrayRequest(requestUrl, response -> {
@@ -302,6 +285,16 @@ public class Backend {
         params.put("deny", "true");
         ApiPostRequest request =
                 new ApiPostRequest(requestUrl, onSuccess, errorListener, token, params);
+        queue.add(request);
+    }
+
+    public void registerFirebaseToken(Response.Listener<String> onSuccess,
+                                      Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/user/token";
+        Map<String, String> params = new HashMap<>();
+        params.put("token", FirebaseService.getToken(ctx));
+        ApiPutRequest request =
+                new ApiPutRequest(requestUrl, onSuccess, errorListener, token, params);
         queue.add(request);
     }
 }
