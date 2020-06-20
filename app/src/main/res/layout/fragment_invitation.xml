@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_marginTop="5dp"
+    android:background="@drawable/layout_bg_rounded"
+    android:minHeight="?attr/actionBarSize"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_weight="5"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceListItem" />
 
     <ImageView
@@ -17,6 +20,7 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:src="@drawable/ic_check_black_24dp" />
 
     <ImageView
@@ -24,5 +28,6 @@
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:src="@drawable/ic_remove_circle_outline_black_24dp" />
 </LinearLayout>

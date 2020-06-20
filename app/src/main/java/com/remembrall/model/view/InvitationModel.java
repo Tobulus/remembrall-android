@@ -32,4 +32,8 @@ public class InvitationModel extends AndroidViewModel {
     public LiveData<List<InvitationData>> getLiveData() {
         return liveData;
     }
+
+    public void refresh() {
+        loadDataFromBackend();
+    }
 }

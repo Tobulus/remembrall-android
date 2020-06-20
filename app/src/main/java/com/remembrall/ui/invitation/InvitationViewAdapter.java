@@ -44,8 +44,7 @@ public class InvitationViewAdapter
             holder.ack.setOnClickListener(v -> ServiceLocator.getInstance()
                                                              .get(Backend.class)
                                                              .acknowledge(holder.invitation.getId(),
-                                                                          s -> invitations.remove(
-                                                                                  position),
+                                                                          s -> refresh(),
                                                                           e -> {
 
                                                                           }));
@@ -53,11 +52,15 @@ public class InvitationViewAdapter
             holder.deny.setOnClickListener(v -> ServiceLocator.getInstance()
                                                               .get(Backend.class)
                                                               .deny(holder.invitation.getId(),
-                                                                    s -> invitations.remove(position),
+                                                                    s -> refresh(),
                                                                     e -> {
 
                                                                     }));
         }
+    }
+
+    private void refresh() {
+        invitationModel.refresh();
     }
 
     @Override

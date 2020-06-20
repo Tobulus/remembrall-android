@@ -9,6 +9,7 @@ import com.remembrall.api.Backend;
 import com.remembrall.locator.ServiceLocator;
 
 public class FirebaseService extends FirebaseMessagingService {
+
     public static String getToken(Context context) {
         return context.getSharedPreferences("_", MODE_PRIVATE).getString("fb", "empty");
     }

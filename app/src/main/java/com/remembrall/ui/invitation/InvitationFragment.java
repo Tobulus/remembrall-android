@@ -36,6 +36,7 @@ public class InvitationFragment extends Fragment {
             InvitationViewAdapter adapter = new InvitationViewAdapter(this, invitationModel);
             recyclerView.setAdapter(adapter);
         }
+
         return view;
     }
 }
