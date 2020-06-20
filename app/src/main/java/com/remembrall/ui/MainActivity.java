@@ -31,6 +31,12 @@ public class MainActivity extends AppCompatActivity
         implements GroceryListFragment.GroceryListListener, LoginFragment.LoginListener,
                    RegistrationFragment.RegistrationListener, LoginRequiredListener {
 
+    /* Define the names of different Intent which this activity accepts*/
+    public static final String INTENT_NAME = "action";
+
+    /* Define codes for intent actions which this activity accepts*/
+    public static final int INTENT_ACTION_SHOW_INVITATIONS = 1;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +166,16 @@ public class MainActivity extends AppCompatActivity
         if (!processed) {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent.getExtras() != null
+            && intent.getExtras().getInt(INTENT_NAME) == INTENT_ACTION_SHOW_INVITATIONS) {
+            showInvitations();
+        }
+
+        super.onNewIntent(intent);
     }
 
     @Override
