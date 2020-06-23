@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginComplete() {
         loginFulfilled();
-        showGroceryLists(true);
+        showGroceryLists(false);
     }
 
     @Override
