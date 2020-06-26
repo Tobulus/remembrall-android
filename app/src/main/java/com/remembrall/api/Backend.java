@@ -83,6 +83,21 @@ public class Backend {
         queue.add(request.get());
     }
 
+    public void logout(Response.Listener<String> onSuccess, Response.ErrorListener onError) {
+        token = null;
+        ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
+           .edit()
+           .remove(TOKEN_KEY)
+           .apply();
+
+        String requestUrl = url + "/api/logout";
+        ApiPostRequest request = new ApiPostRequest(requestUrl, s -> {
+            loginRequiredListener.onLoginRequired();
+            onSuccess.onResponse(s);
+        }, onError, token, null);
+        queue.add(request);
+    }
+
     public void register(String user,
                          String firstname,
                          String lastname,
@@ -293,6 +308,17 @@ public class Backend {
         String requestUrl = url + "/api/user/token";
         Map<String, String> params = new HashMap<>();
         params.put("token", FirebaseService.getToken(ctx));
+        ApiPutRequest request =
+                new ApiPutRequest(requestUrl, onSuccess, errorListener, token, params);
+        queue.add(request);
+    }
+
+    public void resetPassword(String email,
+                              Response.Listener<String> onSuccess,
+                              Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/user/reset-passwd";
+        Map<String, String> params = new HashMap<>();
+        params.put("username", email);
         ApiPutRequest request =
                 new ApiPutRequest(requestUrl, onSuccess, errorListener, token, params);
         queue.add(request);
