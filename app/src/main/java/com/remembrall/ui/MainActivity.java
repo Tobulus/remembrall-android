@@ -23,6 +23,7 @@ import com.remembrall.ui.invitation.InvitationFragment;
 import com.remembrall.ui.login_registration.LoginFragment;
 import com.remembrall.ui.login_registration.LoginRegistrationFragment;
 import com.remembrall.ui.login_registration.RegistrationFragment;
+import com.remembrall.ui.profile.ProfileFragment;
 
 import static com.remembrall.ui.groceryList.GroceryListFragment.LAUNCH_CREATE_GROCERY_LIST;
 import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH_CREATE_GROCERY_LIST_ENTRY;
@@ -82,6 +83,9 @@ public class MainActivity extends AppCompatActivity
                 case R.id.action_invitations:
                     showInvitations();
                     break;
+                case R.id.action_profile:
+                    showProfile();
+                    break;
             }
             return true;
         });
@@ -105,6 +109,15 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
     }
 
+    private void showProfile() {
+        ProfileFragment fragment = new ProfileFragment();
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(R.id.main_fragment, fragment)
+                                   .addToBackStack("profile")
+                                   .commit();
+        findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
+    }
+
     private void showGroceryLists(boolean archived) {
         GroceryListFragment fragment = new GroceryListFragment(archived);
         getSupportFragmentManager().beginTransaction()
@@ -112,8 +125,7 @@ public class MainActivity extends AppCompatActivity
                                    .addToBackStack("lists")
                                    .commit();
 
-        findViewById(R.id.floating_plus_button).setVisibility(archived ?
-                                                              View.INVISIBLE :
+        findViewById(R.id.floating_plus_button).setVisibility(archived ? View.INVISIBLE :
                                                               View.VISIBLE);
         FloatingActionButton fab = findViewById(R.id.floating_plus_button);
         fab.setOnClickListener(v -> {
