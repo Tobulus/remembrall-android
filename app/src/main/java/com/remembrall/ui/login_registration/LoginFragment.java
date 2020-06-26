@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.remembrall.R;
@@ -36,6 +37,7 @@ public class LoginFragment extends Fragment {
         final EditText passwordEditText = view.findViewById(R.id.password);
         final Button loginButton = view.findViewById(R.id.login);
         final ProgressBar loadingProgressBar = view.findViewById(R.id.loading);
+        final TextView forgotPassword = view.findViewById(R.id.forgot_password);
 
         loginButton.setEnabled(true);
 
@@ -55,9 +57,14 @@ public class LoginFragment extends Fragment {
                                               }, e -> {
                                               });
                             },
-                            error -> Toast.makeText(getContext(),
-                                                    "Failed:" + error.getMessage(),
-                                                    Toast.LENGTH_LONG).show());
+                                 error -> Toast.makeText(getContext(),
+                                                         "Failed:" + error.getMessage(),
+                                                         Toast.LENGTH_LONG).show());
+        });
+
+        forgotPassword.setOnClickListener(v -> {
+            ResetPasswordDialog dialog = new ResetPasswordDialog();
+            dialog.show(getParentFragmentManager(), "forgot-password");
         });
 
         return view;

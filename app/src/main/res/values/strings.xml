@@ -19,4 +19,7 @@
     <string name="archived_navigation_lists">Archive</string>
     <string name="default_channel_name">Default channel for information notification</string>
     <string name="default_channel_description">Groups notifications for informations with default importance</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
 </resources>
