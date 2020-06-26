@@ -24,6 +24,12 @@ public class ProfileFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        TextView changePassword = view.findViewById(R.id.change_password);
+        changePassword.setOnClickListener(v -> {
+            ChangePasswordDialog dialog = new ChangePasswordDialog();
+            dialog.show(getParentFragmentManager(), "change-password");
+        });
+
         TextView logout = view.findViewById(R.id.logout);
         logout.setOnClickListener(v -> ServiceLocator.getInstance().get(Backend.class).logout(s -> {
         }, error -> {

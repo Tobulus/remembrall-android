@@ -316,9 +316,22 @@ public class Backend {
     public void resetPassword(String email,
                               Response.Listener<String> onSuccess,
                               Response.ErrorListener errorListener) {
-        String requestUrl = url + "/api/user/reset-passwd";
+        String requestUrl = url + "/api/user/reset-password";
         Map<String, String> params = new HashMap<>();
         params.put("username", email);
+        ApiPutRequest request =
+                new ApiPutRequest(requestUrl, onSuccess, errorListener, token, params);
+        queue.add(request);
+    }
+
+    public void changePassword(String oldPassword,
+                               String newPassword,
+                               Response.Listener<String> onSuccess,
+                               Response.ErrorListener errorListener) {
+        String requestUrl = url + "/api/user/change-password";
+        Map<String, String> params = new HashMap<>();
+        params.put("oldPassword", oldPassword);
+        params.put("newPassword", newPassword);
         ApiPutRequest request =
                 new ApiPutRequest(requestUrl, onSuccess, errorListener, token, params);
         queue.add(request);
