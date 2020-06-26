@@ -1,13 +1,13 @@
 package com.remembrall.api;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.remembrall.BuildConfig;
 import com.remembrall.api.data.GroceryListData;
 import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.api.data.InvitationData;
@@ -23,12 +23,10 @@ import com.remembrall.model.database.GroceryListEntry;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -41,25 +39,15 @@ public class Backend {
     private final LoginRequiredListener loginRequiredListener;
 
     private RequestQueue queue;
-    private String url;
+    private final String url = BuildConfig.SERVER_URL;
 
     private String token;
 
     public Backend(Context ctx, LoginRequiredListener listener) {
         this.ctx = ctx;
         this.queue = Volley.newRequestQueue(ctx);
-        token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
-                   .getString(TOKEN_KEY, null);
-        Properties properties = new Properties();
-        AssetManager assetManager = ctx.getAssets();
-        try {
-            InputStream inputStream = assetManager.open("application.properties");
-            properties.load(inputStream);
-            this.url = properties.getProperty("host");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        this.token = ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
+                        .getString(TOKEN_KEY, null);
         this.loginRequiredListener = listener;
     }
 
