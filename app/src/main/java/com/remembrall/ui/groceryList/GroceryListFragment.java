@@ -173,7 +173,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
     private void showGroceryListDialog() {
         GroceryListDialog dialog = new GroceryListDialog(adapter.getSelectedGroceryList());
         dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST);
-        dialog.show(requireFragmentManager(), "edit-grocery-list");
+        dialog.show(getParentFragmentManager(), "edit-grocery-list");
     }
 
     private void deleteSelectedItems() {

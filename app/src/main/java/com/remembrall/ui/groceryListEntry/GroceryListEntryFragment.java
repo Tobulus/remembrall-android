@@ -133,7 +133,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         bundle.putLong("id", groceryListId);
         dialog.setTargetFragment(this, LAUNCH_CREATE_INVITATION);
         dialog.setArguments(bundle);
-        dialog.show(requireFragmentManager(), "create-invitation");
+        dialog.show(getParentFragmentManager(), "create-invitation");
     }
 
     private void showGroceryListEntryDialog() {
@@ -143,7 +143,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
                 new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry());
         dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
         dialog.setArguments(bundle);
-        dialog.show(requireFragmentManager(), "edit-grocery-list-entry");
+        dialog.show(getParentFragmentManager(), "edit-grocery-list-entry");
     }
 
     private void deleteSelectedItems() {

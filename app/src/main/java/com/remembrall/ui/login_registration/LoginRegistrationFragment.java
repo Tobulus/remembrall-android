@@ -31,7 +31,7 @@ public class LoginRegistrationFragment extends Fragment {
         TabLayout tabs = view.findViewById(R.id.view_pager_tabs);
         LoginFragment loginFragment = new LoginFragment();
         RegistrationFragment registrationFragment = new RegistrationFragment();
-        PagerAdapter adapter = new PagerAdapter(getFragmentManager());
+        PagerAdapter adapter = new PagerAdapter(getParentFragmentManager());
         tabs.setupWithViewPager(pager);
 
         adapter.add(loginFragment);
