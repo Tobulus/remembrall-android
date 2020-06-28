@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -17,7 +20,8 @@ import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 
-public class GroceryListEntryDialog extends DialogFragment {
+public class GroceryListEntryDialog extends DialogFragment
+        implements AdapterView.OnItemSelectedListener {
 
     private GroceryListEntry groceryListEntry;
 
@@ -39,15 +43,22 @@ public class GroceryListEntryDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_grocery_list_entry, null);
         final TextView name = view.findViewById(R.id.name);
 
+        Spinner quantityUnit = view.findViewById(R.id.quantityUnit);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
+                                                                             R.array.quantity_units,
+                                                                             android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        quantityUnit.setAdapter(adapter);
+        quantityUnit.setOnItemSelectedListener(this);
+
         if (groceryListEntry != null) {
             name.setText(groceryListEntry.getName());
         }
 
-        builder.setView(view)
-               .setPositiveButton(R.string.save, (dialog, id) -> {
-                   if (groceryListEntry == null) {
-                       createEntry(groceryListId, name.getText().toString());
-                   } else {
+        builder.setView(view).setPositiveButton(R.string.save, (dialog, id) -> {
+            if (groceryListEntry == null) {
+                createEntry(groceryListId, name.getText().toString());
+            } else {
                        groceryListEntry.setName(name.getText().toString());
                        updateEntry(groceryListId, groceryListEntry);
                    }
@@ -86,5 +97,15 @@ public class GroceryListEntryDialog extends DialogFragment {
                                               error -> Toast.makeText(getContext(),
                                                                       error.getMessage(),
                                                                       Toast.LENGTH_LONG).show());
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        parent.getItemAtPosition(position);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

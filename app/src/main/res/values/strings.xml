@@ -5,13 +5,12 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="login_failed">"Login failed"</string>
     <string name="create_grocerylist_name">Name</string>
     <string name="create_grocerylist_save">Save</string>
     <string name="activity_registration_register">Register</string>
     <string name="navigation_lists">Lists</string>
     <string name="navigation_invitations">Invitations</string>
-    <string name="create_invitation">Invite email</string>
+    <string name="create_invitation">Email</string>
     <string name="prompt_lastname">Lastname</string>
     <string name="prompt_firstname">Firstname</string>
     <string name="save">Save</string>
@@ -25,4 +24,10 @@
     <string name="change_password">Change password</string>
     <string name="new_password">New Password</string>
     <string name="old_password">Old password</string>
+    <string name="quantity">Amount</string>
+    <string name="piece">pc</string>
+    <string name="liter">l</string>
+    <string name="milli_liter">ml</string>
+    <string name="gram">g</string>
+    <string name="kilo_gram">kg</string>
 </resources>

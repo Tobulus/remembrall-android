@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="quantity_units">
+        <item code="l">@string/liter</item>
+        <item code="p">@string/piece</item>
+        <item code="ml">@string/milli_liter</item>
+        <item code="g">@string/gram</item>
+        <item code="kg">@string/kilo_gram</item>
+    </string-array>
+</resources>

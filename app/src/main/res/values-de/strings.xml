@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Remembrall</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in_short">Anmelden</string>
+    <string name="create_grocerylist_name">Name</string>
+    <string name="create_grocerylist_save">Speichern</string>
+    <string name="activity_registration_register">Registrieren</string>
+    <string name="navigation_lists">Listen</string>
+    <string name="navigation_invitations">Einladungen</string>
+    <string name="create_invitation">Email</string>
+    <string name="prompt_lastname">Nachname</string>
+    <string name="prompt_firstname">Vorname</string>
+    <string name="save">Speichern</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="archived_navigation_lists">Archiv</string>
+    <string name="default_channel_name">Standardkanal für Benachrichtigung</string>
+    <string name="default_channel_description">Gruppiert Benachrichtigungen für Informationen mit normaler Wichtigkeit</string>
+    <string name="forgot_password">Passwort vergessen?</string>
+    <string name="profile">Profil</string>
+    <string name="logout">Abmelden</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="new_password">Neues Passwort</string>
+    <string name="old_password">Altes Passwort</string>
+    <string name="quantity">Menge</string>
+    <string name="piece">St.</string>
+    <string name="liter">l</string>
+    <string name="milli_liter">ml</string>
+    <string name="gram">g</string>
+    <string name="kilo_gram">kg</string>
+</resources>
