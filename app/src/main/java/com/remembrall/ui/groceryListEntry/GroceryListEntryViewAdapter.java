@@ -59,6 +59,10 @@ public class GroceryListEntryViewAdapter
                 return true;
             });
 
+            holder.quantityWithUnit.setText(String.format("%.2f %s",
+                                                          holder.groceryListEntry.getQuantity(),
+                                                          holder.groceryListEntry.getQuantityUnit()));
+
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
             holder.checked.setOnClickListener(v -> {
                 holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
@@ -114,6 +118,7 @@ public class GroceryListEntryViewAdapter
     public static class GroceryListEntryHolder extends RecyclerView.ViewHolder {
         public final View view;
         public final TextView name;
+        public final TextView quantityWithUnit;
         public final CheckBox checked;
         public final Context ctx;
 
@@ -123,6 +128,7 @@ public class GroceryListEntryViewAdapter
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
+            quantityWithUnit = view.findViewById(R.id.quantity_with_unit);
             checked = view.findViewById(R.id.checked);
             ctx = context;
         }

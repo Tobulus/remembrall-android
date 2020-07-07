@@ -18,6 +18,12 @@ public class GroceryListEntryData {
     @JsonProperty("checked")
     private boolean checked;
 
+    @JsonProperty("quantity")
+    private Double quantity;
+
+    @JsonProperty("quantityUnit")
+    private String quantityUnit;
+
     @JsonProperty("groceryList")
     private GroceryListData groceryList;
 
@@ -53,11 +59,31 @@ public class GroceryListEntryData {
         this.groceryList = groceryList;
     }
 
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getQuantityUnit() {
+        return quantityUnit;
+    }
+
+    public void setQuantityUnit(String quantityUnit) {
+        this.quantityUnit = quantityUnit;
+    }
+
     public Map<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("id", id.toString());
+        if (id != null) {
+            map.put("id", id.toString());
+        }
         map.put("name", name);
         map.put("checked", Boolean.toString(checked));
+        map.put("quantity", quantity.toString());
+        map.put("quantityUnit", quantityUnit);
         return map;
     }
 
@@ -68,6 +94,8 @@ public class GroceryListEntryData {
         entity.setName(name);
         entity.setChecked(checked);
         entity.setGroceryList(getGroceryList().getId());
+        entity.setQuantity(quantity);
+        entity.setQuantityUnit(quantityUnit);
         return entity;
     }
 }
