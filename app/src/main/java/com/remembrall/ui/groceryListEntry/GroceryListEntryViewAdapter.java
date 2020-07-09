@@ -27,6 +27,7 @@ public class GroceryListEntryViewAdapter
     private final RecyclerView recyclerView;
 
     private List<Integer> selected = new ArrayList<>();
+    private QuantityUnitAdapter quantityUnitAdapter;
 
     GroceryListEntryViewAdapter(LifecycleOwner owner,
                                 GroceryListEntryModel model,
@@ -35,6 +36,8 @@ public class GroceryListEntryViewAdapter
         fragment = (GroceryListEntryFragment) owner;
         recyclerView = recycler;
         model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
+        quantityUnitAdapter = new QuantityUnitAdapter(fragment.getContext(),
+                                                      android.R.layout.simple_spinner_item);
     }
 
     @NonNull
@@ -61,7 +64,9 @@ public class GroceryListEntryViewAdapter
 
             holder.quantityWithUnit.setText(String.format("%.2f %s",
                                                           holder.groceryListEntry.getQuantity(),
-                                                          holder.groceryListEntry.getQuantityUnit()));
+                                                          quantityUnitAdapter.fromCode(holder.groceryListEntry
+                                                                                               .getQuantityUnit())
+                                                                             .getShortLabel(fragment.getContext())));
 
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
             holder.checked.setOnClickListener(v -> {

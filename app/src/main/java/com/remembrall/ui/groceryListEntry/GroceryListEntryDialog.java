@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +19,6 @@ import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 
-import java.util.stream.IntStream;
-
 public class GroceryListEntryDialog extends DialogFragment
         implements AdapterView.OnItemSelectedListener {
 
@@ -35,19 +31,9 @@ public class GroceryListEntryDialog extends DialogFragment
         this.groceryListEntry = groceryListEntry;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        // TODO: https://stackoverflow.com/questions/1625249/android-how-to-bind-spinner-to-custom-object-list
-
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
@@ -59,9 +45,9 @@ public class GroceryListEntryDialog extends DialogFragment
         final TextView quantity = view.findViewById(R.id.quantity);
 
         Spinner quantityUnit = view.findViewById(R.id.quantityUnit);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
-                                                                             R.array.quantity_units,
-                                                                             android.R.layout.simple_spinner_item);
+
+        QuantityUnitAdapter adapter =
+                new QuantityUnitAdapter(getContext(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         quantityUnit.setAdapter(adapter);
         quantityUnit.setOnItemSelectedListener(this);
@@ -69,13 +55,7 @@ public class GroceryListEntryDialog extends DialogFragment
         if (groceryListEntry != null) {
             name.setText(groceryListEntry.getName());
             quantity.setText(groceryListEntry.getQuantity().toString());
-
-            String[] codes = getResources().getStringArray(R.array.quantity_units_codes);
-            int idx = IntStream.range(0, codes.length)
-                               .filter(i -> codes[i].equals(groceryListEntry.getQuantityUnit()))
-                               .findFirst()
-                               .orElse(0);
-            quantityUnit.setSelection(idx);
+            quantityUnit.setSelection(adapter.getPosition(groceryListEntry.getQuantityUnit()));
         } else {
             quantityUnit.setSelection(0);
         }
@@ -88,8 +68,10 @@ public class GroceryListEntryDialog extends DialogFragment
                    Double quantityDouble = quantity.getText().toString().isEmpty() ?
                                            1d :
                                            Double.parseDouble(quantity.getText().toString());
+
                    String quantityUnitCode =
-                           getResources().getStringArray(R.array.quantity_units_codes)[quantityUnit.getSelectedItemPosition()];
+                           adapter.getItem(quantityUnit.getSelectedItemPosition()).getCode();
+
                    if (groceryListEntry == null) {
                        createEntry(groceryListId,
                                    name.getText().toString(),
