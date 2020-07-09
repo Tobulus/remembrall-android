@@ -42,6 +42,9 @@ public class GroceryListDialog extends DialogFragment {
         }
 
         builder.setView(view)
+               .setTitle(groceryList == null ?
+                         R.string.dialog_title_grocery_list_create :
+                         R.string.dialog_title_grocery_list_update)
                .setPositiveButton(R.string.save, (dialog, id) -> {
                    if (groceryList == null) {
                        createList(name.getText().toString());

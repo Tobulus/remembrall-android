@@ -25,9 +25,16 @@
     <string name="new_password">New Password</string>
     <string name="old_password">Old password</string>
     <string name="quantity">Amount</string>
-    <string name="piece">pc</string>
-    <string name="liter">l</string>
-    <string name="milli_liter">ml</string>
-    <string name="gram">g</string>
-    <string name="kilo_gram">kg</string>
+    <string name="piece">piece</string>
+    <string name="liter">liter</string>
+    <string name="milli_liter">milli-liter</string>
+    <string name="gram">gram</string>
+    <string name="kilo_gram">kilo-gram</string>
+    <string name="dialog_title_grocery_list_entry_create">Create entry</string>
+    <string name="dialog_title_grocery_list_entry_update">Update entry</string>
+    <string name="dialog_title_grocery_list_create">Create list</string>
+    <string name="dialog_title_grocery_list_update">Update entry</string>
+    <string name="dialog_title_change_password">Change password</string>
+    <string name="dialog_title_forgot_password">Reset password</string>
+    <string name="prompt_password_again">Repeat password</string>
 </resources>

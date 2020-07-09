@@ -28,7 +28,7 @@ public class ChangePasswordDialog extends DialogFragment {
         final TextView oldPassword = view.findViewById(R.id.old_password);
         final TextView newPassword = view.findViewById(R.id.new_password);
 
-        builder.setView(view)
+        builder.setView(view).setTitle(R.string.dialog_title_change_password)
                .setPositiveButton(R.string.save,
                                   (dialog, id) -> changePassword(oldPassword.getText().toString(),
                                                                  newPassword.getText().toString()))

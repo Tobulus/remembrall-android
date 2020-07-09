@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -32,6 +33,14 @@ public class GroceryListEntryDialog extends DialogFragment
 
     public GroceryListEntryDialog(GroceryListEntry groceryListEntry) {
         this.groceryListEntry = groceryListEntry;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @NonNull
@@ -68,10 +77,13 @@ public class GroceryListEntryDialog extends DialogFragment
                                .orElse(0);
             quantityUnit.setSelection(idx);
         } else {
-            quantityUnit.setSelection(1);
+            quantityUnit.setSelection(0);
         }
 
         builder.setView(view)
+               .setTitle(groceryListEntry == null ?
+                         R.string.dialog_title_grocery_list_entry_create :
+                         R.string.dialog_title_grocery_list_entry_update)
                .setPositiveButton(R.string.save, (dialog, id) -> {
                    Double quantityDouble = quantity.getText().toString().isEmpty() ?
                                            1d :
