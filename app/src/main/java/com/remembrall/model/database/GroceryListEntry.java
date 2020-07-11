@@ -17,6 +17,10 @@ public class GroceryListEntry {
 
     private Long groceryList;
 
+    private Double quantity;
+
+    private String quantityUnit;
+
     public Long getId() {
         return id;
     }
@@ -49,11 +53,30 @@ public class GroceryListEntry {
         this.groceryList = groceryList;
     }
 
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getQuantityUnit() {
+        return quantityUnit;
+    }
+
+    public void setQuantityUnit(String quantityUnit) {
+        this.quantityUnit = quantityUnit;
+    }
+
     public GroceryListEntryData toData() {
         GroceryListEntryData data = new GroceryListEntryData();
         data.setId(id);
         data.setName(name);
         data.setChecked(checked);
+        data.setQuantity(quantity);
+        data.setQuantityUnit(quantityUnit);
+
         GroceryListData list = new GroceryListData();
         list.setId(groceryList);
         data.setGroceryList(list);

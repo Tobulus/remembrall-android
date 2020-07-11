@@ -176,15 +176,12 @@ public class Backend {
                                        GroceryListEntryData entry,
                                        Consumer<String> onSuccess,
                                        Response.ErrorListener errorListener) {
-        Map<String, String> postParams = new HashMap<>();
-        postParams.put("name", entry.getName());
         String requestUrl = url + "/api/grocery-list/" + groceryListId + "/entry/new";
-
         ApiPostRequest request = new ApiPostRequest(requestUrl,
                                                     onSuccess::accept,
                                                     error -> onErrorHandler(error, errorListener),
                                                     token,
-                                                    postParams);
+                                                    entry.toMap());
         queue.add(request);
     }
 

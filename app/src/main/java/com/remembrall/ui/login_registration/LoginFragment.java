@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            ResetPasswordDialog dialog = new ResetPasswordDialog();
+            ForgotPasswordDialog dialog = new ForgotPasswordDialog();
             dialog.show(getParentFragmentManager(), "forgot-password");
         });
 

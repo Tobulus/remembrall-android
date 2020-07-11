@@ -13,7 +13,7 @@ import com.remembrall.R;
 import com.remembrall.api.Backend;
 import com.remembrall.locator.ServiceLocator;
 
-public class ResetPasswordDialog extends DialogFragment {
+public class ForgotPasswordDialog extends DialogFragment {
 
     @NonNull
     @Override
@@ -25,10 +25,11 @@ public class ResetPasswordDialog extends DialogFragment {
         final TextView email = view.findViewById(R.id.email);
 
         builder.setView(view)
+               .setTitle(R.string.dialog_title_forgot_password)
                .setPositiveButton(R.string.save,
                                   (dialog, id) -> resetPassword(email.getText().toString()))
                .setNegativeButton(R.string.cancel,
-                                  (dialog, id) -> ResetPasswordDialog.this.getDialog().cancel());
+                                  (dialog, id) -> ForgotPasswordDialog.this.getDialog().cancel());
 
         return builder.create();
     }

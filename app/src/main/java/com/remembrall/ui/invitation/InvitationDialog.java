@@ -28,7 +28,7 @@ public class InvitationDialog extends DialogFragment {
 
         final TextView email = view.findViewById(R.id.email);
 
-        builder.setView(view)
+        builder.setView(view).setTitle(R.string.dialog_title_invitation)
                .setPositiveButton(R.string.save, (dialog, id) -> {
                    createInvitation(groceryListId, email.getText().toString());
                })

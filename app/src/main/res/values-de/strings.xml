@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Remembrall</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in_short">Anmelden</string>
+    <string name="create_grocerylist_name">Name</string>
+    <string name="create_grocerylist_save">Speichern</string>
+    <string name="activity_registration_register">Registrieren</string>
+    <string name="navigation_lists">Listen</string>
+    <string name="navigation_invitations">Einladungen</string>
+    <string name="create_invitation">Email</string>
+    <string name="prompt_lastname">Nachname</string>
+    <string name="prompt_firstname">Vorname</string>
+    <string name="save">Speichern</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="archived_navigation_lists">Archiv</string>
+    <string name="default_channel_name">Standardkanal für Benachrichtigung</string>
+    <string name="default_channel_description">Gruppiert Benachrichtigungen für Informationen mit normaler Wichtigkeit</string>
+    <string name="forgot_password">Passwort vergessen?</string>
+    <string name="profile">Profil</string>
+    <string name="logout">Abmelden</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="new_password">Neues Passwort</string>
+    <string name="old_password">Altes Passwort</string>
+    <string name="quantity">Menge</string>
+    <string name="QuantityUnit.P">Stück</string>
+    <string name="QuantityUnit.L">Liter</string>
+    <string name="QuantityUnit.ML">Milliliter</string>
+    <string name="QuantityUnit.G">Gramm</string>
+    <string name="QuantityUnit.KG">Kilogramm</string>
+    <string name="QuantityUnit.P.short">St.</string>
+    <string name="QuantityUnit.L.short">l</string>
+    <string name="QuantityUnit.ML.short">ml</string>
+    <string name="QuantityUnit.G.short">g</string>
+    <string name="QuantityUnit.KG.short">kg</string>
+    <string name="dialog_title_grocery_list_entry_create">Eintrag anlegen</string>
+    <string name="dialog_title_grocery_list_entry_update">Eintrag bearbeiten</string>
+    <string name="dialog_title_grocery_list_create">Liste anlegen</string>
+    <string name="dialog_title_grocery_list_update">Liste bearbeiten</string>
+    <string name="dialog_title_change_password">Passwort ändern</string>
+    <string name="dialog_title_forgot_password">Passwort zurücksetzen</string>
+    <string name="prompt_password_again">Passwort wiederholen</string>
+    <string name="dialog_title_invitation">Einladen</string>
+</resources>
