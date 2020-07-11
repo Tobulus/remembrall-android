@@ -42,4 +42,5 @@
     <string name="dialog_title_change_password">Passwort ändern</string>
     <string name="dialog_title_forgot_password">Passwort zurücksetzen</string>
     <string name="prompt_password_again">Passwort wiederholen</string>
+    <string name="dialog_title_invitation">Einladen</string>
 </resources>

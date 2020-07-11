@@ -57,8 +57,13 @@ public class GroceryListViewAdapter
                                                     holder.groceryList.getNumberOfEntries()));
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
             holder.parent.setOnLongClickListener(v -> {
-                selected.add(position);
-                holder.view.setSelected(true);
+                if (selected.contains(position)) {
+                    selected.remove(Integer.valueOf(position));
+                    holder.view.setSelected(false);
+                } else {
+                    selected.add(position);
+                    holder.view.setSelected(true);
+                }
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });

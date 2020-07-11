@@ -15,6 +15,7 @@ import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,14 +57,20 @@ public class GroceryListEntryViewAdapter
 
             holder.name.setText(holder.groceryListEntry.getName());
             holder.name.setOnLongClickListener(v -> {
-                selected.add(position);
-                holder.view.setSelected(true);
+                if (selected.contains(position)) {
+                    selected.remove(Integer.valueOf(position));
+                    holder.view.setSelected(false);
+                } else {
+                    selected.add(position);
+                    holder.view.setSelected(true);
+                }
                 fragment.requireActivity().invalidateOptionsMenu();
                 return true;
             });
 
-            holder.quantityWithUnit.setText(String.format("%.2f %s",
-                                                          holder.groceryListEntry.getQuantity(),
+            holder.quantityWithUnit.setText(String.format("%s %s",
+                                                          new DecimalFormat("#.##").format(holder.groceryListEntry
+                                                                                                   .getQuantity()),
                                                           quantityUnitAdapter.fromCode(holder.groceryListEntry
                                                                                                .getQuantityUnit())
                                                                              .getShortLabel(fragment.getContext())));
