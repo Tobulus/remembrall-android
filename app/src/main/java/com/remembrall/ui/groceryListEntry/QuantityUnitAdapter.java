@@ -41,19 +41,19 @@ public class QuantityUnitAdapter extends ArrayAdapter<QuantityUnit> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView label = (TextView) super.getView(position, convertView, parent);
         label.setTextColor(Color.BLACK);
-        label.setText(getItem(position).getLabel(ctx));
+        label.setText(getItem(position) == null ? "" : getItem(position).getLabel(ctx));
 
         return label;
     }
 
     @Override
-    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView label = (TextView) super.getDropDownView(position, convertView, parent);
         label.setTextColor(Color.BLACK);
-        label.setText(getItem(position).getLabel(ctx));
+        label.setText(getItem(position) == null ? "" : getItem(position).getLabel(ctx));
 
         return label;
     }

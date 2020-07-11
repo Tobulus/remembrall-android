@@ -18,6 +18,7 @@ import com.remembrall.model.view.GroceryListEntryModel;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GroceryListEntryViewAdapter
@@ -37,7 +38,7 @@ public class GroceryListEntryViewAdapter
         fragment = (GroceryListEntryFragment) owner;
         recyclerView = recycler;
         model.getLiveData().observe(owner, entries -> this.notifyDataSetChanged());
-        quantityUnitAdapter = new QuantityUnitAdapter(fragment.getContext(),
+        quantityUnitAdapter = new QuantityUnitAdapter(fragment.requireContext(),
                                                       android.R.layout.simple_spinner_item);
     }
 
@@ -50,7 +51,7 @@ public class GroceryListEntryViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(final GroceryListEntryHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final GroceryListEntryHolder holder, int position) {
         List<GroceryListEntry> groceryListEntries = groceryListEntryModel.getLiveData().getValue();
         if (groceryListEntries != null) {
             holder.groceryListEntry = groceryListEntries.get(position);
@@ -83,8 +84,7 @@ public class GroceryListEntryViewAdapter
                               .updateGroceryListEntry(holder.groceryListEntry.getGroceryList(),
                                                       holder.groceryListEntry,
                                                       response -> {
-                                                      },
-                                                      e -> holder.checked.toggle());
+                                                      }, e -> holder.checked.toggle());
             });
         }
     }
@@ -93,15 +93,23 @@ public class GroceryListEntryViewAdapter
         return selected.size();
     }
 
-    public GroceryListEntry getSelectedGroceryListEntry() {
-        return groceryListEntryModel.getLiveData().getValue().get(selected.get(0));
+    public Optional<GroceryListEntry> getSelectedGroceryListEntry() {
+        List<GroceryListEntry> data = groceryListEntryModel.getLiveData().getValue();
+
+        if (data == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(groceryListEntryModel.getLiveData().getValue().get(selected.get(0)));
     }
 
     public List<GroceryListEntry> getSelectedGroceryListEntries() {
         return selected.stream()
-                       .map(position -> groceryListEntryModel.getLiveData()
+                       .map(position -> groceryListEntryModel.getLiveData().getValue() != null ?
+                                        groceryListEntryModel.getLiveData()
                                                              .getValue()
-                                                             .get(position))
+                                                             .get(position) :
+                                        null)
                        .collect(Collectors.toList());
     }
 
@@ -114,8 +122,14 @@ public class GroceryListEntryViewAdapter
 
     public boolean unselect() {
         boolean isNotEmpty = selected.size() > 0;
-        selected.forEach(id -> ((GroceryListEntryViewAdapter.GroceryListEntryHolder) recyclerView.findViewHolderForAdapterPosition(
-                id)).view.setSelected(false));
+        selected.forEach(id -> {
+            GroceryListEntryViewAdapter.GroceryListEntryHolder holder =
+                    ((GroceryListEntryViewAdapter.GroceryListEntryHolder) recyclerView.findViewHolderForAdapterPosition(
+                            id));
+            if (holder != null) {
+                holder.view.setSelected(false);
+            }
+        });
         selected.clear();
         fragment.requireActivity().invalidateOptionsMenu();
         return isNotEmpty;

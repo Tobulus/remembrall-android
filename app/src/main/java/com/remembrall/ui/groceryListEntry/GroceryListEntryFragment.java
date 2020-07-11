@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,6 +25,8 @@ import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
 import com.remembrall.model.view.factory.GroceryListEntryModelFactory;
 import com.remembrall.ui.invitation.InvitationDialog;
+
+import java.security.InvalidParameterException;
 
 public class GroceryListEntryFragment extends Fragment implements BackPressedListener {
 
@@ -47,7 +50,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_grocery_list_entry, menu);
     }
 
@@ -140,7 +143,9 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         Bundle bundle = new Bundle();
         bundle.putLong("id", groceryListId);
         GroceryListEntryDialog dialog =
-                new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry());
+                new GroceryListEntryDialog(adapter.getSelectedGroceryListEntry()
+                                                  .orElseThrow(() -> new InvalidParameterException(
+                                                          "Entry selection is empty")));
         dialog.setTargetFragment(this, LAUNCH_CREATE_GROCERY_LIST_ENTRY);
         dialog.setArguments(bundle);
         dialog.show(getParentFragmentManager(), "edit-grocery-list-entry");

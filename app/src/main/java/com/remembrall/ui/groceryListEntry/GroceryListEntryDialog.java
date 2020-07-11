@@ -19,15 +19,20 @@ import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 
+import java.security.InvalidParameterException;
+
 public class GroceryListEntryDialog extends DialogFragment
         implements AdapterView.OnItemSelectedListener {
 
     private GroceryListEntry groceryListEntry;
+    private Backend backend;
 
     public GroceryListEntryDialog() {
+        backend = ServiceLocator.getInstance().get(Backend.class);
     }
 
     public GroceryListEntryDialog(GroceryListEntry groceryListEntry) {
+        this();
         this.groceryListEntry = groceryListEntry;
     }
 
@@ -37,24 +42,25 @@ public class GroceryListEntryDialog extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
+        if (getArguments() == null) {
+            throw new InvalidParameterException("GroceryListId was empty but is required.");
+        }
         Long groceryListId = getArguments().getLong("id");
 
         View view = inflater.inflate(R.layout.dialog_grocery_list_entry, null);
-
         final TextView name = view.findViewById(R.id.name);
         final TextView quantity = view.findViewById(R.id.quantity);
-
-        Spinner quantityUnit = view.findViewById(R.id.quantityUnit);
+        final Spinner quantityUnit = view.findViewById(R.id.quantityUnit);
 
         QuantityUnitAdapter adapter =
-                new QuantityUnitAdapter(getContext(), android.R.layout.simple_spinner_item);
+                new QuantityUnitAdapter(requireContext(), android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         quantityUnit.setAdapter(adapter);
         quantityUnit.setOnItemSelectedListener(this);
 
         if (groceryListEntry != null) {
             name.setText(groceryListEntry.getName());
-            quantity.setText(groceryListEntry.getQuantity().toString());
+            quantity.setText(String.format("%s", groceryListEntry.getQuantity()));
             quantityUnit.setSelection(adapter.getPosition(groceryListEntry.getQuantityUnit()));
         } else {
             quantityUnit.setSelection(0);
@@ -70,6 +76,8 @@ public class GroceryListEntryDialog extends DialogFragment
                                            Double.parseDouble(quantity.getText().toString());
 
                    String quantityUnitCode =
+                           adapter.getItem(quantityUnit.getSelectedItemPosition()) == null ?
+                           QuantityUnit.PIECE.getCode() :
                            adapter.getItem(quantityUnit.getSelectedItemPosition()).getCode();
 
                    if (groceryListEntry == null) {
@@ -83,9 +91,11 @@ public class GroceryListEntryDialog extends DialogFragment
                        groceryListEntry.setQuantityUnit(quantityUnitCode);
                        updateEntry(groceryListId, groceryListEntry);
                    }
-               })
-               .setNegativeButton(R.string.cancel,
-                                  (dialog, id) -> GroceryListEntryDialog.this.getDialog().cancel());
+               }).setNegativeButton(R.string.cancel, (dialog, id) -> {
+            if (GroceryListEntryDialog.this.getDialog() != null) {
+                GroceryListEntryDialog.this.getDialog().cancel();
+            }
+        });
 
         return builder.create();
     }
@@ -99,31 +109,27 @@ public class GroceryListEntryDialog extends DialogFragment
         entry.setQuantity(quantity);
         entry.setQuantityUnit(quantityUnitCode);
 
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
-                      .createGroceryListEntry(groceryListId,
-                                              entry,
-                                              json -> getTargetFragment().onActivityResult(
-                                                      getTargetRequestCode(),
-                                                      Activity.RESULT_OK,
-                                                      null),
-                                              error -> Toast.makeText(getContext(),
-                                                                      error.getMessage(),
-                                                                      Toast.LENGTH_LONG).show());
+        backend.createGroceryListEntry(groceryListId,
+                                       entry,
+                                       json -> signalSuccess(),
+                                       error -> Toast.makeText(getContext(),
+                                                               error.getMessage(),
+                                                               Toast.LENGTH_LONG).show());
     }
 
     private void updateEntry(Long groceryListId, GroceryListEntry entry) {
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
-                      .updateGroceryListEntry(groceryListId,
-                                              entry,
-                                              json -> getTargetFragment().onActivityResult(
-                                                      getTargetRequestCode(),
-                                                      Activity.RESULT_OK,
-                                                      null),
-                                              error -> Toast.makeText(getContext(),
-                                                                      error.getMessage(),
-                                                                      Toast.LENGTH_LONG).show());
+        backend.updateGroceryListEntry(groceryListId,
+                                       entry,
+                                       json -> signalSuccess(),
+                                       error -> Toast.makeText(getContext(),
+                                                               error.getMessage(),
+                                                               Toast.LENGTH_LONG).show());
+    }
+
+    private void signalSuccess() {
+        if (getTargetFragment() != null) {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
+        }
     }
 
     @Override
@@ -133,6 +139,5 @@ public class GroceryListEntryDialog extends DialogFragment
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 }

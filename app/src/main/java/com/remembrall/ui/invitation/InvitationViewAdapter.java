@@ -59,7 +59,7 @@ public class InvitationViewAdapter
         }
     }
 
-    private void refresh() {
+    public void refresh() {
         invitationModel.refresh();
     }
 
