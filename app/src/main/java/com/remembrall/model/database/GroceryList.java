@@ -18,6 +18,8 @@ public class GroceryList {
 
     private Integer numberOfCheckedEntries;
 
+    private String participants;
+
     public Long getId() {
         return id;
     }
@@ -56,6 +58,14 @@ public class GroceryList {
 
     public void setArchived(boolean archived) {
         this.archived = archived;
+    }
+
+    public String getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(String participants) {
+        this.participants = participants;
     }
 
     public GroceryListData toData() {

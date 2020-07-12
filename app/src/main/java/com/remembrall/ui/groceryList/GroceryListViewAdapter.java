@@ -55,6 +55,7 @@ public class GroceryListViewAdapter
             holder.numberInfo.setText(String.format("%s / %s",
                                                     holder.groceryList.getNumberOfCheckedEntries(),
                                                     holder.groceryList.getNumberOfEntries()));
+            holder.participants.setText(holder.groceryList.getParticipants());
             holder.parent.setOnClickListener(v -> groceriesActivity.onClick(holder.groceryList));
             holder.parent.setOnLongClickListener(v -> {
                 if (selected.contains(position)) {
@@ -110,6 +111,7 @@ public class GroceryListViewAdapter
         public final View view;
         public final TextView name;
         public final TextView numberInfo;
+        public final TextView participants;
         public final LinearLayout parent;
         public final Context ctx;
 
@@ -120,6 +122,7 @@ public class GroceryListViewAdapter
             this.view = view;
             name = view.findViewById(R.id.name);
             numberInfo = view.findViewById(R.id.numberInfo);
+            participants = view.findViewById(R.id.participants);
             parent = view.findViewById(R.id.parentLayout);
             ctx = context;
         }

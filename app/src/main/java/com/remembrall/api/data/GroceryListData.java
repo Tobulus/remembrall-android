@@ -24,6 +24,9 @@ public class GroceryListData {
     @JsonProperty("numberOfCheckedEntries")
     private Integer numberOfCheckedEntries;
 
+    @JsonProperty("participants")
+    private String participants;
+
     public Long getId() {
         return id;
     }
@@ -64,6 +67,14 @@ public class GroceryListData {
         this.archived = archived;
     }
 
+    public String getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(String participants) {
+        this.participants = participants;
+    }
+
     public Map<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         map.put("id", id.toString());
@@ -80,6 +91,7 @@ public class GroceryListData {
         entity.setArchived(archived);
         entity.setNumberOfCheckedEntries(numberOfCheckedEntries);
         entity.setNumberOfEntries(numberOfEntries);
+        entity.setParticipants(participants);
         return entity;
     }
 }
