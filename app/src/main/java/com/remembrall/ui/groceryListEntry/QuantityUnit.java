@@ -3,9 +3,10 @@ package com.remembrall.ui.groceryListEntry;
 import android.content.Context;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public enum QuantityUnit {
-    PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
+    UNDEFINED(null), PIECE("P"), LITER("L"), MILLILITER("ML"), GRAM("G"), KILOGRAM("KG");
 
     private String code;
 
@@ -15,9 +16,9 @@ public enum QuantityUnit {
 
     public static QuantityUnit fromCode(String code) {
         return Arrays.stream(values())
-                     .filter(quantityUnit -> quantityUnit.code.equals(code))
+                     .filter(quantityUnit -> Objects.equals(quantityUnit.code, code))
                      .findFirst()
-                     .orElse(null);
+                     .orElse(QuantityUnit.UNDEFINED);
     }
 
     public String getCode() {
@@ -25,6 +26,10 @@ public enum QuantityUnit {
     }
 
     public String getLabel(Context context) {
+        if (this == UNDEFINED) {
+            return "";
+        }
+
         return context.getResources()
                       .getString(context.getResources()
                                         .getIdentifier("QuantityUnit." + code,
@@ -33,6 +38,10 @@ public enum QuantityUnit {
     }
 
     public String getShortLabel(Context context) {
+        if (this == UNDEFINED) {
+            return "";
+        }
+
         return context.getResources()
                       .getString(context.getResources()
                                         .getIdentifier("QuantityUnit." + code + ".short",

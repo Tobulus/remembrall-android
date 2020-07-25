@@ -60,7 +60,9 @@ public class GroceryListEntryDialog extends DialogFragment
 
         if (groceryListEntry != null) {
             name.setText(groceryListEntry.getName());
-            quantity.setText(String.format("%s", groceryListEntry.getQuantity()));
+            quantity.setText(groceryListEntry.getQuantity() != null ?
+                             String.format("%s", groceryListEntry.getQuantity()) :
+                             "");
             quantityUnit.setSelection(adapter.getPosition(groceryListEntry.getQuantityUnit()));
         } else {
             quantityUnit.setSelection(0);
@@ -72,12 +74,12 @@ public class GroceryListEntryDialog extends DialogFragment
                          R.string.dialog_title_grocery_list_entry_update)
                .setPositiveButton(R.string.save, (dialog, id) -> {
                    Double quantityDouble = quantity.getText().toString().isEmpty() ?
-                                           1d :
+                                           null :
                                            Double.parseDouble(quantity.getText().toString());
 
                    String quantityUnitCode =
                            adapter.getItem(quantityUnit.getSelectedItemPosition()) == null ?
-                           QuantityUnit.PIECE.getCode() :
+                           QuantityUnit.UNDEFINED.getCode() :
                            adapter.getItem(quantityUnit.getSelectedItemPosition()).getCode();
 
                    if (groceryListEntry == null) {

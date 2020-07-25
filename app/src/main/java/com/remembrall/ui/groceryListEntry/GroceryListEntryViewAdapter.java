@@ -69,12 +69,8 @@ public class GroceryListEntryViewAdapter
                 return true;
             });
 
-            holder.quantityWithUnit.setText(String.format("%s %s",
-                                                          new DecimalFormat("#.##").format(holder.groceryListEntry
-                                                                                                   .getQuantity()),
-                                                          quantityUnitAdapter.fromCode(holder.groceryListEntry
-                                                                                               .getQuantityUnit())
-                                                                             .getShortLabel(fragment.getContext())));
+            holder.quantityWithUnit.setText(formatQuantityWithUnit(holder.groceryListEntry.getQuantity(),
+                                                                   holder.groceryListEntry.getQuantityUnit()));
 
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
             holder.checked.setOnClickListener(v -> {
@@ -84,9 +80,26 @@ public class GroceryListEntryViewAdapter
                               .updateGroceryListEntry(holder.groceryListEntry.getGroceryList(),
                                                       holder.groceryListEntry,
                                                       response -> {
-                                                      }, e -> holder.checked.toggle());
+                                                      },
+                                                      e -> holder.checked.toggle());
             });
         }
+    }
+
+    private String formatQuantityWithUnit(Double quantity, String quantityUnit) {
+        if (quantity != null && quantityUnit != null) {
+            return String.format("%s %s",
+                                 new DecimalFormat("#.##").format(quantity),
+                                 quantityUnitAdapter.fromCode(quantityUnit)
+                                                    .getShortLabel(fragment.getContext()));
+        } else if (quantity != null) {
+            return String.format("%s", new DecimalFormat("#.##").format(quantity));
+        } else if (quantityUnit != null) {
+            return String.format("%s",
+                                 quantityUnitAdapter.fromCode(quantityUnit)
+                                                    .getShortLabel(fragment.getContext()));
+        }
+        return "";
     }
 
     public int getNofSelectedItems() {

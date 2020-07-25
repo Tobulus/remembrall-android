@@ -82,8 +82,8 @@ public class GroceryListEntryData {
         }
         map.put("name", name);
         map.put("checked", Boolean.toString(checked));
-        map.put("quantity", quantity.toString());
-        map.put("quantityUnit", quantityUnit);
+        map.put("quantity", quantity == null ? "" : quantity.toString());
+        map.put("quantityUnit", quantityUnit == null ? "" : quantityUnit);
         return map;
     }
 
