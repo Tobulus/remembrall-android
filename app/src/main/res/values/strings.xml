@@ -43,4 +43,5 @@
     <string name="dialog_title_forgot_password">Reset password</string>
     <string name="prompt_password_again">Repeat password</string>
     <string name="dialog_title_invitation">Invite</string>
+    <string name="new_chip">New</string>
 </resources>

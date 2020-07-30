@@ -27,6 +27,9 @@ public class GroceryListEntryData {
     @JsonProperty("groceryList")
     private GroceryListData groceryList;
 
+    @JsonProperty("unseen")
+    private boolean unseen;
+
     public Long getId() {
         return id;
     }
@@ -75,6 +78,14 @@ public class GroceryListEntryData {
         this.quantityUnit = quantityUnit;
     }
 
+    public boolean isUnseen() {
+        return unseen;
+    }
+
+    public void setUnseen(boolean unseen) {
+        this.unseen = unseen;
+    }
+
     public Map<String, String> toMap() {
         HashMap<String, String> map = new HashMap<>();
         if (id != null) {
@@ -96,6 +107,7 @@ public class GroceryListEntryData {
         entity.setGroceryList(getGroceryList().getId());
         entity.setQuantity(quantity);
         entity.setQuantityUnit(quantityUnit);
+        entity.setUnseen(unseen);
         return entity;
     }
 }

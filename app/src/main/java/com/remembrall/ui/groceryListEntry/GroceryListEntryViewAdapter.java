@@ -57,6 +57,9 @@ public class GroceryListEntryViewAdapter
             holder.groceryListEntry = groceryListEntries.get(position);
 
             holder.name.setText(holder.groceryListEntry.getName());
+            holder.unseen.setVisibility(holder.groceryListEntry.isUnseen() ?
+                                        View.VISIBLE :
+                                        View.INVISIBLE);
             holder.name.setOnLongClickListener(v -> {
                 if (selected.contains(position)) {
                     selected.remove(Integer.valueOf(position));
@@ -158,6 +161,7 @@ public class GroceryListEntryViewAdapter
         public final View view;
         public final TextView name;
         public final TextView quantityWithUnit;
+        public final TextView unseen;
         public final CheckBox checked;
         public final Context ctx;
 
@@ -167,6 +171,7 @@ public class GroceryListEntryViewAdapter
             super(view);
             this.view = view;
             name = view.findViewById(R.id.name);
+            unseen = view.findViewById(R.id.unseen_chip);
             quantityWithUnit = view.findViewById(R.id.quantity_with_unit);
             checked = view.findViewById(R.id.checked);
             ctx = context;

@@ -21,6 +21,8 @@ public class GroceryListEntry {
 
     private String quantityUnit;
 
+    private Boolean unseen;
+
     public Long getId() {
         return id;
     }
@@ -67,6 +69,14 @@ public class GroceryListEntry {
 
     public void setQuantityUnit(String quantityUnit) {
         this.quantityUnit = quantityUnit;
+    }
+
+    public Boolean isUnseen() {
+        return unseen;
+    }
+
+    public void setUnseen(Boolean unseen) {
+        this.unseen = unseen;
     }
 
     public GroceryListEntryData toData() {
