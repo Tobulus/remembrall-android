@@ -35,6 +35,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
 
     private Long groceryListId;
     private GroceryListEntryViewAdapter adapter;
+    private SwipeRefreshLayout swipe;
 
     public GroceryListEntryFragment() {
     }
@@ -92,6 +93,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_list_entries, container, false);
+        swipe = (SwipeRefreshLayout) view;
         GroceryListEntryModel model = ViewModelProviders.of(this,
                                                             new GroceryListEntryModelFactory(
                                                                     groceryListId,
@@ -104,9 +106,9 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         adapter = new GroceryListEntryViewAdapter(this, model, recyclerView);
         recyclerView.setAdapter(adapter);
 
-        ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
+        swipe.setOnRefreshListener(() -> {
             adapter.refresh();
-            ((SwipeRefreshLayout) view).setRefreshing(false);
+            swipe.setRefreshing(false);
         });
 
         return view;
@@ -117,7 +119,11 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         super.onActivityResult(requestCode, resultCode, data);
 
         if ((requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY) && resultCode == Activity.RESULT_OK) {
-            adapter.refresh();
+            swipe.post(() -> {
+                swipe.setRefreshing(true);
+                adapter.refresh();
+                swipe.setRefreshing(false);
+            });
         }
 
         if (requestCode == LAUNCH_CREATE_INVITATION && resultCode == Activity.RESULT_OK) {

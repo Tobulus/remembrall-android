@@ -31,6 +31,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     private GroceryListListener mListener;
     private GroceryListViewAdapter adapter;
+    private SwipeRefreshLayout swipe;
     private boolean archived;
 
     public GroceryListFragment(boolean archived) {
@@ -48,6 +49,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_lists, container, false);
+        swipe = (SwipeRefreshLayout) view;
         GroceryListModel model = ViewModelProviders.of(this,
                                                        new GroceryListModelFactory(archived,
                                                                                    requireActivity()
@@ -60,9 +62,9 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView);
         recyclerView.setAdapter(adapter);
 
-        ((SwipeRefreshLayout) view).setOnRefreshListener(() -> {
+        swipe.setOnRefreshListener(() -> {
             adapter.refresh();
-            ((SwipeRefreshLayout) view).setRefreshing(false);
+            swipe.setRefreshing(false);
         });
 
         return view;
@@ -145,7 +147,11 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == LAUNCH_CREATE_GROCERY_LIST && resultCode == Activity.RESULT_OK) {
-            adapter.refresh();
+            swipe.post(() -> {
+                swipe.setRefreshing(true);
+                adapter.refresh();
+                swipe.setRefreshing(false);
+            });
         }
     }
 
