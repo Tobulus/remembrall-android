@@ -72,7 +72,6 @@ public class Backend {
     }
 
     public void logout(Response.Listener<String> onSuccess, Response.ErrorListener onError) {
-        token = null;
         ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
            .edit()
            .remove(TOKEN_KEY)
@@ -80,6 +79,7 @@ public class Backend {
 
         String requestUrl = url + "/api/logout";
         ApiPostRequest request = new ApiPostRequest(requestUrl, s -> {
+            token = null;
             loginRequiredListener.onLoginRequired();
             onSuccess.onResponse(s);
         }, onError, token, null);
