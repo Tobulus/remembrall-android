@@ -41,12 +41,22 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putLong("id", groceryListId);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
         if (getArguments() != null) {
             groceryListId = getArguments().getLong("id");
+        }
+
+        if (savedInstanceState != null) {
+            groceryListId = savedInstanceState.getLong("id");
         }
     }
 
