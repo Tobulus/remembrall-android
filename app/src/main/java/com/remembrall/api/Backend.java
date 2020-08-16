@@ -18,6 +18,8 @@ import com.remembrall.api.request.ApiPostRequest;
 import com.remembrall.api.request.ApiPutRequest;
 import com.remembrall.fcm.FirebaseService;
 import com.remembrall.listener.LoginRequiredListener;
+import com.remembrall.locator.ServiceLocator;
+import com.remembrall.model.database.Database;
 import com.remembrall.model.database.GroceryList;
 import com.remembrall.model.database.GroceryListEntry;
 import org.json.JSONObject;
@@ -82,10 +84,17 @@ public class Backend {
         String requestUrl = url + "/api/logout";
         ApiPostRequest request = new ApiPostRequest(requestUrl, s -> {
             token = null;
+            ServiceLocator.getInstance().get(Backend.class).dropLocalDatabase();
             loginRequiredListener.onLoginRequired();
             onSuccess.onResponse(s);
         }, onError, token, null);
         queue.add(request);
+    }
+
+    public void dropLocalDatabase() {
+        ServiceLocator.getInstance().get(Database.class).groceryListRepository().deleteAll(true);
+        ServiceLocator.getInstance().get(Database.class).groceryListRepository().deleteAll(false);
+        ServiceLocator.getInstance().get(Database.class).groceryListEntryRepository().deleteAll();
     }
 
     public void register(String user,
