@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class ApiLoginRequest extends JsonObjectRequest {
@@ -15,15 +16,18 @@ public class ApiLoginRequest extends JsonObjectRequest {
     private String token;
     private String user;
     private String password;
+    private Locale locale;
 
     public ApiLoginRequest(String url,
                            String user,
                            String password,
+                           Locale locale,
                            Response.Listener<JSONObject> listener,
                            @Nullable Response.ErrorListener errorListener) {
         super(url, null, listener, errorListener);
         this.user = user;
         this.password = password;
+        this.locale = locale;
     }
 
     @Override
@@ -39,6 +43,13 @@ public class ApiLoginRequest extends JsonObjectRequest {
         params.put("X-AUTH-TOKEN", "(empty)");
         params.put("Authorization",
                    "Basic " + Base64.getEncoder().encodeToString(phrase.getBytes()));
+        return params;
+    }
+
+    @Override
+    protected Map<String, String> getParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("locale", locale.getLanguage());
         return params;
     }
 

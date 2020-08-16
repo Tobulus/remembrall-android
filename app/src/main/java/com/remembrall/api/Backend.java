@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -57,10 +58,11 @@ public class Backend {
 
     public void login(String user,
                       String password,
+                      Locale locale,
                       Response.Listener<JSONObject> onSuccess,
                       Response.ErrorListener onError) {
         AtomicReference<ApiLoginRequest> request = new AtomicReference<>();
-        request.set(new ApiLoginRequest(url + "/api/auth", user, password, json -> {
+        request.set(new ApiLoginRequest(url + "/api/auth", user, password, locale, json -> {
             token = request.get().getToken();
             ctx.getSharedPreferences(BACKEND_PREFS, Context.MODE_PRIVATE)
                .edit()

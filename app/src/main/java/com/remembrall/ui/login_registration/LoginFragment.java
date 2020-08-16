@@ -48,15 +48,16 @@ public class LoginFragment extends Fragment {
                           .get(Backend.class)
                           .login(usernameEditText.getText().toString(),
                                  passwordEditText.getText().toString(),
-                            json -> {
-                                loadingProgressBar.setVisibility(View.INVISIBLE);
-                                mListener.onLoginComplete();
-                                ServiceLocator.getInstance()
-                                              .get(Backend.class)
-                                              .registerFirebaseToken(s -> {
-                                              }, e -> {
-                                              });
-                            },
+                                 getResources().getConfiguration().locale,
+                                 json -> {
+                                     loadingProgressBar.setVisibility(View.INVISIBLE);
+                                     mListener.onLoginComplete();
+                                     ServiceLocator.getInstance()
+                                                   .get(Backend.class)
+                                                   .registerFirebaseToken(s -> {
+                                                   }, e -> {
+                                                   });
+                                 },
                                  error -> Toast.makeText(getContext(),
                                                          "Failed:" + error.getMessage(),
                                                          Toast.LENGTH_LONG).show());
