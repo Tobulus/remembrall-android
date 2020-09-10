@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.GroceryListEntryBackend;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.view.GroceryListEntryModel;
@@ -78,8 +78,7 @@ public class GroceryListEntryViewAdapter
             holder.checked.setChecked(holder.groceryListEntry.isChecked());
             holder.checked.setOnClickListener(v -> {
                 holder.groceryListEntry.setChecked(!holder.groceryListEntry.isChecked());
-                ServiceLocator.getInstance()
-                              .get(Backend.class)
+                ServiceLocator.getInstance().get(GroceryListEntryBackend.class)
                               .updateGroceryListEntry(holder.groceryListEntry.getGroceryList(),
                                                       holder.groceryListEntry,
                                                       response -> {

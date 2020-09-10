@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class ProfileFragment extends Fragment {
@@ -31,9 +31,11 @@ public class ProfileFragment extends Fragment {
         });
 
         TextView logout = view.findViewById(R.id.logout);
-        logout.setOnClickListener(v -> ServiceLocator.getInstance().get(Backend.class).logout(s -> {
-        }, error -> {
-        }));
+        logout.setOnClickListener(v -> ServiceLocator.getInstance()
+                                                     .get(UserBackend.class)
+                                                     .logout(s -> {
+                                                     }, error -> {
+                                                     }));
 
         return view;
     }

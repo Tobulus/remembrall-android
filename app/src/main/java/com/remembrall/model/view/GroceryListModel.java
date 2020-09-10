@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.GroceryListBackend;
 import com.remembrall.api.data.GroceryListData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.Database;
@@ -19,13 +19,13 @@ public class GroceryListModel extends AndroidViewModel {
 
     private final MutableLiveData<List<GroceryList>> liveData = new MutableLiveData<>();
     private final boolean archived;
-    private Backend backend;
+    private GroceryListBackend backend;
     private GroceryListRepository repository;
 
     public GroceryListModel(@NonNull Application application, boolean archived) {
         super(application);
         this.archived = archived;
-        backend = ServiceLocator.getInstance().get(Backend.class);
+        backend = ServiceLocator.getInstance().get(GroceryListBackend.class);
         repository = ServiceLocator.getInstance().get(Database.class).groceryListRepository();
         liveData.setValue(ServiceLocator.getInstance()
                                         .get(Database.class)

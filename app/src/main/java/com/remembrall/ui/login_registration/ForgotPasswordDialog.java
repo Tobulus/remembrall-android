@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class ForgotPasswordDialog extends DialogFragment {
@@ -35,7 +35,7 @@ public class ForgotPasswordDialog extends DialogFragment {
     }
 
     private void resetPassword(String email) {
-        ServiceLocator.getInstance().get(Backend.class).resetPassword(email, s -> { /* TODO Toast.makeText(requireActivity().getApplicationContext(),
+        ServiceLocator.getInstance().get(UserBackend.class).resetPassword(email, s -> { /* TODO Toast.makeText(requireActivity().getApplicationContext(),
                                                          "Your password has been reset and you will receive an email in a few moments.",
                                                          Toast.LENGTH_LONG).show()*/
         }, error -> { /* TODO Toast.makeText(requireActivity().getApplicationContext(),

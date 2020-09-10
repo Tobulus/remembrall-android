@@ -5,8 +5,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import androidx.room.Room;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
 import com.remembrall.api.NetworkResponseHandler;
+import com.remembrall.api.backend.Backend;
+import com.remembrall.api.backend.GroceryListBackend;
+import com.remembrall.api.backend.GroceryListEntryBackend;
+import com.remembrall.api.backend.InvitationBackend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.model.database.Database;
 
 public class ServiceLocatorInitializer extends Application {
@@ -16,15 +20,21 @@ public class ServiceLocatorInitializer extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         NetworkResponseHandler handler = new NetworkResponseHandler();
-        ServiceLocator.getInstance().put(NetworkResponseHandler.class, handler);
-        ServiceLocator.getInstance()
-                      .put(Backend.class, new Backend(getApplicationContext(), handler));
-        ServiceLocator.getInstance()
-                      .put(Database.class,
-                           Room.databaseBuilder(getApplicationContext(),
-                                                Database.class,
-                                                "remembrall").allowMainThreadQueries().build());
+        ServiceLocator locator = ServiceLocator.getInstance();
+        Backend backend = new Backend(getApplicationContext(), handler);
+
+        locator.put(NetworkResponseHandler.class, handler);
+        locator.put(Backend.class, backend);
+        locator.put(GroceryListBackend.class, new GroceryListBackend(backend));
+        locator.put(GroceryListEntryBackend.class, new GroceryListEntryBackend(backend));
+        locator.put(InvitationBackend.class, new InvitationBackend(backend));
+        locator.put(UserBackend.class, new UserBackend(backend));
+        locator.put(Database.class,
+                    Room.databaseBuilder(getApplicationContext(), Database.class, "remembrall")
+                        .allowMainThreadQueries()
+                        .build());
         createDefaultNotificationChannel();
     }
 

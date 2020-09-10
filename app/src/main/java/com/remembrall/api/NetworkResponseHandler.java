@@ -1,5 +1,6 @@
 package com.remembrall.api;
 
+import com.remembrall.api.backend.Backend;
 import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.locator.ServiceLocator;
 

@@ -12,7 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.Backend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class LoginFragment extends Fragment {
@@ -44,8 +45,7 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
 
-            ServiceLocator.getInstance()
-                          .get(Backend.class)
+            ServiceLocator.getInstance().get(UserBackend.class)
                           .login(usernameEditText.getText().toString(),
                                  passwordEditText.getText().toString(),
                                  getResources().getConfiguration().locale,

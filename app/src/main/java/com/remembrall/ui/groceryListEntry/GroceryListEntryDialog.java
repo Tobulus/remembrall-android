@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.GroceryListEntryBackend;
 import com.remembrall.api.data.GroceryListEntryData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryListEntry;
@@ -25,10 +25,10 @@ public class GroceryListEntryDialog extends DialogFragment
         implements AdapterView.OnItemSelectedListener {
 
     private GroceryListEntry groceryListEntry;
-    private Backend backend;
+    private GroceryListEntryBackend backend;
 
     public GroceryListEntryDialog() {
-        backend = ServiceLocator.getInstance().get(Backend.class);
+        backend = ServiceLocator.getInstance().get(GroceryListEntryBackend.class);
     }
 
     public GroceryListEntryDialog(GroceryListEntry groceryListEntry) {

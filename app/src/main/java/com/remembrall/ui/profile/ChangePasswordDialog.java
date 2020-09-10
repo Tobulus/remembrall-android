@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class ChangePasswordDialog extends DialogFragment {
@@ -39,8 +39,7 @@ public class ChangePasswordDialog extends DialogFragment {
     }
 
     private void changePassword(String oldPassword, String newPassword) {
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
+        ServiceLocator.getInstance().get(UserBackend.class)
                       .changePassword(oldPassword, newPassword, s -> {
                       }, e -> {
                       });

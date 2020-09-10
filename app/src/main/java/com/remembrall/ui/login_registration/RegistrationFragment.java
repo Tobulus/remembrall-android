@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.UserBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class RegistrationFragment extends Fragment {
@@ -49,7 +49,7 @@ public class RegistrationFragment extends Fragment {
         loginButton.setEnabled(true);
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            ServiceLocator.getInstance().get(Backend.class)
+            ServiceLocator.getInstance().get(UserBackend.class)
                           .register(usernameEditText.getText().toString(),
                                     firstnameEditText.getText().toString(),
                                     lastnameEditText.getText().toString(),

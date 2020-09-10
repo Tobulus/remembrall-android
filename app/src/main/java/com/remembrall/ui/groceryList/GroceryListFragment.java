@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.GroceryListBackend;
 import com.remembrall.listener.BackPressedListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
@@ -136,8 +136,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         GroceryList list = adapter.getSelectedGroceryList();
         list.setArchived(archived);
 
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
+        ServiceLocator.getInstance().get(GroceryListBackend.class)
                       .updateGroceryList(list,
                                          json -> adapter.refresh(),
                                          error -> Toast.makeText(getContext(),
@@ -188,8 +187,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
     private void deleteSelectedItems() {
         adapter.getSelectedGroceryLists()
-               .forEach(groceryList -> ServiceLocator.getInstance()
-                                                     .get(Backend.class)
+               .forEach(groceryList -> ServiceLocator.getInstance().get(GroceryListBackend.class)
                                                      .deleteGroceryList(groceryList,
                                                                         json -> adapter.refresh(),
                                                                         error -> Toast.makeText(

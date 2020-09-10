@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.InvitationBackend;
 import com.remembrall.api.data.InvitationData;
 import com.remembrall.locator.ServiceLocator;
 
@@ -15,11 +15,11 @@ import java.util.List;
 public class InvitationModel extends AndroidViewModel {
 
     private final MutableLiveData<List<InvitationData>> liveData = new MutableLiveData<>();
-    private Backend backend;
+    private InvitationBackend backend;
 
     public InvitationModel(@NonNull Application application) {
         super(application);
-        backend = ServiceLocator.getInstance().get(Backend.class);
+        backend = ServiceLocator.getInstance().get(InvitationBackend.class);
         liveData.setValue(new ArrayList<>());
         loadDataFromBackend();
     }

@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.InvitationBackend;
 import com.remembrall.locator.ServiceLocator;
 
 public class InvitationDialog extends DialogFragment {
@@ -38,8 +38,7 @@ public class InvitationDialog extends DialogFragment {
     }
 
     private void createInvitation(Long groceryListId, String email) {
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
+        ServiceLocator.getInstance().get(InvitationBackend.class)
                       .createInvitation(groceryListId,
                                         email,
                                         json -> getTargetFragment().onActivityResult(

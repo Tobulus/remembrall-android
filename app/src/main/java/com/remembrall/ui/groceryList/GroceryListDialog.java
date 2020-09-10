@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.GroceryListBackend;
 import com.remembrall.api.data.GroceryListData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
@@ -61,8 +61,7 @@ public class GroceryListDialog extends DialogFragment {
     private void createList(String name) {
         GroceryListData groceryList = new GroceryListData();
         groceryList.setName(name);
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
+        ServiceLocator.getInstance().get(GroceryListBackend.class)
                       .createGroceryList(groceryList,
                                          json -> getTargetFragment().onActivityResult(
                                                  getTargetRequestCode(),
@@ -74,8 +73,7 @@ public class GroceryListDialog extends DialogFragment {
     }
 
     private void updateList(GroceryList list) {
-        ServiceLocator.getInstance()
-                      .get(Backend.class)
+        ServiceLocator.getInstance().get(GroceryListBackend.class)
                       .updateGroceryList(list,
                                          json -> getTargetFragment().onActivityResult(
                                                  getTargetRequestCode(),

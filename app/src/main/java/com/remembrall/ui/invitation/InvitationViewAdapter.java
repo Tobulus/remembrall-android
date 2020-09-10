@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.InvitationBackend;
 import com.remembrall.api.data.InvitationData;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.view.InvitationModel;
@@ -42,7 +42,7 @@ public class InvitationViewAdapter
                                  + invitations.get(position).getGroceryList().getName());
 
             holder.ack.setOnClickListener(v -> ServiceLocator.getInstance()
-                                                             .get(Backend.class)
+                                                             .get(InvitationBackend.class)
                                                              .acknowledge(holder.invitation.getId(),
                                                                           s -> refresh(),
                                                                           e -> {
@@ -50,7 +50,7 @@ public class InvitationViewAdapter
                                                                           }));
 
             holder.deny.setOnClickListener(v -> ServiceLocator.getInstance()
-                                                              .get(Backend.class)
+                                                              .get(InvitationBackend.class)
                                                               .deny(holder.invitation.getId(),
                                                                     s -> refresh(),
                                                                     e -> {

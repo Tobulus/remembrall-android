@@ -10,7 +10,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.remembrall.R;
-import com.remembrall.api.Backend;
+import com.remembrall.api.backend.Backend;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.ui.MainActivity;
 
