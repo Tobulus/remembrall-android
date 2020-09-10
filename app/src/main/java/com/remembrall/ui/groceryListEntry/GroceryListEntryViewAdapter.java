@@ -19,6 +19,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GroceryListEntryViewAdapter
@@ -150,10 +151,10 @@ public class GroceryListEntryViewAdapter
         return isNotEmpty;
     }
 
-    public void refresh() {
+    public void refresh(Consumer<Boolean> onFinish) {
         // clear selection as the dataset might not match the dataset the selection is based on
         unselect();
-        groceryListEntryModel.refresh();
+        groceryListEntryModel.refresh(onFinish);
     }
 
     public static class GroceryListEntryHolder extends RecyclerView.ViewHolder {

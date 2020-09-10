@@ -16,6 +16,7 @@ import com.remembrall.model.view.GroceryListModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GroceryListViewAdapter
@@ -92,10 +93,10 @@ public class GroceryListViewAdapter
                        .collect(Collectors.toList());
     }
 
-    public void refresh() {
+    public void refresh(Consumer<Boolean> onFinish) {
         // clear selection as the dataset might not match the dataset the selection is based on
         unselect();
-        groceryListModel.refresh();
+        groceryListModel.refresh(onFinish);
     }
 
     public boolean unselect() {

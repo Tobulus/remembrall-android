@@ -65,10 +65,14 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         adapter = new GroceryListViewAdapter(this, model, mListener, recyclerView);
         recyclerView.setAdapter(adapter);
 
-        swipe.setOnRefreshListener(() -> {
-            adapter.refresh();
+        Runnable showCircleLongRunning = () -> swipe.setRefreshing(true);
+        swipe.postDelayed(showCircleLongRunning, 500);
+        adapter.refresh((success) -> {
+            swipe.removeCallbacks(showCircleLongRunning);
             swipe.setRefreshing(false);
         });
+
+        swipe.setOnRefreshListener(() -> adapter.refresh((success) -> swipe.setRefreshing(false)));
 
         return view;
     }
@@ -138,7 +142,8 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
 
         ServiceLocator.getInstance().get(GroceryListBackend.class)
                       .updateGroceryList(list,
-                                         json -> adapter.refresh(),
+                                         json -> adapter.refresh((success) -> swipe.setRefreshing(
+                                                 false)),
                                          error -> Toast.makeText(getContext(),
                                                                  error.getMessage(),
                                                                  Toast.LENGTH_LONG).show());
@@ -151,8 +156,7 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         if (requestCode == LAUNCH_CREATE_GROCERY_LIST && resultCode == Activity.RESULT_OK) {
             swipe.post(() -> {
                 swipe.setRefreshing(true);
-                adapter.refresh();
-                swipe.setRefreshing(false);
+                adapter.refresh((success) -> swipe.setRefreshing(false));
             });
         }
     }
@@ -189,7 +193,8 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
         adapter.getSelectedGroceryLists()
                .forEach(groceryList -> ServiceLocator.getInstance().get(GroceryListBackend.class)
                                                      .deleteGroceryList(groceryList,
-                                                                        json -> adapter.refresh(),
+                                                                        json -> adapter.refresh((success) -> swipe
+                                                                                .setRefreshing(false)),
                                                                         error -> Toast.makeText(
                                                                                 getContext(),
                                                                                 error.getMessage(),

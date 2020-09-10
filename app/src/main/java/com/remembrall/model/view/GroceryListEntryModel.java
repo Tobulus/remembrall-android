@@ -13,6 +13,7 @@ import com.remembrall.model.database.GroceryListEntry;
 import com.remembrall.model.database.repository.GroceryListEntryRepository;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class GroceryListEntryModel extends AndroidViewModel {
@@ -29,18 +30,17 @@ public class GroceryListEntryModel extends AndroidViewModel {
                 ServiceLocator.getInstance().get(Database.class).groceryListEntryRepository();
         this.groceryListId = groceryListId;
         this.liveData.setValue(repository.getGroceryListEntries(groceryListId));
-        loadDataFromBackend();
     }
 
     public LiveData<List<GroceryListEntry>> getLiveData() {
         return liveData;
     }
 
-    public void refresh() {
-        loadDataFromBackend();
+    public void refresh(Consumer<Boolean> onFinish) {
+        loadDataFromBackend(onFinish);
     }
 
-    private void loadDataFromBackend() {
+    private void loadDataFromBackend(Consumer<Boolean> onFinish) {
         backend.getGroceryListEntries(groceryListId, groceryListEntries -> {
             List<GroceryListEntry> entries = groceryListEntries.stream()
                                                                .map(GroceryListEntryData::toEntity)
@@ -48,7 +48,8 @@ public class GroceryListEntryModel extends AndroidViewModel {
             repository.deleteAll();
             repository.upsert(entries);
             liveData.setValue(entries);
-        }, error -> {
-        });
+
+            onFinish.accept(true);
+        }, error -> onFinish.accept(false));
     }
 }

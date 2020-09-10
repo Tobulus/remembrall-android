@@ -104,6 +104,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_grocery_list_entries, container, false);
         swipe = (SwipeRefreshLayout) view;
+
         GroceryListEntryModel model = ViewModelProviders.of(this,
                                                             new GroceryListEntryModelFactory(
                                                                     groceryListId,
@@ -116,10 +117,14 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         adapter = new GroceryListEntryViewAdapter(this, model, recyclerView);
         recyclerView.setAdapter(adapter);
 
-        swipe.setOnRefreshListener(() -> {
-            adapter.refresh();
+        Runnable showCircleLongRunning = () -> swipe.setRefreshing(true);
+        swipe.postDelayed(showCircleLongRunning, 500);
+        adapter.refresh((success) -> {
+            swipe.removeCallbacks(showCircleLongRunning);
             swipe.setRefreshing(false);
         });
+
+        swipe.setOnRefreshListener(() -> adapter.refresh((success) -> swipe.setRefreshing(false)));
 
         return view;
     }
@@ -131,8 +136,7 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
         if ((requestCode == LAUNCH_CREATE_GROCERY_LIST_ENTRY) && resultCode == Activity.RESULT_OK) {
             swipe.post(() -> {
                 swipe.setRefreshing(true);
-                adapter.refresh();
-                swipe.setRefreshing(false);
+                adapter.refresh((success) -> swipe.setRefreshing(false));
             });
         }
 
@@ -172,7 +176,9 @@ public class GroceryListEntryFragment extends Fragment implements BackPressedLis
                .forEach(entry -> ServiceLocator.getInstance().get(GroceryListEntryBackend.class)
                                                .deleteGroceryListEntry(groceryListId,
                                                                        entry,
-                                                                       json -> adapter.refresh(),
+                                                                       json -> adapter.refresh(
+                                                                               success -> swipe.setRefreshing(
+                                                                                       false)),
                                                                        error -> Toast.makeText(
                                                                                getContext(),
                                                                                error.getMessage(),
