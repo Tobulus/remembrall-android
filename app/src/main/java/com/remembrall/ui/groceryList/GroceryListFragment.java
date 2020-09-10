@@ -34,6 +34,9 @@ public class GroceryListFragment extends Fragment implements BackPressedListener
     private SwipeRefreshLayout swipe;
     private boolean archived;
 
+    public GroceryListFragment() {
+    }
+
     public GroceryListFragment(boolean archived) {
         this.archived = archived;
     }
