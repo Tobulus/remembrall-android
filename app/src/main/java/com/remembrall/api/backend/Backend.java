@@ -6,6 +6,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.remembrall.BuildConfig;
+import com.remembrall.R;
+import com.remembrall.api.NetworkResponseHandler;
 import com.remembrall.api.request.ApiPutRequest;
 import com.remembrall.fcm.FirebaseService;
 import com.remembrall.listener.LoginRequiredListener;
@@ -55,6 +57,10 @@ public class Backend {
                 return;
             }
         }
+
+        ServiceLocator.getInstance()
+                      .get(NetworkResponseHandler.class)
+                      .onFail(ctx.getString(R.string.loading_failed));
 
         customErrorListener.onErrorResponse(error);
     }

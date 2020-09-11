@@ -3,15 +3,19 @@ package com.remembrall.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.remembrall.R;
 import com.remembrall.api.NetworkResponseHandler;
 import com.remembrall.api.backend.Backend;
 import com.remembrall.listener.BackPressedListener;
+import com.remembrall.listener.FailedListener;
 import com.remembrall.listener.LoginRequiredListener;
 import com.remembrall.locator.ServiceLocator;
 import com.remembrall.model.database.GroceryList;
@@ -32,7 +36,8 @@ import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH
 
 public class MainActivity extends AppCompatActivity
         implements GroceryListFragment.GroceryListListener, LoginFragment.LoginListener,
-                   RegistrationFragment.RegistrationListener, LoginRequiredListener {
+                   RegistrationFragment.RegistrationListener, LoginRequiredListener,
+                   FailedListener {
 
     /* Define the names of different Intent which this activity accepts*/
     public static final String INTENT_NAME = "action";
@@ -40,16 +45,17 @@ public class MainActivity extends AppCompatActivity
     /* Define codes for intent actions which this activity accepts*/
     public static final int INTENT_ACTION_SHOW_INVITATIONS = 1;
 
+    private AlphaAnimation failAnimation;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
 
-        ServiceLocator.getInstance().get(NetworkResponseHandler.class).register(this);
-
-        initNavigation();
+        setupToolbar();
+        setupFailedChip();
+        setupListeners();
+        setupNavigation();
 
         if (!ServiceLocator.getInstance().get(Backend.class).isSessionAvailable()) {
             // TODO: check for invitations intent from push notification so that the user is forwarded after login
@@ -74,12 +80,50 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void setupToolbar() {
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+    }
+
+    private void setupListeners() {
+        ServiceLocator.getInstance()
+                      .get(NetworkResponseHandler.class)
+                      .register((LoginRequiredListener) this);
+        ServiceLocator.getInstance()
+                      .get(NetworkResponseHandler.class)
+                      .register((FailedListener) this);
+    }
+
     private void loginFulfilled() {
         findViewById(R.id.navigation).setVisibility(View.VISIBLE);
         findViewById(R.id.floating_plus_button).setVisibility(View.VISIBLE);
     }
 
-    private void initNavigation() {
+    private void setupFailedChip() {
+        View view = findViewById(R.id.failed_chip);
+
+        failAnimation = new AlphaAnimation(1f, 0f);
+        failAnimation.setStartOffset(0);
+        failAnimation.setDuration(3000);
+        failAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // nothing to do
+            }
+        });
+    }
+
+    private void setupNavigation() {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
@@ -220,5 +264,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginRequired() {
         showLoginRegistration();
+    }
+
+    @Override
+    public void onFail(String message) {
+        Chip view = findViewById(R.id.failed_chip);
+        view.setText(message);
+        view.startAnimation(failAnimation);
     }
 }
