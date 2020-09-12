@@ -42,12 +42,6 @@ public class ApiLoginRequest extends JsonObjectRequest {
         params.put("X-AUTH-TOKEN", "(empty)");
         params.put("Authorization",
                    "Basic " + Base64.getEncoder().encodeToString(phrase.getBytes()));
-        return params;
-    }
-
-    @Override
-    protected Map<String, String> getParams() {
-        Map<String, String> params = new HashMap<>();
         params.put("locale", locale.getLanguage());
         return params;
     }
