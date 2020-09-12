@@ -44,18 +44,12 @@ public class InvitationViewAdapter
             holder.ack.setOnClickListener(v -> ServiceLocator.getInstance()
                                                              .get(InvitationBackend.class)
                                                              .acknowledge(holder.invitation.getId(),
-                                                                          s -> refresh(),
-                                                                          e -> {
-
-                                                                          }));
+                                                                          s -> refresh()));
 
             holder.deny.setOnClickListener(v -> ServiceLocator.getInstance()
                                                               .get(InvitationBackend.class)
                                                               .deny(holder.invitation.getId(),
-                                                                    s -> refresh(),
-                                                                    e -> {
-
-                                                                    }));
+                                                                    s -> refresh()));
         }
     }
 

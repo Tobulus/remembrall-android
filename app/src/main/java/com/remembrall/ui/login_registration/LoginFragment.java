@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.remembrall.R;
 import com.remembrall.api.backend.Backend;
@@ -58,9 +57,9 @@ public class LoginFragment extends Fragment {
                                                    }, e -> {
                                                    });
                                  },
-                                 error -> Toast.makeText(getContext(),
-                                                         "Failed:" + error.getMessage(),
-                                                         Toast.LENGTH_LONG).show());
+                                 error -> {
+                                     loadingProgressBar.setVisibility(View.INVISIBLE);
+                                 });
         });
 
         forgotPassword.setOnClickListener(v -> {

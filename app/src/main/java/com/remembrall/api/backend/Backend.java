@@ -6,7 +6,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.remembrall.BuildConfig;
-import com.remembrall.R;
 import com.remembrall.api.NetworkResponseHandler;
 import com.remembrall.api.request.ApiPutRequest;
 import com.remembrall.fcm.FirebaseService;
@@ -47,7 +46,9 @@ public class Backend {
         ServiceLocator.getInstance().get(Database.class).groceryListEntryRepository().deleteAll();
     }
 
-    protected void onErrorHandler(VolleyError error, Response.ErrorListener customErrorListener) {
+    protected void onErrorHandler(VolleyError error,
+                                  Response.ErrorListener customErrorListener,
+                                  int customError) {
         if (error.networkResponse != null) {
             int code = error.networkResponse.statusCode;
 
@@ -60,9 +61,11 @@ public class Backend {
 
         ServiceLocator.getInstance()
                       .get(NetworkResponseHandler.class)
-                      .onFail(ctx.getString(R.string.loading_failed));
+                      .onFail(ctx.getString(customError));
 
-        customErrorListener.onErrorResponse(error);
+        if (customErrorListener != null) {
+            customErrorListener.onErrorResponse(error);
+        }
     }
 
     public void registerFirebaseToken(Response.Listener<String> onSuccess,

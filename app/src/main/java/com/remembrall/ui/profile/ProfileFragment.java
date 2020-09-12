@@ -33,9 +33,7 @@ public class ProfileFragment extends Fragment {
         TextView logout = view.findViewById(R.id.logout);
         logout.setOnClickListener(v -> ServiceLocator.getInstance()
                                                      .get(UserBackend.class)
-                                                     .logout(s -> {
-                                                     }, error -> {
-                                                     }));
+                                                     .logout());
 
         return view;
     }

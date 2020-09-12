@@ -3,6 +3,7 @@ package com.remembrall.api.backend;
 import com.android.volley.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.remembrall.R;
 import com.remembrall.api.data.GroceryListData;
 import com.remembrall.api.request.ApiArrayRequest;
 import com.remembrall.api.request.ApiDeleteRequest;
@@ -28,16 +29,22 @@ public class GroceryListBackend {
                                 Response.ErrorListener errorListener) {
         String api = archived ? "/api/archived-grocery-lists" : "/api/grocery-lists";
 
-        ApiArrayRequest json = new ApiArrayRequest(backend.url + api, response -> {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                listConsumer.accept(mapper.readValue(response.toString(),
-                                                     new TypeReference<List<GroceryListData>>() {
-                                                     }));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, error -> backend.onErrorHandler(error, errorListener), backend.token);
+        ApiArrayRequest json = new ApiArrayRequest(backend.url + api,
+                                                   response -> {
+                                                       ObjectMapper mapper = new ObjectMapper();
+                                                       try {
+                                                           listConsumer.accept(mapper.readValue(
+                                                                   response.toString(),
+                                                                   new TypeReference<List<GroceryListData>>() {
+                                                                   }));
+                                                       } catch (IOException e) {
+                                                           e.printStackTrace();
+                                                       }
+                                                   },
+                                                   error -> backend.onErrorHandler(error,
+                                                                                   errorListener,
+                                                                                   R.string.loading_failed),
+                                                   backend.token);
 
         backend.queue.add(json);
     }
@@ -51,7 +58,8 @@ public class GroceryListBackend {
         ApiPostRequest request = new ApiPostRequest(backend.url + "/api/grocery-list/new",
                                                     onSuccess::accept,
                                                     error -> backend.onErrorHandler(error,
-                                                                                    errorListener),
+                                                                                    errorListener,
+                                                                                    R.string.loading_failed),
                                                     backend.token,
                                                     postParams);
         backend.queue.add(request);

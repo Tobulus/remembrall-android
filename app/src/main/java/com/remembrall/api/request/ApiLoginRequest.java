@@ -1,6 +1,5 @@
 package com.remembrall.api.request;
 
-import androidx.annotation.Nullable;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -23,7 +22,7 @@ public class ApiLoginRequest extends JsonObjectRequest {
                            String password,
                            Locale locale,
                            Response.Listener<JSONObject> listener,
-                           @Nullable Response.ErrorListener errorListener) {
+                           Response.ErrorListener errorListener) {
         super(url, null, listener, errorListener);
         this.user = user;
         this.password = password;

@@ -39,9 +39,8 @@ public class ChangePasswordDialog extends DialogFragment {
     }
 
     private void changePassword(String oldPassword, String newPassword) {
-        ServiceLocator.getInstance().get(UserBackend.class)
-                      .changePassword(oldPassword, newPassword, s -> {
-                      }, e -> {
-                      });
+        ServiceLocator.getInstance()
+                      .get(UserBackend.class)
+                      .changePassword(oldPassword, newPassword);
     }
 }

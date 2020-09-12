@@ -3,6 +3,7 @@ package com.remembrall.api.backend;
 import com.android.volley.Response;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.remembrall.R;
 import com.remembrall.api.data.InvitationData;
 import com.remembrall.api.request.ApiArrayRequest;
 import com.remembrall.api.request.ApiPostRequest;
@@ -31,7 +32,9 @@ public class InvitationBackend {
         ApiPostRequest request =
                 new ApiPostRequest(backend.url + "/api/grocery-list/" + groceryListId + "/invite",
                                    onSuccess::accept,
-                                   error -> backend.onErrorHandler(error, errorListener),
+                                   error -> backend.onErrorHandler(error,
+                                                                   errorListener,
+                                                                   R.string.loading_failed),
                                    backend.token,
                                    postParams);
         backend.queue.add(request);
@@ -39,39 +42,41 @@ public class InvitationBackend {
 
     public void getInvitations(Consumer<List<InvitationData>> listConsumer,
                                Response.ErrorListener errorListener) {
-        ApiArrayRequest json = new ApiArrayRequest(backend.url + "/api/invitations", response -> {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                listConsumer.accept(mapper.readValue(response.toString(),
-                                                     new TypeReference<List<InvitationData>>() {
-                                                     }));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, error -> backend.onErrorHandler(error, errorListener), backend.token);
+        ApiArrayRequest json = new ApiArrayRequest(backend.url + "/api/invitations",
+                                                   response -> {
+                                                       ObjectMapper mapper = new ObjectMapper();
+                                                       try {
+                                                           listConsumer.accept(mapper.readValue(
+                                                                   response.toString(),
+                                                                   new TypeReference<List<InvitationData>>() {
+                                                                   }));
+                                                       } catch (IOException e) {
+                                                           e.printStackTrace();
+                                                       }
+                                                   },
+                                                   error -> backend.onErrorHandler(error,
+                                                                                   errorListener,
+                                                                                   R.string.loading_failed),
+                                                   backend.token);
 
         backend.queue.add(json);
     }
 
-    public void acknowledge(Long invitationId,
-                            Response.Listener<String> onSuccess,
-                            Response.ErrorListener errorListener) {
+    public void acknowledge(Long invitationId, Response.Listener<String> onSuccess) {
         String requestUrl = backend.url + "/api/invitation/" + invitationId;
         Map<String, String> params = new HashMap<>();
         params.put("ack", "true");
         ApiPostRequest request =
-                new ApiPostRequest(requestUrl, onSuccess, errorListener, backend.token, params);
+                new ApiPostRequest(requestUrl, onSuccess, null, backend.token, params);
         backend.queue.add(request);
     }
 
-    public void deny(Long invitationId,
-                     Response.Listener<String> onSuccess,
-                     Response.ErrorListener errorListener) {
+    public void deny(Long invitationId, Response.Listener<String> onSuccess) {
         String requestUrl = backend.url + "/api/invitation/" + invitationId;
         Map<String, String> params = new HashMap<>();
         params.put("deny", "true");
         ApiPostRequest request =
-                new ApiPostRequest(requestUrl, onSuccess, errorListener, backend.token, params);
+                new ApiPostRequest(requestUrl, onSuccess, null, backend.token, params);
         backend.queue.add(request);
     }
 }

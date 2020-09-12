@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -49,22 +48,18 @@ public class RegistrationFragment extends Fragment {
         loginButton.setEnabled(true);
         loginButton.setOnClickListener(v -> {
             loadingProgressBar.setVisibility(View.VISIBLE);
-            ServiceLocator.getInstance().get(UserBackend.class)
+            ServiceLocator.getInstance()
+                          .get(UserBackend.class)
                           .register(usernameEditText.getText().toString(),
                                     firstnameEditText.getText().toString(),
                                     lastnameEditText.getText().toString(),
                                     passwordEditText.getText().toString(),
                                     matchingPasswordEditText.getText().toString(),
-                                     json -> {
-                                         loadingProgressBar.setVisibility(View.INVISIBLE);
-                                         mListener.onRegistrationComplete();
-                                     },
-                                     error -> {
-                                         loadingProgressBar.setVisibility(View.INVISIBLE);
-                                         Toast.makeText(getContext(),
-                                                        "Failed:" + error.getMessage(),
-                                                        Toast.LENGTH_LONG).show();
-                                     });
+                                    json -> {
+                                        loadingProgressBar.setVisibility(View.INVISIBLE);
+                                        mListener.onRegistrationComplete();
+                                    },
+                                    error -> loadingProgressBar.setVisibility(View.INVISIBLE));
         });
     }
 

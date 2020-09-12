@@ -2,6 +2,7 @@ package com.remembrall.api.backend;
 
 import android.content.Context;
 import com.android.volley.Response;
+import com.remembrall.R;
 import com.remembrall.api.request.ApiLoginRequest;
 import com.remembrall.api.request.ApiPostRequest;
 import com.remembrall.api.request.ApiPutRequest;
@@ -26,7 +27,7 @@ public class UserBackend {
                       String password,
                       Locale locale,
                       Response.Listener<JSONObject> onSuccess,
-                      Response.ErrorListener onError) {
+                      Response.ErrorListener customErrorListener) {
         AtomicReference<ApiLoginRequest> request = new AtomicReference<>();
         request.set(new ApiLoginRequest(backend.url + "/api/auth", user, password, locale, json -> {
             backend.token = request.get().getToken();
@@ -35,11 +36,11 @@ public class UserBackend {
                        .putString(Backend.TOKEN_KEY, backend.token)
                        .apply();
             onSuccess.onResponse(json);
-        }, onError));
+        }, error -> backend.onErrorHandler(error, customErrorListener, R.string.login_failed)));
         backend.queue.add(request.get());
     }
 
-    public void logout(Response.Listener<String> onSuccess, Response.ErrorListener onError) {
+    public void logout() {
         backend.ctx.getSharedPreferences(Backend.BACKEND_PREFS, Context.MODE_PRIVATE)
                    .edit()
                    .remove(Backend.TOKEN_KEY)
@@ -50,8 +51,7 @@ public class UserBackend {
             backend.token = null;
             ServiceLocator.getInstance().get(Backend.class).dropLocalDatabase();
             backend.loginRequiredListener.onLoginRequired();
-            onSuccess.onResponse(s);
-        }, onError, backend.token, null);
+        }, null, backend.token, null);
         backend.queue.add(request);
     }
 
@@ -74,7 +74,8 @@ public class UserBackend {
         ApiPostRequest request = new ApiPostRequest(requestUrl,
                                                     onSuccess::accept,
                                                     error -> backend.onErrorHandler(error,
-                                                                                    errorListener),
+                                                                                    errorListener,
+                                                                                    R.string.loading_failed),
                                                     backend.token,
                                                     params);
         backend.queue.add(request);
@@ -91,16 +92,13 @@ public class UserBackend {
         backend.queue.add(request);
     }
 
-    public void changePassword(String oldPassword,
-                               String newPassword,
-                               Response.Listener<String> onSuccess,
-                               Response.ErrorListener errorListener) {
+    public void changePassword(String oldPassword, String newPassword) {
         String requestUrl = backend.url + "/api/user/change-password";
         Map<String, String> params = new HashMap<>();
         params.put("oldPassword", oldPassword);
         params.put("newPassword", newPassword);
-        ApiPutRequest request =
-                new ApiPutRequest(requestUrl, onSuccess, errorListener, backend.token, params);
+        ApiPutRequest request = new ApiPutRequest(requestUrl, s -> {
+        }, null, backend.token, params);
         backend.queue.add(request);
     }
 }
