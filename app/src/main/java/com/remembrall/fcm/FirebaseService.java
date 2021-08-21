@@ -45,7 +45,12 @@ public class FirebaseService extends FirebaseMessagingService {
             Intent intent =
                     new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                                         .putExtra(MainActivity.INTENT_NAME,
-                                                                  MainActivity.INTENT_ACTION_SHOW_INVITATIONS);
+                                                                  remoteMessage.getNotification().getClickAction());
+
+            if (remoteMessage.getData().get("listId") != null) {
+                intent.putExtra("listId", remoteMessage.getData().get("listId"));
+            }
+
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

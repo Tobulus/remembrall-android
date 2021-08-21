@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity
     /* Define the names of different Intent which this activity accepts*/
     public static final String INTENT_NAME = "action";
 
-    /* Define codes for intent actions which this activity accepts*/
-    public static final int INTENT_ACTION_SHOW_INVITATIONS = 1;
-
     private AlphaAnimation failAnimation;
 
     @Override
@@ -66,8 +63,12 @@ public class MainActivity extends AppCompatActivity
         loginFulfilled();
 
         if (Objects.equals(getIntent().getAction(), "OPEN_INVITATIONS")) {
-            // TODO: check why invitations are not selected in the navigation
-            showInvitations();
+            showInvitationsAndFocus();
+            return;
+        }
+
+        if (Objects.equals(getIntent().getAction(), "OPEN_LIST")) {
+            showGroceryListEntries(Long.parseLong((String) getIntent().getExtras().get("listId")));
             return;
         }
 
@@ -162,6 +163,12 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
     }
 
+    private void showInvitationsAndFocus() {
+        showInvitations();
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setSelectedItemId(R.id.action_invitations);
+    }
+
     private void showProfile() {
         ProfileFragment fragment = new ProfileFragment();
         getSupportFragmentManager().beginTransaction()
@@ -236,12 +243,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent.getExtras() != null
-            && intent.getExtras().getInt(INTENT_NAME) == INTENT_ACTION_SHOW_INVITATIONS) {
-            showInvitations();
-        }
-
         super.onNewIntent(intent);
+
+        if (intent.getExtras() != null) {
+            if (Objects.equals(intent.getExtras().get(INTENT_NAME), "OPEN_INVITATIONS")) {
+                showInvitationsAndFocus();
+            } else if (Objects.equals(intent.getExtras().get(INTENT_NAME), "OPEN_LIST")) {
+                showGroceryListEntries(Long.parseLong((String) intent.getExtras().get("listId")));
+            }
+        }
     }
 
     @Override
