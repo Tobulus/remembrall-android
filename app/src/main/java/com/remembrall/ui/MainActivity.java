@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -36,11 +38,14 @@ import static com.remembrall.ui.groceryListEntry.GroceryListEntryFragment.LAUNCH
 
 public class MainActivity extends AppCompatActivity
         implements GroceryListFragment.GroceryListListener, LoginFragment.LoginListener,
-                   RegistrationFragment.RegistrationListener, LoginRequiredListener,
-                   FailedListener {
+        RegistrationFragment.RegistrationListener, LoginRequiredListener,
+        FailedListener {
 
-    /* Define the names of different Intent which this activity accepts*/
     public static final String INTENT_NAME = "action";
+
+    private static final String OPEN_INVITATIONS = "OPEN_INVITATIONS";
+    private static final String OPEN_LIST = "OPEN_LIST";
+    private static final String LIST_ID = "listId";
 
     private AlphaAnimation failAnimation;
 
@@ -62,13 +67,17 @@ public class MainActivity extends AppCompatActivity
 
         loginFulfilled();
 
-        if (Objects.equals(getIntent().getAction(), "OPEN_INVITATIONS")) {
+        if (Objects.equals(getIntent().getAction(), OPEN_INVITATIONS)) {
             showInvitationsAndFocus();
             return;
         }
 
-        if (Objects.equals(getIntent().getAction(), "OPEN_LIST")) {
-            showGroceryListEntries(Long.parseLong((String) getIntent().getExtras().get("listId")));
+        if (Objects.equals(getIntent().getAction(), OPEN_LIST)) {
+            Long listId =
+                    Long.parseLong((String) Objects.requireNonNull(Objects.requireNonNull(getIntent()
+                            .getExtras())
+                            .get(LIST_ID)));
+            showGroceryListEntriesAndFocus(listId);
             return;
         }
 
@@ -150,21 +159,23 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
         LoginRegistrationFragment fragment = new LoginRegistrationFragment();
         getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.main_fragment, fragment)
-                                   .commit();
+                .replace(R.id.main_fragment, fragment)
+                .commit();
     }
 
+    /**
+     * Should only be called from the navigation listener.
+     */
     private void showInvitations() {
         InvitationFragment fragment = new InvitationFragment();
         getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.main_fragment, fragment)
-                                   .addToBackStack("invitations")
-                                   .commitAllowingStateLoss();
+                .replace(R.id.main_fragment, fragment)
+                .addToBackStack("invitations")
+                .commitAllowingStateLoss();
         findViewById(R.id.floating_plus_button).setVisibility(View.INVISIBLE);
     }
 
     private void showInvitationsAndFocus() {
-        showInvitations();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setSelectedItemId(R.id.action_invitations);
     }
@@ -218,6 +229,12 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    private void showGroceryListEntriesAndFocus(Long listId) {
+        showGroceryListEntries(listId);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.getMenu().findItem(R.id.action_lists).setChecked(true);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -246,10 +263,11 @@ public class MainActivity extends AppCompatActivity
         super.onNewIntent(intent);
 
         if (intent.getExtras() != null) {
-            if (Objects.equals(intent.getExtras().get(INTENT_NAME), "OPEN_INVITATIONS")) {
+            if (Objects.equals(intent.getExtras().get(INTENT_NAME), OPEN_INVITATIONS)) {
                 showInvitationsAndFocus();
-            } else if (Objects.equals(intent.getExtras().get(INTENT_NAME), "OPEN_LIST")) {
-                showGroceryListEntries(Long.parseLong((String) intent.getExtras().get("listId")));
+            } else if (Objects.equals(intent.getExtras().get(INTENT_NAME), OPEN_LIST)) {
+                showGroceryListEntriesAndFocus(Long.parseLong((String) Objects.requireNonNull(intent.getExtras()
+                        .get(LIST_ID))));
             }
         }
     }

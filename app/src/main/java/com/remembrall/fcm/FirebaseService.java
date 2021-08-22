@@ -4,9 +4,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.remembrall.R;
@@ -42,15 +44,12 @@ public class FirebaseService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {
+            /* This will only be called if the App is in foreground */
             Intent intent =
                     new Intent(this, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                                         .putExtra(MainActivity.INTENT_NAME,
                                                                   remoteMessage.getNotification().getClickAction());
-
-            if (remoteMessage.getData().get("listId") != null) {
-                intent.putExtra("listId", remoteMessage.getData().get("listId"));
-            }
-
+            remoteMessage.getData().forEach(intent::putExtra);
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -58,17 +57,15 @@ public class FirebaseService extends FirebaseMessagingService {
             String body = remoteMessage.getNotification().getBody();
             NotificationCompat.Builder builder =
                     new NotificationCompat.Builder(this, CHANNEL_DEFAULT).setContentTitle(title)
-                                                                         .setPriority(
-                                                                                 NotificationCompat.PRIORITY_DEFAULT)
-                                                                         .setContentText(body)
-                                                                         .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                            .setPriority(
+                                    NotificationCompat.PRIORITY_DEFAULT)
+                            .setContentText(body)
+                            .setSmallIcon(R.drawable.ic_cart_launcher_background)
                                                                          .setContentIntent(
                                                                                  pendingIntent)
                                                                          .setAutoCancel(true);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.notify(notificationId.incrementAndGet(), builder.build());
-        } else {
-            Log.d("firebase", "getNotification() was null");
         }
     }
 }
